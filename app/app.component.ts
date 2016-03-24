@@ -1,7 +1,7 @@
 import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector} from "angular2/core";
 import {RouteConfig, RouterOutlet, RouterLink, Router, RouteParams} from 'angular2/router';
 
-import {ProfileViewport} from './calendar/calendar.component';
+import {ProfileViewport} from './profile/profile.component';
 import {User, UserType} from './interfaces/interface';
 
 @Component({
@@ -101,7 +101,7 @@ export class LayoutHeader {
 })
 @RouteConfig([
 	{ path: '/', name: 'ActivityViewport', component: ActivityViewport },
-	{ path: '/calendar/...', name: 'CalendarViewport', component: ProfileViewport, useAsDefault: true },
+	{ path: '/calendar/...', name: 'ProfileViewport', component: ProfileViewport, useAsDefault: true },
 ])
 export class MountNode {
 }
