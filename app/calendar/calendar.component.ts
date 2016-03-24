@@ -66,20 +66,22 @@ class MonthPipe implements PipeTransform {
 				</ul>
 			</div>
 
-			<div class="month__days">
+			<div class="month__days" *ngIf="id">
 				<ul class="cal__days">
 					<div *ngFor="#wk of weeks" class="week">
 						<li *ngFor="#w of wk">
-							<a href="">{{ w }}</a>
+							<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: month+'%'+w+'%'+year}]">{{ w }}</a>
 						</li>
 					</div>
 				</ul>
 			</div>
 		</div>
 	`,
-	pipes: [MonthPipe, WeekPipe]
+	pipes: [MonthPipe, WeekPipe],
+	directives: [RouterLink]
 })
 class Calendar implements OnInit {
+	@Input() id: string;
 	week: Number[] = range(0, 6);
 	month: number;
 	year: number;
@@ -103,9 +105,12 @@ class Calendar implements OnInit {
 		this.startDay = (new Date(date.getFullYear(), date.getMonth(), 1)).getDay();
 		this.days = (new Date(date.getFullYear(), (date.getMonth() + 1), 0)).getDate();
 
-		let temp = range(1, this.startDay)
-							.concat(range(1, this.days))
-							.concat(range(1, (7 - (this.days + this.startDay) % 7)));
+		let prevDays = (new Date(date.getFullYear(), date.getMonth(), 0)).getDate(),
+				temp = range((prevDays - this.startDay + 1), prevDays).concat(range(1, this.days));
+
+		if ((temp.length % 7) !== 0) {
+			temp = temp.concat(range(1, (7 - (this.days + this.startDay) % 7)));
+		}
 
 		this.weeks = [];
 		while (temp.length > 0) {
@@ -142,10 +147,11 @@ class Calendar implements OnInit {
 				</section>
 			</div>
 		</div>
-	`
+	`,
+	directives: []
 })
-class ProfileContext
-{ }
+class ProfileContext {
+}
 
 
 @Component({
@@ -154,15 +160,7 @@ class ProfileContext
 	`,
 	directives: [ProfileContext]
 })
-class Cal implements OnInit {
-	id: String;
-
-	constructor(private _router: Router,
-						  private _routerParams: RouteParams) {}
-
-	ngOnInit() {
-		this.id = this._routerParams.get('id');
-	}
+class Cal {
 }
 
 @Component({
@@ -172,6 +170,27 @@ class Cal implements OnInit {
 })
 class None {}
 
+
+@Component({
+	selector: 'day-segment',
+	template: `
+		<profile-context></profile-context>
+		<h2>Day segment</h2>
+		<h2>{{day}}</h2>
+	`,
+	directives: [ProfileContext]
+})
+class DaySegment implements OnInit {
+	@Input() day: String = "";
+
+	constructor(private _router: Router,
+							private _routerParams: RouteParams) { }
+
+	ngOnInit() {
+		this.day = this._routerParams.get('day');
+	}
+}
+
 @Component({
 	selector: 'profile-nav',
 	template: `
@@ -180,18 +199,24 @@ class None {}
 				<img src="{{user.avatar}}" />
 				<h3>{{user.fname}} {{user.lname}}</h3>
 				<ul>
-					<li><a href="">{{user.fname}}'s calendar</a></li>
-					<li><a href="">My events with {{user.fname}}</a></li>
 					<li><a href="">{{user.fname}}'s contact card</a></li>
+					<li><a [routerLink]="['/CalendarViewport', 'DaySegment', {id: user.id, day: day}]">{{user.fname}}'s calendar</a></li>
+					<li><a href="">My events with {{user.fname}}</a></li>
 				</ul>
 			</div>
-			<calendar></calendar>
+			<calendar [id]="user.id"></calendar>
 		</div>
 	`,
-	directives: [Calendar]
+	directives: [Calendar, RouterLink]
 })
-class ProfileNav {
+class ProfileNav implements OnInit {
 	@Input() user: User;
+	day: String = '';
+
+	ngOnInit() {
+		let day = new Date();
+		this.day = `${day.getMonth()}%${day.getDate()}%${day.getFullYear()}`;
+	}
 }
 
 
@@ -209,6 +234,7 @@ class ProfileNav {
 @RouteConfig([
 	{ path: '/', name: 'None', component: None, useAsDefault: true },
 	{ path: '/:id', name: 'Cal', component: Cal },
+	{ path: '/:id/day/:day', name: 'DaySegment', component: DaySegment }
 ])
 export class ProfileViewport implements OnInit {
 	user: User;

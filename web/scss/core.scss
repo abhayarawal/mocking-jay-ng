@@ -711,7 +711,7 @@ $top__height: 50px;
 			text-align: center;
 			
 			@include mq($brk__md) {
-				line-height: 36px;
+				line-height: 34px;
 			}
 		}
 	}
@@ -768,13 +768,13 @@ $top__height: 50px;
 						font-weight: 500;
 						font-size: 14px;
 
-						&.selected
+						&.router-link-active
 						{
 							background: rgba(255, 255, 255, 0.9);
 							@include bg-top-bottom(#ffe6a8, #ffbe63);
 							color: #333A4C;
-							font-size: 17px;
-							@include transform(scale(0.8));
+							font-size: 15px;
+							@include transform(scale(0.9));
 						}
 					}
 				}
