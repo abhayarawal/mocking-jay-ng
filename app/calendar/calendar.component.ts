@@ -4,6 +4,12 @@ import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGro
 
 import {User, UserType} from '../interfaces/interface';
 
+interface Days {
+	year: number,
+	month: number,
+	days: number[]
+}
+
 var range = (x, y) : number[] => {
 	let temp = [];
 	for (let j = x; j <= y; j++) { temp.push(j); }
@@ -56,7 +62,7 @@ class MonthPipe implements PipeTransform {
 		<div class="calendar">
 			<div class="month__select">
 				<button class="lnr lnr-chevron-left" (click)="prevMonth()"></button>
-				<h4>{{ month | monthPipe }}, {{ year }}</h4>
+				<h4>{{ now.month | monthPipe }}, {{ now.year }}</h4>
 				<button class="lnr lnr-chevron-right" (click)="nextMonth()"></button>
 			</div>
 
@@ -71,8 +77,8 @@ class MonthPipe implements PipeTransform {
 					<li *ngFor="#d of prev.days" class="prev">
 						<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: prev.month+'%'+d+'%'+prev.year}]">{{d}}</a>
 					</li>
-					<li *ngFor="#d of days">
-						<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: month+'%'+d+'%'+year}]">{{d}}</a>
+					<li *ngFor="#d of now.days">
+						<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: now.month+'%'+d+'%'+now.year}]">{{d}}</a>
 					</li>
 					<li *ngFor="#d of next.days" class="prev">
 						<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: next.month+'%'+d+'%'+next.year}]">{{d}}</a>
@@ -87,29 +93,25 @@ class MonthPipe implements PipeTransform {
 class Calendar implements OnInit {
 	@Input() id: string;
 	week: number[] = range(0, 6);
-	month: number;
-	year: number;
 	startDay: number;
-	prev: {};
+	prev: Days;
 	days: number[];
-	next: {}; 
+	next: Days; 
+	now: Days;
 
 	prevMonth(): void {
-		this.build(this.year, --this.month);
+		this.build(this.now.year, --this.now.month);
 	}
 
 	nextMonth(): void {
-		this.build(this.year, ++this.month);
+		this.build(this.now.year, ++this.now.month);
 	}
 
 	build(year, month): void {
 		let date = new Date(year, month);
-
-		this.month = date.getMonth();
-		this.year = date.getFullYear();
 		this.startDay = (new Date(date.getFullYear(), date.getMonth(), 1)).getDay();
 		let days = (new Date(date.getFullYear(), (date.getMonth() + 1), 0)).getDate();
-
+		
 		let prev = new Date(date.getFullYear(), date.getMonth(), 0);
 		this.prev = {
 			year: prev.getFullYear(),
@@ -117,7 +119,11 @@ class Calendar implements OnInit {
 			days: (range((prev.getDate() - this.startDay + 1), prev.getDate()))
 		}
 
-		this.days = range(1, days);
+		this.now = {
+			month: date.getMonth(),
+			year: date.getFullYear(),
+			days: range(1, days)
+		}
 
 		let next = new Date(date.getFullYear(), (date.getMonth() + 1), 1);
 		this.next = {
