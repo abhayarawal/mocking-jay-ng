@@ -727,55 +727,52 @@ $top__height: 50px;
 	.month__days
 	{
 		ul
-		{
-			.week
-			{	
-				li
+		{	
+			li
+			{
+				position: relative;
+				
+				&.prev
 				{
-					position: relative;
-					
-					&.prev
-					{
-						a
-						{
-							color: #94AABB;
-							font-weight: 400;
-						}
-					}
-					
-					&.event
-					{
-						&:after
-						{
-							display: block;
-							content: '';
-							width: 4px;
-							height: 4px;
-							background: rgba(255, 255, 255, 0.3);
-							@include border-radius(100%);
-							position: absolute;
-							left: 50%;
-							margin-left: -2px;
-							bottom: 5px;
-							z-index: -1;
-						}
-					}
-
 					a
 					{
+						color: #94AABB;
+						font-weight: 400;
+					}
+				}
+				
+				&.event
+				{
+					&:after
+					{
 						display: block;
+						content: '';
+						width: 4px;
+						height: 4px;
+						background: rgba(255, 255, 255, 0.3);
 						@include border-radius(100%);
-						font-weight: 500;
-						font-size: 14px;
+						position: absolute;
+						left: 50%;
+						margin-left: -2px;
+						bottom: 5px;
+						z-index: -1;
+					}
+				}
 
-						&.router-link-active
-						{
-							background: rgba(255, 255, 255, 0.9);
-							@include bg-top-bottom(#ffe6a8, #ffbe63);
-							color: #333A4C;
-							font-size: 15px;
-							@include transform(scale(0.9));
-						}
+				a
+				{
+					display: block;
+					@include border-radius(100%);
+					font-weight: 500;
+					font-size: 14px;
+
+					&.router-link-active
+					{
+						background: rgba(255, 255, 255, 0.9);
+						@include bg-top-bottom(#ffe6a8, #ffbe63);
+						color: #333A4C;
+						font-size: 15px;
+						@include transform(scale(0.9));
 					}
 				}
 			}

@@ -4,7 +4,7 @@ import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGro
 
 import {User, UserType} from '../interfaces/interface';
 
-var range = (x, y) : Number[] => {
+var range = (x, y) : number[] => {
 	let temp = [];
 	for (let j = x; j <= y; j++) { temp.push(j); }
 	return temp;
@@ -68,11 +68,15 @@ class MonthPipe implements PipeTransform {
 
 			<div class="month__days" *ngIf="id">
 				<ul class="cal__days">
-					<div *ngFor="#wk of weeks" class="week">
-						<li *ngFor="#w of wk">
-							<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: month+'%'+w+'%'+year}]">{{ w }}</a>
-						</li>
-					</div>
+					<li *ngFor="#d of prev.days" class="prev">
+						<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: prev.month+'%'+d+'%'+prev.year}]">{{d}}</a>
+					</li>
+					<li *ngFor="#d of days">
+						<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: month+'%'+d+'%'+year}]">{{d}}</a>
+					</li>
+					<li *ngFor="#d of next.days" class="prev">
+						<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: next.month+'%'+d+'%'+next.year}]">{{d}}</a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -82,12 +86,13 @@ class MonthPipe implements PipeTransform {
 })
 class Calendar implements OnInit {
 	@Input() id: string;
-	week: Number[] = range(0, 6);
+	week: number[] = range(0, 6);
 	month: number;
 	year: number;
 	startDay: number;
-	days: number; 
-	weeks: any;
+	prev: {};
+	days: number[];
+	next: {}; 
 
 	prevMonth(): void {
 		this.build(this.year, --this.month);
@@ -103,18 +108,22 @@ class Calendar implements OnInit {
 		this.month = date.getMonth();
 		this.year = date.getFullYear();
 		this.startDay = (new Date(date.getFullYear(), date.getMonth(), 1)).getDay();
-		this.days = (new Date(date.getFullYear(), (date.getMonth() + 1), 0)).getDate();
+		let days = (new Date(date.getFullYear(), (date.getMonth() + 1), 0)).getDate();
 
-		let prevDays = (new Date(date.getFullYear(), date.getMonth(), 0)).getDate(),
-				temp = range((prevDays - this.startDay + 1), prevDays).concat(range(1, this.days));
-
-		if ((temp.length % 7) !== 0) {
-			temp = temp.concat(range(1, (7 - (this.days + this.startDay) % 7)));
+		let prev = new Date(date.getFullYear(), date.getMonth(), 0);
+		this.prev = {
+			year: prev.getFullYear(),
+			month: prev.getMonth(),
+			days: (range((prev.getDate() - this.startDay + 1), prev.getDate()))
 		}
 
-		this.weeks = [];
-		while (temp.length > 0) {
-			this.weeks.push(temp.splice(0, 7));
+		this.days = range(1, days);
+
+		let next = new Date(date.getFullYear(), (date.getMonth() + 1), 1);
+		this.next = {
+			year: next.getFullYear(),
+			month: next.getMonth(),
+			days: (range(1, (7 - (days + this.startDay) % 7)))
 		}
 	}
 

@@ -449,12 +449,12 @@ html, body {
   text-transform: uppercase;
   font-size: 10px; }
 
-.calendar .month__days ul .week li {
+.calendar .month__days ul li {
   position: relative; }
-  .calendar .month__days ul .week li.prev a {
+  .calendar .month__days ul li.prev a {
     color: #94AABB;
     font-weight: 400; }
-  .calendar .month__days ul .week li.event:after {
+  .calendar .month__days ul li.event:after {
     display: block;
     content: '';
     width: 4px;
@@ -470,7 +470,7 @@ html, body {
     margin-left: -2px;
     bottom: 5px;
     z-index: -1; }
-  .calendar .month__days ul .week li a {
+  .calendar .month__days ul li a {
     display: block;
     -webkit-border-radius: 100%;
     -moz-border-radius: 100%;
@@ -479,7 +479,7 @@ html, body {
     border-radius: 100%;
     font-weight: 500;
     font-size: 14px; }
-    .calendar .month__days ul .week li a.router-link-active {
+    .calendar .month__days ul li a.router-link-active {
       background: rgba(255, 255, 255, 0.9);
       background-repeat: repeat-x;
       background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffbe63), to(#ffe6a8));
