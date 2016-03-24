@@ -63,6 +63,20 @@ class MonthPipe implements PipeTransform {
 }
 
 @Component({
+	selector: 'cal-day',
+	template: `
+		<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: month+'%'+day+'%'+year}]">{{day}}</a>
+	`,
+	directives: [RouterLink]
+})
+class CalendarDay {
+	@Input() id: string;
+	@Input() year: any;
+	@Input() month: any;
+	@Input() day: any;
+}
+
+@Component({
 	selector: 'calendar',
 	template: `
 		<div class="calendar">
@@ -81,20 +95,20 @@ class MonthPipe implements PipeTransform {
 			<div class="month__days" *ngIf="id">
 				<ul class="cal__days">
 					<li *ngFor="#d of prev.days" class="prev">
-						<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: prev.month+'%'+d+'%'+prev.year}]">{{d}}</a>
+						<cal-day [id]="id" [year]="prev.year" [month]="prev.month" [day]="d"></cal-day>
 					</li>
 					<li *ngFor="#d of now.days">
-						<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: now.month+'%'+d+'%'+now.year}]">{{d}}</a>
+						<cal-day [id]="id" [year]="now.year" [month]="now.month" [day]="d"></cal-day>
 					</li>
 					<li *ngFor="#d of next.days" class="prev">
-						<a [routerLink]="['/CalendarViewport', 'DaySegment', {id: id, day: next.month+'%'+d+'%'+next.year}]">{{d}}</a>
+						<cal-day [id]="id" [year]="next.year" [month]="next.month" [day]="d"></cal-day>
 					</li>
 				</ul>
 			</div>
 		</div>
 	`,
 	pipes: [MonthPipe, WeekPipe],
-	directives: [RouterLink]
+	directives: [CalendarDay]
 })
 class Calendar implements OnInit {
 	@Input() id: string;
