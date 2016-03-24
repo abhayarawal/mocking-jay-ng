@@ -1,8 +1,6 @@
 import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector, Pipe, PipeTransform} from "angular2/core";
 import {RouteConfig, RouterOutlet, RouterLink, Router, Location, RouteParams} from 'angular2/router';
 
-import {User, UserType} from '../interfaces/interface';
-
 var range = (x, y): number[] => {
 	let temp = [];
 	for (let j = x; j <= y; j++) { temp.push(j); }
@@ -96,7 +94,6 @@ class CalendarDay { }
 export class Calendar implements OnInit {
 	@Input() id: string;
 	week: number[] = range(0, 6);
-	days: number[];
 	startDay: number;
 	prev: Days;
 	next: Days;
