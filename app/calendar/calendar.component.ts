@@ -4,6 +4,12 @@ import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGro
 
 import {User, UserType} from '../interfaces/interface';
 
+interface Day {
+	year: number,
+	month: number,
+	day: number
+}
+
 interface Days {
 	year: number,
 	month: number,
@@ -111,7 +117,7 @@ class Calendar implements OnInit {
 		let date = new Date(year, month);
 		this.startDay = (new Date(date.getFullYear(), date.getMonth(), 1)).getDay();
 		let days = (new Date(date.getFullYear(), (date.getMonth() + 1), 0)).getDate();
-		
+
 		let prev = new Date(date.getFullYear(), date.getMonth(), 0);
 		this.prev = {
 			year: prev.getFullYear(),
@@ -148,7 +154,7 @@ class Calendar implements OnInit {
 				<section>
 					<ul>
 						<li>
-							<a href=""><span class="lnr lnr-star"></span> Favorite</a>
+							<h4>{{ today }}</h4>
 						</li>
 					</ul>
 				</section>
@@ -165,7 +171,21 @@ class Calendar implements OnInit {
 	`,
 	directives: []
 })
-class ProfileContext {
+class ProfileContext implements OnInit {
+	@Input() day: String = '';
+
+	ngOnInit() {
+	}
+
+	get today() {
+		let today = this.day.split("%");
+		if (today.length === 3) {
+			let date = new Date(parseInt(today[2]), parseInt(today[0]), parseInt(today[1]));
+			return `${date.toString().match(/([\w]+\s){1,4}/i)[0].trim()}`;
+		} else {
+			return "date not valid";
+		}
+	}
 }
 
 
@@ -189,9 +209,7 @@ class None {}
 @Component({
 	selector: 'day-segment',
 	template: `
-		<profile-context></profile-context>
-		<h2>Day segment</h2>
-		<h2>{{day}}</h2>
+		<profile-context [day]="day"></profile-context>
 	`,
 	directives: [ProfileContext]
 })
