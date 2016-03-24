@@ -1,0 +1,784 @@
+@font-face {
+  font-family: "proxima";
+  src: url("https://cdn.shopify.com/s/files/1/0521/5917/files/ProximaNova-Light.otf?14020683400156842665") format("opentype");
+	font-weight: 300;
+	font-style: normal;
+  }
+
+@font-face {
+  font-family: "proxima";
+  src: url("https://cdn.shopify.com/s/files/1/0521/5917/files/ProximaNova-LightItalic.otf?14020683400156842665") format("opentype");
+	font-weight: 300;
+	font-style: italic;
+  }
+
+@font-face {
+  font-family: "proxima";
+  src: url("https://cdn.shopify.com/s/files/1/0521/5917/files/ProximaNova-Regular.otf?14020683400156842665") format("opentype");
+	font-weight: 400;
+	font-style: normal;
+  }
+
+@font-face {
+  font-family: "proxima";
+  src: url("https://cdn.shopify.com/s/files/1/0521/5917/files/ProximaNova-RegItalic.otf?14020683400156842665") format("opentype");
+	font-weight: 400;
+	font-style: italic;
+  }
+
+@font-face {
+  font-family: "proxima";
+  src: url("https://cdn.shopify.com/s/files/1/0521/5917/files/ProximaNova-Semibold.otf?14020683400156842665") format("opentype");
+	font-weight: 500;
+	font-style: normal;
+  }
+
+/* css foundation */
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+body {
+    margin: 0;
+    font: 16px/1 sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+		text-rendering: optimizeLegibility;
+}
+h1,
+h2,
+h3,
+h4,
+p,
+blockquote,
+figure,
+ol,
+ul {
+    margin: 0;
+    padding: 0;
+}
+main,
+li {
+    display: block;
+}
+h1,
+h2,
+h3,
+h4 {
+    font-size: inherit;
+}
+strong {
+    font-weight: bold;
+}
+a,
+button {
+    color: inherit;
+}
+a {
+    text-decoration: none;
+}
+button {
+    overflow: visible;
+    border: 0;
+    font: inherit;
+    -webkit-font-smoothing: inherit;
+    letter-spacing: inherit;
+    background: none;
+    cursor: pointer;
+}
+::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+:focus {
+    outline: 0;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    border: 0;
+}
+
+/* grid system */
+$wrapper: 100%;
+$gutter: 2.5rem;
+
+@mixin row($inside: false) {
+	
+	@if($inside == true)
+	{
+		margin-left: -$gutter/2;
+		margin-right: -$gutter/2;
+	}
+	@else
+	{
+		width: 100%;
+		max-width: $wrapper;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	
+	&:before, &:after
+	{
+		content: '';
+		display: table;
+	}
+	
+	&:after
+	{
+		clear: both;
+	}
+}
+
+@mixin col($width: 1, $padding: true)
+{
+	float: left;
+  width: percentage($width);
+  
+	@if($padding == true) 
+	{
+    padding-left: $gutter/2;
+    padding-right: $gutter/2;
+  }
+}
+
+@mixin push($width: 0) 
+{
+  position: relative;
+  left: percentage($width);
+}
+
+@mixin pull($width: 0)
+{
+  position: relative;
+  right: percentage($width);
+}
+
+/* Easy breakpoint mixin */
+$brk__sm: 500px;
+$brk__md: 768px;
+$brk__lg: 992px;
+$brk__xlg: 1200px;
+
+@mixin mq($value) {
+  @media only screen and (min-width: $value) {
+    @content;
+  }
+}
+
+
+/* hard reset */
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.row
+{
+	@include row(true);
+}
+
+/* layout */
+html, body
+{
+	display: block;
+	position: relative;
+}
+
+@mixin opacity($opacity)
+{
+	opacity: $opacity;
+	filter: alpha(opacity=($opacity * 100));
+}
+
+@mixin font-size($size) {
+	font-size:$size;
+	font-size: ($size / 16px) * 1rem;
+}
+
+@mixin render($property, $args...) {
+  -webkit-#{$property}: $args;
+  -moz-#{$property}: $args;
+  -o-#{$property}: $args;
+  -ms-#{$property}: $args;
+  #{$property}: $args;
+}
+
+@mixin transition($args...) {
+  @include render(transition, $args);
+}
+
+@mixin border-radius($args...) {
+	@include render(border-radius, $args);
+}
+
+@mixin placeholder($color) {
+	::-webkit-input-placeholder {
+   color: $color;
+	}
+	:-moz-placeholder { /* Firefox 18- */
+		 color: $color;  
+	}
+	::-moz-placeholder {  /* Firefox 19+ */
+		 color: $color;  
+	}
+	:-ms-input-placeholder {  
+		 color: $color;  
+	}
+}
+
+@mixin transform($args...) {
+	@include render(transform, $args);
+}
+
+@mixin box-shadow( $h: 10px , $v: 10px , $b: 0px , $s: 0px , $c: #000000 )
+{
+	-webkit-box-shadow: $h $v $b $s $c;
+	-moz-box-shadow: $h $v $b $s $c;
+	box-shadow: $h $v $b $s $c;
+ }
+
+@mixin animate($name, $duration, $fn, $delay: 0s) {
+	@include render(animation-name, $name);
+	@include render(animation-duration, $duration);
+	@include render(animation-timing-function, $fn);
+	@include render(animation-delay, $delay);
+}
+
+@mixin bg-left-right($lcolor, $rcolor) {
+	background: $lcolor;
+	background-repeat: repeat-y;
+  background: -webkit-gradient(linear, left top, right top, from($rcolor), to($lcolor));
+  background: -webkit-linear-gradient(left, $lcolor, $rcolor);
+  background: -moz-linear-gradient(left, $lcolor, $rcolor);
+  background: -ms-linear-gradient(left, $lcolor, $rcolor);
+  background: -o-linear-gradient(left, $lcolor, $rcolor);
+}
+
+@mixin bg-top-bottom($tcolor, $bcolor) {
+	background-repeat: repeat-x;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from($bcolor), to($tcolor));
+  background: -webkit-linear-gradient(top, $tcolor, $bcolor);
+  background: -moz-linear-gradient(top, $tcolor, $bcolor);
+  background: -ms-linear-gradient(top, $tcolor, $bcolor);
+  background: -o-linear-gradient(top, $tcolor, $bcolor);
+}
+
+/* styling */
+$heading-font: 'proxima', sans-serif;
+$base-font: 'proxima', sans-serif;
+$font-size: 14px;
+
+body
+{
+	font: 100%/1.6 $base-font; 
+  margin: 0 auto; 
+  text-align: left; 
+	background: #fff;
+	font-weight: 400;
+	@include font-size($font-size);
+	color: #555555;
+}
+
+strong, b
+{
+	font-weight: 500;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+	font-family: $heading-font;
+	font-weight: 300;
+}
+
+h1 {font-size: 3.125em;}
+h2 {font-size: 2.618em;}
+h3 {font-size: 1.931em;}
+h4 {font-size: 1.618em;}
+h5 {font-size: 1.194em;}
+h6 {font-size: 1em;}
+
+@media only screen and (min-width: 42em) {	
+  h1 {font-size: 3.125em;}
+	h2 {font-size: 2.618em;}
+	h3 {font-size: 1.931em;}
+	h4 {font-size: 1.618em;}
+	h5 {font-size: 1.194em;}
+	h6 {font-size: 1em;}
+}
+
+
+.container
+{
+	width: 100%;
+	display: block;
+	position: relative;
+}
+
+.row
+{
+	@include row();
+}
+
+
+// main layout
+
+html, body
+{
+	display: block;
+	position: relative;
+	height: 100%;
+	width: 100%;
+	background: #fff;
+}
+
+$top__height: 50px;
+
+%viewport
+{
+	display: block;
+	left: 0px;
+	top: $top__height;
+	position: absolute;
+	width: 100%;
+	height: calc(100% - #{$top__height});
+	z-index: 4;
+}
+
+.app__wrap
+{
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	
+	.app__top
+	{
+		left: 0px;
+		top: 0px;
+		width: 100%;
+		height: $top__height;
+		z-index: 5;
+		position: absolute;
+		display: block;
+	}
+
+	.viewport
+	{
+		@extend %viewport;
+	}
+}
+
+
+.profile__viewport
+{
+	@extend %viewport;
+	
+	$left__width: 275px;
+
+	.profile__nav
+	{
+		left: 0px;
+		top: 0px;
+		height: 100%;
+		width: $left__width;
+		position: absolute;
+		overflow-x: hidden;
+		overflow-y: auto;	
+	}
+
+	.profile__outlet
+	{
+		left: 275px;
+		top: 0px;
+		height: 100%;
+		width: calc(100% - #{$left__width});
+		position: absolute;
+		overflow-x: hidden;
+		overflow: auto;
+
+		.profile__context
+		{
+			position: absolute;
+			width: 100%;
+			left: 0px;
+			top: 0px;
+			background: #fff;
+			@include box-shadow(0, 1px, 3px, 0, rgba(0, 0, 0, 0.2));
+			z-index: 3;
+		}
+	}
+}
+
+
+// designs
+
+.app__top
+{
+	background: #fff;
+	padding: 8px 10px 0 10px;
+	
+	.top__left
+	{
+		@include col(1, false);
+		@include mq($brk__md) {
+			@include col(1/5, false);
+		}
+		@include mq($brk__lg) {
+			@include col(1.5/5, false);
+		}
+	}
+	
+	.top__search
+	{
+		@include col(2/3, false);
+		@include mq($brk__md) {
+			@include col(2/5, false);
+		}
+		@include mq($brk__lg) {
+			@include col(2/5, false);
+		}
+	}
+	
+	.top__right
+	{
+		@include col(1/3, false);
+		@include mq($brk__md) {
+			@include col(2/5, false);
+		}
+		@include mq($brk__lg) {
+			@include col(1.5/5, false);
+		}
+	}
+	
+	.top__search
+	{
+		.search__box
+		{
+			@include border-radius(40px);
+			border: 1px solid rgba(0, 0, 0, .15);
+			max-width: 300px;
+			margin: 0 auto;
+			position: relative;
+			
+			@include mq($brk__lg) {
+				max-width: 400px;
+			}
+			
+			span
+			{
+				width: 26px;
+				line-height: 26px;
+				display: block;
+				position: absolute;
+				text-align: center;
+				font-size: 16px;
+				top: 2px;
+				left: 2px;
+				@include border-radius(100%);
+				color: rgb(148, 148, 148);
+			}
+			
+			input
+			{
+				border: none;
+				background: none;
+				height: 30px;
+				font-size: 14px;
+				padding: 0 35px 0 35px;
+				display: block;
+				width: 100%;
+			}
+		}
+	}
+	
+	.top__right
+	{
+		.main__nav
+		{
+			text-align: right;
+			
+			& > li
+			{
+				display: inline-block;
+				vertical-align: middle;
+				
+				&:not(:last-child)
+				{
+					padding-right: 10px;
+					
+					a
+					{
+						font-size: 20px;
+					}
+				}
+				
+				&:last-child
+				{
+					margin-left: 20px;
+
+					span, img
+					{
+						display: inline-block;
+						vertical-align: middle;
+					}
+
+					span
+					{
+						margin-right: 5px;
+					}
+
+					img
+					{
+						width: 36px;
+						@include border-radius(100%);
+						position: relative;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+.profile__viewport
+{
+	.profile__nav
+	{
+		background: #333A4C;
+		color: #A2B4BC;
+		padding: 30px 17px;
+
+		.profile__card
+		{
+			text-align: center;
+		
+			img
+			{
+				width: 50%;
+				display: inline-block;
+				@include border-radius(100%);
+			}
+			
+			h3, h4, h5
+			{
+				display: block;
+				font-weight: 300;
+			}
+			
+			ul
+			{
+				display: block;
+				margin-top: 15px;
+				
+				li
+				{
+					&:not(:first-child) {
+						margin-top: 5px;
+					}
+					
+					a
+					{
+						display: block;
+						line-height: 25px;
+						border: 1px solid darken(#A2B4BC, 15%);
+						@include border-radius(40px);
+					}
+				}
+			}
+		}
+	}
+
+	.profile__outlet
+	{
+		border-top: 1px solid #ededed;
+		background: #f9f9f9;
+		-webkit-transform: translateZ(0);
+		-webkit-backface-visibility: hidden;
+
+		.profile__context
+		{
+			.row
+			{
+				section
+				{
+					@include col(1, false);
+					@include mq($brk__md) {
+						@include col(1/2, false);
+					}
+				}
+
+				$ctx_lh: 25px;
+
+				section:first-child
+				{
+					padding: 8px 10px;
+
+					ul
+					{
+						li
+						{
+							display: inline-block;
+
+							a
+							{
+								display: block;
+								line-height: $ctx_lh;
+							}
+						}
+					}
+				}
+				
+				section:last-child
+				{
+					text-align: right;
+					padding: 8px 10px;
+					
+					ul
+					{
+						li
+						{
+							display: inline-block;
+							
+							a, button
+							{
+								border: 1px solid rgba(0, 0, 0, .15);
+								line-height: $ctx_lh;
+								display: block;
+								@include border-radius(40px);
+								padding: 0 15px;
+								
+								&.lnr
+								{
+									font-size: 12px;
+									width: 27px;
+									text-align: center;
+									padding: 0;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.calendar
+{	
+	.month__select
+	{
+		text-align: center;
+		margin-top: 50px;
+		
+		h3, h4, button
+		{
+			display: inline-block;
+			vertical-align: middle;
+		}
+		
+		h3, h4
+		{
+			text-transform: uppercase;
+			font-weight: 300;
+			font-size: 17px;
+			padding: 0 10px;
+		}
+		
+		button
+		{
+			border: 1px solid darken(#A2B4BC, 10%);
+			@include border-radius(100%);
+			height: 27px;
+			width: 27px;
+			text-align: center;
+		}
+	}
+	
+	.cal__days
+	{
+		font-size: 0;
+		
+		li
+		{
+			font-size: 12px;
+			display: inline-block;
+			width: percentage(1/7);
+			text-align: center;
+			
+			@include mq($brk__md) {
+				line-height: 36px;
+			}
+		}
+	}
+	
+	.month__week
+	{
+		margin-top: 10px;
+		color: #94AABB;
+		text-transform: uppercase;
+		font-size: 10px;
+	}
+	
+	.month__days
+	{
+		ul
+		{
+			.week
+			{	
+				li
+				{
+					position: relative;
+					
+					&.prev
+					{
+						a
+						{
+							color: #94AABB;
+							font-weight: 400;
+						}
+					}
+					
+					&.event
+					{
+						&:after
+						{
+							display: block;
+							content: '';
+							width: 4px;
+							height: 4px;
+							background: rgba(255, 255, 255, 0.3);
+							@include border-radius(100%);
+							position: absolute;
+							left: 50%;
+							margin-left: -2px;
+							bottom: 5px;
+							z-index: -1;
+						}
+					}
+
+					a
+					{
+						display: block;
+						@include border-radius(100%);
+						font-weight: 500;
+						font-size: 14px;
+
+						&.selected
+						{
+							background: rgba(255, 255, 255, 0.9);
+							@include bg-top-bottom(#ffe6a8, #ffbe63);
+							color: #333A4C;
+							font-size: 17px;
+							@include transform(scale(0.8));
+						}
+					}
+				}
+			}
+		}
+	}
+}
