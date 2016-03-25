@@ -118,7 +118,7 @@ html, body {
 
 /* styling */
 body {
-  font: 100%/1.6 "proxima", sans-serif;
+  font: 100%/1.6 "proxima", arial, sans-serif;
   margin: 0 auto;
   text-align: left;
   background: #fff;
@@ -131,7 +131,7 @@ strong, b {
   font-weight: 500; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "proxima", sans-serif;
+  font-family: "proxima", arial, sans-serif;
   font-weight: 300; }
 
 h1 {
@@ -496,8 +496,8 @@ html, body {
       background: -o-linear-gradient(top, #ffe6a8, #ffbe63);
       color: #333A4C;
       font-size: 15px;
-      -webkit-transform: scale(0.9);
-      -moz-transform: scale(0.9);
-      -o-transform: scale(0.9);
-      -ms-transform: scale(0.9);
-      transform: scale(0.9); }
+      -webkit-transform: scale(0.85);
+      -moz-transform: scale(0.85);
+      -o-transform: scale(0.85);
+      -ms-transform: scale(0.85);
+      transform: scale(0.85); }

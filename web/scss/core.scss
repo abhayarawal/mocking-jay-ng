@@ -268,8 +268,8 @@ html, body
 }
 
 /* styling */
-$heading-font: 'proxima', sans-serif;
-$base-font: 'proxima', sans-serif;
+$heading-font: 'proxima', arial, sans-serif;
+$base-font: 'proxima', arial, sans-serif;
 $font-size: 14px;
 
 body
@@ -785,7 +785,7 @@ $top__height: 50px;
 						@include bg-top-bottom(#ffe6a8, #ffbe63);
 						color: #333A4C;
 						font-size: 15px;
-						@include transform(scale(0.9));
+						@include transform(scale(0.85));
 					}
 				}
 			}

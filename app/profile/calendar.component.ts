@@ -1,6 +1,12 @@
 import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector, Pipe, PipeTransform} from "angular2/core";
 import {RouteConfig, RouterOutlet, RouterLink, Router, Location, RouteParams} from 'angular2/router';
 
+interface Days {
+	year: number,
+	month: number,
+	days: number[]
+}
+
 var range = (x, y): number[] => {
 	let temp = [];
 	for (let j = x; j <= y; j++) { temp.push(j); }

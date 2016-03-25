@@ -5,17 +5,6 @@ import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGro
 import {Calendar} from './calendar.component';
 import {User, UserType} from '../interfaces/interface';
 
-interface Day {
-	year: number,
-	month: number,
-	day: number
-}
-
-interface Days {
-	year: number,
-	month: number,
-	days: number[]
-}
 
 @Component({
 	selector: 'profile-context',
