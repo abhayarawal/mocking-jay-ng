@@ -2,6 +2,7 @@ import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector, Pi
 import {RouteConfig, RouterOutlet, RouterLink, Router, Location, RouteParams} from 'angular2/router';
 import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGroup, NgControl, FormBuilder, NgFormModel, ControlGroup, Validators} from 'angular2/common';
 
+import {LayoutHeader} from '../layouts/header.layout';
 import {Calendar} from './calendar.component';
 import {User, UserType} from '../interfaces/interface';
 
@@ -115,6 +116,7 @@ class ProfileNav implements OnInit {
 
 @Component({
 	template: `
+		<layout-header></layout-header>
 		<div class="profile__viewport">
 			<profile-nav [user]="user"></profile-nav>
 			<div class="profile__outlet">
@@ -122,7 +124,7 @@ class ProfileNav implements OnInit {
 			</div>
 		</div>
 	`,
-	directives: [RouterLink, RouterOutlet, ProfileNav]
+	directives: [RouterLink, RouterOutlet, ProfileNav, LayoutHeader]
 })
 @RouteConfig([
 	{ path: '/', name: 'None', component: None, useAsDefault: true },
