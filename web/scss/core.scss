@@ -792,3 +792,66 @@ $top__height: 50px;
 		}
 	}
 }
+
+
+%card
+{
+	background: #fff;
+	@include box-shadow(0, 1px, 4px, 0, rgba(0, 0, 0, .04));
+	border: 1px solid rgba(0, 0, 0, .09);
+	border-radius: 3px;
+	padding: 15px;
+}
+
+.auth
+{
+	width: 100%;
+	padding-top: 30px;
+
+	@include mq($brk__md) {
+		width: 300px;
+		height: 400px;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin-left: -150px;
+		margin-top: -200px;
+
+		@extend %card;
+	}
+
+	h2
+	{
+		text-transform: uppercase;
+		text-align: center;
+	}
+
+	.form__group
+	{
+		margin-top: 20px;
+
+		label
+		{
+			display: block;
+		}
+
+		input
+		{
+			display: block;
+			width: 100%;
+			height: 40px;
+			padding: 0 15px; 
+			font-size: 14px;
+		}
+
+		button
+		{
+			@include bg-top-bottom(#ffe6a8, #ffbe63);
+			line-height: 40px;
+			display: inline-block;
+			padding: 0 35px;
+			text-transform: uppercase;
+			@include border-radius(3px);
+		}
+	}
+}
