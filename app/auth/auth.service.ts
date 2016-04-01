@@ -37,7 +37,7 @@ export class AuthService {
     return authHeader;
   }
 
-	authenticate(username: string, password: string) {
+	authenticate({username, password}) {
 		let packet = JSON.stringify({
 			username: username,
 			password: password

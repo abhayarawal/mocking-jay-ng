@@ -900,7 +900,11 @@ textarea
   }
 }
 
-
+.ng-touched.ng-invalid
+{
+	box-shadow: 0 0 0 2px #F6C8BB !important;
+	border: 1px solid #f6a595 !important;
+}
 
 
 .auth

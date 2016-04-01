@@ -1,5 +1,6 @@
 import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector} from "angular2/core";
 import {RouteConfig, RouterOutlet, RouterLink, Router, RouteParams, Redirect} from 'angular2/router';
+import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGroup, NgControl, FormBuilder, NgFormModel, ControlGroup, Validators} from 'angular2/common';
 
 import {Http, Response, Headers} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
@@ -7,18 +8,33 @@ import 'rxjs/Rx';
 
 import {AuthService, Notification} from './auth.service';
 
+
+interface ValidationResult {
+	[key: string]: boolean;
+}
+
+class AuthValidator {
+	static isUsername(control: Control): ValidationResult {
+		let validation = control.value.trim().match(/^[a-z0-9-_\.]+$/i);
+		if (!validation) {
+			return { "isUsername": true };
+		}
+		return null;
+	}
+}
+
 @Component({
 	template: `
 		<div class="auth">
 			<h2>Log in</h2>
-			<form (ngSubmit)="auth()">
+			<form [ngFormModel]="authForm" (ngSubmit)="auth()">
 				<div class="form__group">
-					<label for="">Username:</label>
-					<input type="text" [(ngModel)]="username" id="" placeholder="tovelo" />
+					<label>Username:</label>
+					<input type="text" ngControl="username" placeholder="tovelo" />
 				</div>
 				<div class="form__group">
-					<label for="">Password:</label>
-					<input type="password" [(ngModel)]="password" id="" placeholder="dummy" />
+					<label>Password:</label>
+					<input type="password" ngControl="password" placeholder="dummy" />
 				</div>
 				<div class="form__group">
 					<button type="submit" class="button type__1">Login</button>
@@ -32,14 +48,30 @@ import {AuthService, Notification} from './auth.service';
 	providers: [AuthService]
 })
 export class AuthComponent implements OnInit {
-	username: string = '';
-	password: string = '';
+	username: Control;
+	password: Control;
+	authForm: ControlGroup;
 
 	notification: Notification;
 	observable: Observable<Notification>;
 
 	constructor(private router: Router,
-							private authService: AuthService) {}
+							private authService: AuthService,
+							private builder: FormBuilder) 
+	{
+		this.username = new Control('', Validators.compose([
+			Validators.required, Validators.minLength(4), AuthValidator.isUsername
+		]));
+
+		this.password = new Control('', Validators.compose([
+			Validators.required, Validators.minLength(3)
+		]));
+
+		this.authForm = builder.group({
+			'username': this.username,
+			'password': this.password
+		});
+	}
 
 	ngOnInit() {
 		this.observable = this.authService.notification$;
@@ -55,14 +87,11 @@ export class AuthComponent implements OnInit {
 	}
 
 	auth(): void {
-		let username = this.username.trim(),
-				password = this.password.trim();
-
-		if (username.length > 0 && password.length > 0) {
-			this.authService.authenticate(username, password);
+		if (this.authForm.valid) {
+			this.authService.authenticate(this.authForm.value);
 		} else {
 			this.notification = {
-				message: `hey! username and password not valid`,
+				message: `Username or password not valid`,
 				type: false
 			}
 		}
