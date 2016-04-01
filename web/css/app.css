@@ -203,7 +203,8 @@ html, body {
   left: 0px;
   top: 0px;
   width: 100%;
-  height: 100%; }
+  height: 100%;
+  background: #f9f9f9; }
   .app__wrap .app__top {
     left: 0px;
     top: 0px;
@@ -511,20 +512,96 @@ html, body {
   border-radius: 3px;
   padding: 15px; }
 
+input[type="text"], input[type="password"], input[type="telephone"], input[type="email"], textarea, select, input[type="email"], input[type="number"] {
+  background: #fff;
+  border: 1px solid #cdcfd2;
+  border-radius: 0;
+  outline: none !important;
+  padding: 0 14px;
+  width: 100%;
+  font-size: 13px;
+  color: #1b2432;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+  -ms-transition: all 0.1s ease;
+  transition: all 0.1s ease; }
+  input[type="text"]:focus, input[type="password"]:focus, input[type="telephone"]:focus, input[type="email"]:focus, textarea:focus, select:focus, input[type="email"]:focus, input[type="number"]:focus {
+    -webkit-box-shadow: 0px 0px 2px 0px #eee inset;
+    -moz-box-shadow: 0px 0px 2px 0px #eee inset;
+    box-shadow: 0px 0px 2px 0px #eee inset;
+    border-color: #c0c2c6; }
+  .no-boxshadow input[type="text"], .no-boxshadow input[type="password"], .no-boxshadow input[type="telephone"], .no-boxshadow input[type="email"], .no-boxshadow textarea, .no-boxshadow select, .no-boxshadow input[type="email"], .no-boxshadow input[type="number"] {
+    line-height: 45px; }
+
+input[type="text"], input[type="email"], input[type="number"], input[type="password"], input[type="telephone"], select {
+  height: 45px; }
+
+label {
+  margin-bottom: 6px;
+  display: block;
+  color: #a1a4aa;
+  text-transform: uppercase;
+  font-size: 12px; }
+
+textarea {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  height: 150px; }
+
+.button {
+  line-height: 32px;
+  padding: 0 20px;
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  font-size: 13px;
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+  -ms-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -o-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  text-align: center;
+  vertical-align: middle; }
+  .button:active {
+    -webkit-transform: scale(0.95);
+    -moz-transform: scale(0.95);
+    -o-transform: scale(0.95);
+    -ms-transform: scale(0.95);
+    transform: scale(0.95); }
+  .button.type__1 {
+    border: 2px solid #6a67ce;
+    color: #6a67ce; }
+  .button.type__2 {
+    border: 2px solid #ffbe63;
+    color: #ffbe63; }
+
 .auth {
   width: 100%;
   padding-top: 30px; }
   @media only screen and (min-width: 768px) {
     .auth {
-      width: 300px;
-      height: 400px;
+      width: 350px;
+      height: 450px;
       position: absolute;
       left: 50%;
       top: 50%;
-      margin-left: -150px;
-      margin-top: -200px; } }
+      margin-left: -175px;
+      margin-top: -225px; } }
   .auth h2 {
-    text-transform: uppercase;
     text-align: center; }
   .auth .form__group {
     margin-top: 20px; }
@@ -536,19 +613,3 @@ html, body {
       height: 40px;
       padding: 0 15px;
       font-size: 14px; }
-    .auth .form__group button {
-      background-repeat: repeat-x;
-      background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffbe63), to(#ffe6a8));
-      background: -webkit-linear-gradient(top, #ffe6a8, #ffbe63);
-      background: -moz-linear-gradient(top, #ffe6a8, #ffbe63);
-      background: -ms-linear-gradient(top, #ffe6a8, #ffbe63);
-      background: -o-linear-gradient(top, #ffe6a8, #ffbe63);
-      line-height: 40px;
-      display: inline-block;
-      padding: 0 35px;
-      text-transform: uppercase;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      -o-border-radius: 3px;
-      -ms-border-radius: 3px;
-      border-radius: 3px; }
