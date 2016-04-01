@@ -21,7 +21,7 @@ export class AuthService {
 	tokenId: string = 'mj-token-id';
 
 	constructor(private http: Http) {
-		this.notification$ = new Observable(observer => this.observer = observer).share();
+		this.notification$ = new Observable<Notification>(observer => this.observer = observer).share();
 	}
 
 	saveJwt(jwt: string): void {
@@ -34,21 +34,29 @@ export class AuthService {
 		localStorage.removeItem(this.tokenId);
   }
 
-  getAuthHeader(): any {
-		let jwt = localStorage.getItem(this.tokenId);
+  tokenExists(): [boolean, string] {
+  	let jwt = localStorage.getItem(this.tokenId);
 		if (typeof jwt !== 'undefined' && jwt !== null) {
+			return [true, jwt];
+		} else {
+			return [false, undefined];
+		}
+  }
+
+  getAuthHeader(): any {
+		let [jwtExists, jwt] = this.tokenExists();
+		if (jwtExists) {
 			let authHeader = new Headers();
-			if (jwt) {
-				authHeader.append('Content-Type', 'application/json');
-				authHeader.append('Authorization', 'Bearer ' + jwt);
-			}
+			authHeader.append('Content-Type', 'application/json');
+			authHeader.append('Authorization', `Bearer ${jwt}`);
+
 			return authHeader;
 		} else {
 			return false;
 		}
   }
 
-	authenticate({username, password}) {
+	authenticate({username, password}): void {
 		let packet = JSON.stringify({
 			username: username,
 			password: password
@@ -63,7 +71,7 @@ export class AuthService {
 		.map(res => res.json())
 		.subscribe(
 			data => {
-				if (data.success && data.token) {
+				if (data.success && ("token" in data)) {
 					this.saveJwt(data.token);
 				} else {
 					this.deleteJwt();
@@ -81,7 +89,7 @@ export class AuthService {
 				})
 			},
 			() => {
-				console.log(this.getAuthHeader());
+				// console.log('bearer token', this.getAuthHeader())
 			}
 		);
 	}

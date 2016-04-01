@@ -6,6 +6,8 @@ import {LayoutHeader} from '../layouts/header.layout';
 import {Calendar} from './calendar.component';
 import {User, UserType} from '../interfaces/interface';
 
+import {AuthService} from '../auth/auth.service';
+
 
 @Component({
 	selector: 'profile-context',
@@ -101,13 +103,23 @@ class DaySegment implements OnInit {
 			<calendar [id]="user.id"></calendar>
 		</div>
 	`,
-	directives: [Calendar, RouterLink]
+	directives: [Calendar, RouterLink],
+	providers: [AuthService]
 })
 class ProfileNav implements OnInit {
 	@Input() user: User;
 	day: String = '';
 
+	constructor(private authService: AuthService,
+							private router: Router) {}
+
 	ngOnInit() {
+		let [tokenExists, _] = this.authService.tokenExists();
+		if (!(tokenExists)) {
+			this.router.navigateByUrl('/');
+			return;
+		}
+
 		let day = new Date();
 		this.day = `${day.getMonth()}%${day.getDate()}%${day.getFullYear()}`;
 	}

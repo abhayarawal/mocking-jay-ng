@@ -60,7 +60,7 @@ export class AuthComponent implements OnInit {
 							private builder: FormBuilder) 
 	{
 		this.username = new Control('', Validators.compose([
-			Validators.required, Validators.minLength(4), AuthValidator.isUsername
+			Validators.required, Validators.minLength(3), AuthValidator.isUsername
 		]));
 
 		this.password = new Control('', Validators.compose([
@@ -74,6 +74,12 @@ export class AuthComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		let [tokenExists, _] = this.authService.tokenExists();
+		if (tokenExists) {
+			this.router.navigateByUrl('/calendar');
+			return;
+		}
+
 		this.observable = this.authService.notification$;
 		this.observable.subscribe(
 			data => {
