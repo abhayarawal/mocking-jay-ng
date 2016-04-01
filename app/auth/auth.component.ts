@@ -24,6 +24,20 @@ class AuthValidator {
 }
 
 @Component({
+	template: ``,
+	providers: [AuthService]
+})
+export class LogoutComponent implements OnInit {
+	constructor(private authService: AuthService,
+							private router: Router) {}
+
+	ngOnInit() {
+		this.authService.deleteJwt();
+		this.router.navigateByUrl('/');
+	}
+}
+
+@Component({
 	template: `
 		<div class="auth">
 			<h2>Log in</h2>
