@@ -16,7 +16,9 @@ export interface Notification {
 export class AuthService {
 	notification$: Observable<Notification>;
 	private observer: Observer<Notification>;
+
 	baseUri: string = 'http://localhost:5000/api';
+	tokenId: string = 'mj-token-id';
 
 	constructor(private http: Http) {
 		this.notification$ = new Observable(observer => this.observer = observer).share();
@@ -24,17 +26,26 @@ export class AuthService {
 
 	saveJwt(jwt: string): void {
     if(jwt) {
-      localStorage.setItem('mj-token-id', jwt);
+      localStorage.setItem(this.tokenId, jwt);
     }
   }
 
-  getAuthHeader() {
-		let jwt = localStorage.getItem('mj-token-id');
-    let authHeader = new Headers();
-    if (jwt) {
-      authHeader.append('Authorization', 'Bearer ' + jwt);
-    }
-    return authHeader;
+  deleteJwt(): void {
+		localStorage.removeItem(this.tokenId);
+  }
+
+  getAuthHeader(): any {
+		let jwt = localStorage.getItem(this.tokenId);
+		if (typeof jwt !== 'undefined' && jwt !== null) {
+			let authHeader = new Headers();
+			if (jwt) {
+				authHeader.append('Content-Type', 'application/json');
+				authHeader.append('Authorization', 'Bearer ' + jwt);
+			}
+			return authHeader;
+		} else {
+			return false;
+		}
   }
 
 	authenticate({username, password}) {
@@ -54,6 +65,8 @@ export class AuthService {
 			data => {
 				if (data.success && data.token) {
 					this.saveJwt(data.token);
+				} else {
+					this.deleteJwt();
 				}
 
 				this.observer.next({
@@ -67,7 +80,9 @@ export class AuthService {
 					type: false
 				})
 			},
-			() => {}
+			() => {
+				console.log(this.getAuthHeader());
+			}
 		);
 	}
 }
