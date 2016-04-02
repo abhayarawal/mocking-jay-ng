@@ -3,12 +3,17 @@ import {RouteConfig, RouterOutlet, RouterLink, Router, Location, RouteParams} fr
 import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGroup, NgControl, FormBuilder, NgFormModel, ControlGroup, Validators} from 'angular2/common';
 
 import {CalendarService, MonthPipe, WeekFullPipe} from './calendar.service';
+import {Time, Template, Segment, Status, Fragment} from '../interfaces/interface';
 
 var range = (x, y): number[] => {
 	let temp = [];
 	for (let j = x; j <= y; j++) { temp.push(j); }
 	return temp;
 }
+
+
+
+
 
 @Component({
 	selector: 'day-component',
