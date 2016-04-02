@@ -399,8 +399,7 @@ $top__height: 50px;
 		height: 100%;
 		width: calc(100% - #{$left__width});
 		position: absolute;
-		overflow-x: hidden;
-		overflow: auto;
+		overflow: hidden;
 
 		.profile__context
 		{
@@ -914,12 +913,12 @@ textarea
 
 	@include mq($brk__md) {
 		width: 350px;
-		height: 450px;
+		height: 600px;
 		position: absolute;
 		left: 50%;
 		top: 50%;
 		margin-left: -175px;
-		margin-top: -225px;
+		margin-top: -300px;
 
 		@extend %card;
 	}
@@ -945,6 +944,37 @@ textarea
 			height: 40px;
 			padding: 0 15px; 
 			font-size: 14px;
+		}
+	}
+}
+
+.segment__viewport
+{
+	position: absolute;
+	width: 100%;
+	height: calc(100% - 52px);
+	left: 0px;
+	top: 52px;
+
+	.day__component
+	{
+		@extend %card;
+		position: absolute;
+		left: 30px;
+		top: 30px;
+		width: 50%;
+		height: calc(100% - 60px);
+		overflow-x: hidden;
+		overflow-y: auto;
+
+		.day__date
+		{
+			font-weight: 400;
+
+			span
+			{
+				font-weight: 300;
+			}
 		}
 	}
 }

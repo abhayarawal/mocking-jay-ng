@@ -12,6 +12,7 @@ export interface Notification {
 	type: boolean
 }
 
+
 @Injectable()
 export class AuthService {
 	notification$: Observable<Notification>;

@@ -29,7 +29,7 @@ class AuthValidator {
 })
 export class LogoutComponent implements OnInit {
 	constructor(private authService: AuthService,
-							private router: Router) {}
+		private router: Router) { }
 
 	ngOnInit() {
 		this.authService.deleteJwt();
@@ -55,7 +55,7 @@ export class LogoutComponent implements OnInit {
 				</div>
 			</form>
 			<div *ngIf="notification">
-				{{ notification.message }}
+				{{ notification.message }} --- {{ notification.type }}
 			</div>
 		</div>
 	`,
@@ -70,9 +70,8 @@ export class AuthComponent implements OnInit {
 	observable: Observable<Notification>;
 
 	constructor(private router: Router,
-							private authService: AuthService,
-							private builder: FormBuilder) 
-	{
+		private authService: AuthService,
+		private builder: FormBuilder) {
 		this.username = new Control('', Validators.compose([
 			Validators.required, Validators.minLength(3), AuthValidator.isUsername
 		]));

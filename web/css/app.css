@@ -229,8 +229,7 @@ html, body {
   height: 100%;
   width: calc(100% - 275px);
   position: absolute;
-  overflow-x: hidden;
-  overflow: auto; }
+  overflow: hidden; }
   .profile__viewport .profile__outlet .profile__context {
     position: absolute;
     width: 100%;
@@ -503,7 +502,7 @@ html, body {
       -ms-transform: scale(0.85);
       transform: scale(0.85); }
 
-.auth {
+.auth, .segment__viewport .day__component {
   background: #fff;
   -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.04);
   -moz-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.04);
@@ -598,12 +597,12 @@ textarea {
   @media only screen and (min-width: 768px) {
     .auth {
       width: 350px;
-      height: 450px;
+      height: 600px;
       position: absolute;
       left: 50%;
       top: 50%;
       margin-left: -175px;
-      margin-top: -225px; } }
+      margin-top: -300px; } }
   .auth h2 {
     text-align: center; }
   .auth .form__group {
@@ -616,3 +615,22 @@ textarea {
       height: 40px;
       padding: 0 15px;
       font-size: 14px; }
+
+.segment__viewport {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 52px);
+  left: 0px;
+  top: 52px; }
+  .segment__viewport .day__component {
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    width: 50%;
+    height: calc(100% - 60px);
+    overflow-x: hidden;
+    overflow-y: auto; }
+    .segment__viewport .day__component .day__date {
+      font-weight: 400; }
+      .segment__viewport .day__component .day__date span {
+        font-weight: 300; }

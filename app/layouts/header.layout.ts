@@ -15,11 +15,12 @@ import {User, UserType} from '../interfaces/interface';
 			</li>
 			<li *ngIf="user">
 				{{user.fname}} {{user.lname}}
-				<img src="{{user.avatar}}" />
+				<a [routerLink]="['/LogoutComponent']"><img src="{{user.avatar}}" /></a>
 				<span class="lnr lnr-chevron-down"></span>
 			</li>
 		</ul>
-	`
+	`,
+	directives: [RouterLink]
 })
 class MainNav {
 	@Input() user: User;

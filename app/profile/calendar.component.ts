@@ -1,6 +1,8 @@
 import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector, Pipe, PipeTransform} from "angular2/core";
 import {RouteConfig, RouterOutlet, RouterLink, Router, Location, RouteParams} from 'angular2/router';
 
+import {WeekPipe, MonthPipe} from './calendar.service';
+ 
 interface Days {
 	year: number,
 	month: number,
@@ -14,49 +16,10 @@ var range = (x, y): number[] => {
 }
 
 
-@Pipe({
-	name: 'weekPipe'
-})
-class WeekPipe implements PipeTransform {
-	transform(value: string, args: string[]): any {
-		switch (parseInt(value)) {
-			case 0: return "Sun";
-			case 1: return "Mon";
-			case 2: return "Tue";
-			case 3: return "Wed";
-			case 4: return "Thu";
-			case 5: return "Fri";
-			case 6: return "Sat";
-		}
-	}
-}
-
-@Pipe({
-	name: 'monthPipe'
-})
-class MonthPipe implements PipeTransform {
-	transform(value: string, args: string[]): any {
-		switch (parseInt(value)) {
-			case 0: return "January";
-			case 1: return "February";
-			case 2: return "March";
-			case 3: return "April";
-			case 4: return "May";
-			case 5: return "June";
-			case 6: return "July";
-			case 7: return "August";
-			case 8: return "September";
-			case 9: return "October";
-			case 10: return "November";
-			case 11: return "December";
-		}
-	}
-}
-
 @Component({
 	selector: 'cal-day',
 	template: `
-		<a [routerLink]="['/ProfileViewport', 'DaySegment', {id: id, day: month+'%'+day+'%'+year}]">{{day}}</a>
+		<a [routerLink]="['/ProfileViewport', 'DaySegment', {id: id, month: month, day: day, year: year}]">{{day}}</a>
 	`,
 	directives: [RouterLink],
 	inputs: ['id', 'year', 'month', 'day']
