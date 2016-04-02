@@ -138,11 +138,11 @@ class ProfileNav implements OnInit {
 							private router: Router) {}
 
 	ngOnInit() {
-		let [tokenExists, _] = this.authService.tokenExists();
-		if (!(tokenExists)) {
-			this.router.navigateByUrl('/');
-			return;
-		}
+		// let [tokenExists, _] = this.authService.tokenExists();
+		// if (!(tokenExists)) {
+		// 	this.router.navigateByUrl('/');
+		// 	return;
+		// }
 
 		let day = new Date();
 		this.day = `${day.getDate()}`;

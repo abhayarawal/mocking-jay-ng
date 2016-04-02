@@ -31,7 +31,7 @@ export interface Template {
 
 export interface Segment {
 	id: string,
-	Template: Template,
+	template: Template,
 	start: Time,
 	end: Time,
 	repeat: boolean,

@@ -87,11 +87,11 @@ export class AuthComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		let [tokenExists, _] = this.authService.tokenExists();
-		if (tokenExists) {
-			this.router.navigateByUrl('/calendar');
-			return;
-		}
+		// let [tokenExists, _] = this.authService.tokenExists();
+		// if (tokenExists) {
+		// 	this.router.navigateByUrl('/calendar');
+		// 	return;
+		// }
 
 		this.observable = this.authService.notification$;
 		this.observable.subscribe(

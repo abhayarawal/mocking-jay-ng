@@ -11,8 +11,55 @@ var range = (x, y): number[] => {
 	return temp;
 }
 
+var genId = () => {
+	return Math.random().toString(36).substr(2, 9);
+};
 
 
+var template: Template = {
+	id: genId(),
+	name: "advising",
+	interval: 15,
+	allow_multiple: true,
+	color: "#885EC4",
+	require_accept: true
+};
+
+var segment: Segment = {
+	id: genId(),
+	template: template,
+	start: {
+		day: 2,
+		month: 3,
+		year: 2016,
+		hour: 10,
+		minute: 30
+	},
+	end: {
+		day: 2,
+		month: 3,
+		year: 2016,
+		hour: 14,
+		minute: 15
+	},
+	repeat: false,
+	location: "Empire State Rm205"
+};
+
+
+var genFragments = (segment: Segment) => {
+	let [t1, m1] = [10, 45],
+			[t2, m2] = [15, 30];
+
+	let d1 = new Date(2016, 3, 2, t1, m1),
+			d2 = new Date(2016, 3, 2, t2, m2);
+
+	let diff = (d2 - d1)/1000/60;	
+	console.log("diff", diff);
+
+}
+
+genFragments(segment);
 
 
 @Component({
