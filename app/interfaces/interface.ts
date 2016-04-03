@@ -53,7 +53,7 @@ export interface Fragment {
 	id: string,
 	start: Time,
 	end: Time,
-	status: Status,
+	status?: Status,
 	response?: string,
 	instance_id?: string
 }

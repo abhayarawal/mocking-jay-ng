@@ -335,7 +335,7 @@ html, body
 	background: #fff;
 }
 
-$top__height: 50px;
+$top__height: 40px;
 
 %viewport
 {
@@ -420,7 +420,7 @@ $top__height: 50px;
 .app__top
 {
 	background: #fff;
-	padding: 8px 10px 0 10px;
+	padding: 5px 10px 0 10px;
 	
 	.top__left
 	{
@@ -471,8 +471,8 @@ $top__height: 50px;
 			
 			span
 			{
-				width: 26px;
-				line-height: 26px;
+				width: 24px;
+				line-height: 24px;
 				display: block;
 				position: absolute;
 				text-align: center;
@@ -481,13 +481,14 @@ $top__height: 50px;
 				left: 2px;
 				@include border-radius(100%);
 				color: rgb(148, 148, 148);
+				// background: #ccc;
 			}
 			
 			input
 			{
 				border: none;
 				background: none;
-				height: 30px;
+				height: 28px;
 				font-size: 14px;
 				padding: 0 35px 0 35px;
 				display: block;
@@ -513,7 +514,7 @@ $top__height: 50px;
 					
 					a
 					{
-						font-size: 20px;
+						font-size: 17px;
 					}
 				}
 				
@@ -534,7 +535,7 @@ $top__height: 50px;
 
 					img
 					{
-						width: 36px;
+						width: 28px;
 						@include border-radius(100%);
 						position: relative;
 					}
@@ -651,6 +652,7 @@ $top__height: 50px;
 								display: block;
 								@include border-radius(40px);
 								padding: 0 15px;
+								cursor: pointer;
 								
 								&.lnr
 								{
@@ -960,10 +962,10 @@ textarea
 	{
 		@extend %card;
 		position: absolute;
-		left: 30px;
-		top: 30px;
-		width: 50%;
-		height: calc(100% - 60px);
+		left: 20px;
+		top: 20px;
+		width: 60%;
+		height: calc(100% - 40px);
 		overflow-x: hidden;
 		overflow-y: auto;
 
@@ -978,3 +980,130 @@ textarea
 		}
 	}
 }
+
+.segment__wrap
+{		
+	.segments
+	{
+		margin-top: 20px;
+		
+		.segment
+		{
+			position: relative;
+			padding-left: 60px;
+			color: #aaa;
+			
+			.segment__time
+			{
+				position: absolute;
+				height: 100%;
+				left: 0px;
+				top: -22px;
+				font-size: 13px;
+				text-transform: uppercase;
+				text-align: right;
+				width: 60px;
+				padding-right: 7px;
+				
+				ul
+				{
+					li
+					{
+						line-height: 45px;
+						display: block;
+					}
+				}
+			}
+			
+			.fragments
+			{
+				ul
+				{
+					li
+					{
+						display: block;
+						background: #f5f5f5;
+						line-height: 15px;
+						padding-left: 15px;
+						position: relative;
+						color: #fff;
+						border: none;
+						font-size: 15px;
+						border-bottom: 1px solid #e3e3e3;
+						
+						span
+						{
+							display: block;
+							
+							&.time
+							{
+								font-weight: 400;
+								font-size: 12px;
+								text-transform: uppercase;
+								margin-top: 7px;
+							}
+							
+							&.event__title
+							{
+								font-size: 14px;
+								font-weight: 500;
+							}
+						}
+						
+						@mixin segment {
+							background: #fff;
+							border-left: 4px solid;
+							height: 45px;
+							overflow: hidden;
+						}
+						
+						&.segment__01
+						{
+							@include segment;
+							border-color: rgba(136, 94, 196, 0.43);
+							border-bottom: 1px solid #f2f2f2;
+			
+						}
+						
+						&.segment__02
+						{
+							@include segment;
+							border-color: rgba(239, 91, 39, 0.31);
+							border-bottom: 1px solid #f2f2f2;
+						}
+						
+						&.active
+						{
+							z-index: 1;
+						}
+						
+						&.unavailable
+						{
+							background: #f5f5f5;
+						}
+						
+						&.scheduled
+						{
+							background: rgba(59, 185, 100, 0.73);
+							border: none;
+						}
+						
+						&.declined
+						{
+							background: rgba(255, 19, 43, 0.79);
+							border: none;
+						}
+						
+						&.in__progress
+						{
+							background: #ffb949;
+							border: none;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+

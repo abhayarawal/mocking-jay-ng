@@ -9,7 +9,7 @@ import {User, UserType} from '../interfaces/interface';
 	template: `
 		<ul class="main__nav" *ngIf="navs">
 			<li *ngFor="#nav of navs">
-				<a href='{{nav.location}}'>
+				<a [routerLink]="nav.location">
           <span class='lnr lnr-{{nav.lnr}}'></span>
         </a>
 			</li>
@@ -70,9 +70,9 @@ export class LayoutHeader {
 	}
 
 	navs: Object[] = [
-		{ location: '', lnr: 'calendar-full' },
-		{ location: '', lnr: 'layers' },
-		{ location: '', lnr: 'flag' },
-		{ location: '', lnr: 'cog' },
+		{ location: ['/ProfileViewport'], lnr: 'calendar-full' },
+		{ location: ['/ProfileViewport'], lnr: 'layers' },
+		{ location: ['/ProfileViewport'], lnr: 'flag' },
+		{ location: ['/ProfileViewport'], lnr: 'cog' },
 	]
 }

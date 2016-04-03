@@ -46,20 +46,166 @@ var segment: Segment = {
 	location: "Empire State Rm205"
 };
 
+var segment2: Segment = {
+	id: genId(),
+	template: template,
+	start: {
+		day: 2,
+		month: 3,
+		year: 2016,
+		hour: 17,
+		minute: 0
+	},
+	end: {
+		day: 2,
+		month: 3,
+		year: 2016,
+		hour: 20,
+		minute: 30
+	},
+	repeat: false,
+	location: "Empire State Rm205"
+};
 
-var genFragments = (segment: Segment) => {
-	let [t1, m1] = [10, 45],
-			[t2, m2] = [15, 30];
+var _segments = [
+	segment,
+	segment2
+]
 
-	let d1 = new Date(2016, 3, 2, t1, m1),
-			d2 = new Date(2016, 3, 2, t2, m2);
+
+var genFragments = (segment: Segment): Fragment[] => {
+	let [t1, m1] = [segment.start.hour, segment.start.minute],
+			[t2, m2] = [segment.end.hour, segment.end.minute];
+
+	let d1 = new Date(segment.start.year, segment.start.month, segment.start.day, t1, m1),
+			d2 = new Date(segment.start.year, segment.start.month, segment.start.day, t2, m2);
 
 	let diff = (d2 - d1)/1000/60;	
-	console.log("diff", diff);
+	let fragments = diff / segment.template.interval;
 
+	let increment = ([h, m], inc): [number, number] => {
+		if ((m+inc) === 60) {
+			return [h + 1, 0];
+		} else {
+			return [h, m + inc];
+		}
+	}
+
+	let ret: Fragment[] = [];
+	let now: [number, number] = [t1, m1];
+	for (let i = 0, l = fragments; i < l; i++) {
+		let tmp = now;
+		now = increment(now, 15);
+		ret.push({
+			id: genId(),
+			start: {
+				year: segment.start.year,
+				month: segment.start.month,
+				day: segment.start.day,
+				hour: tmp[0],
+				minute: tmp[1]
+			},
+			end: {
+				year: segment.start.year,
+				month: segment.start.month,
+				day: segment.start.day,
+				hour: now[0],
+				minute: now[1]
+			},
+		});
+	}
+
+	return ret;
 }
 
-genFragments(segment);
+@Component({
+	selector: 'segment-unavailable',
+	template: `
+		<div class="segment">
+			<div class="segment__time"></div>
+			<div class="fragments">
+				<ul>
+					<li *ngFor="#a of arr">&nbsp;</li>
+				</ul>
+			</div>
+		</div>
+	`
+})
+class SegmentUnavailable implements OnInit {
+	@Input() count: number = 5;
+	arr: number[] = [];
+
+	ngOnInit() {
+		this.arr = range(1, this.count);
+	}
+}
+
+
+@Component({
+	selector: 'fragment-component',
+	template: `
+		<li *ngIf="fragment" class="segment__02">
+			{{fragment.id}}
+		</li>
+	`
+})
+class FragmentComponent {
+	@Input() fragment;
+}
+
+
+@Component({
+	selector: 'segment-component',
+	template: `
+		<div class="segment" *ngIf="segment">
+			<div class="segment__time">
+				<ul>
+					<li *ngFor="#fragment of fragments">
+						{{fragment.start.hour}}:{{fragment.start.minute}}
+					</li>
+					<li>
+						{{fragments[fragments.length-1].end.hour}}:{{fragments[fragments.length-1].end.minute}}
+					</li>
+				</ul>
+			</div>
+			<div class="fragments">
+				<ul *ngIf="fragments">
+					<fragment-component *ngFor="#fragment of fragments" [fragment]="fragment"></fragment-component>
+				</ul>
+			</div>
+		</div>
+		<segment-unavailable [count]="5"></segment-unavailable>
+	`,
+	directives: [FragmentComponent, SegmentUnavailable]
+})
+class SegmentComponent implements OnInit {
+	@Input() segment: Segment;
+	fragments: Fragment[];
+
+	ngOnInit() {
+		this.fragments = genFragments(this.segment);
+	}
+}
+
+
+@Component({
+	selector: 'segment-wrap',
+	template: `
+		<div class="segment__wrap">
+			<div class="segments">
+				<segment-unavailable [count]="2"></segment-unavailable>
+				<segment-component *ngFor="#segment of segments" [segment]="segment"></segment-component>
+			</div>
+		</div>
+	`,
+	directives: [SegmentUnavailable, SegmentComponent]
+})
+class SegmentWrap {
+	segments = _segments;
+}
+
+
+
 
 
 @Component({
@@ -70,14 +216,10 @@ genFragments(segment);
 				<h3 class="day__date">{{month | monthPipe}} {{day}}, <span>{{year}}</span></h3>
 				<h4>{{ weekDay | weekFullPipe }}</h4>
 			</div>
-
-			<ul>
-				<li *ngFor="#a of arr">
-					{{a}}
-				</li>
-			</ul>
+			<segment-wrap></segment-wrap>
 		</div>
 	`,
+	directives: [SegmentWrap],
 	pipes: [MonthPipe, WeekFullPipe],
 	providers: [CalendarService]
 })
