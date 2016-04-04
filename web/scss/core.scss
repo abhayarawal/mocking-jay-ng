@@ -1356,3 +1356,297 @@ textarea
 		}
   }
 }
+
+.radius-radio
+{
+	width: 70px;
+	height: 25px;
+	display: inline-block;
+	vertical-align: middle;
+	@include border-radius(40px);
+	background: #fff;
+	position: relative;	
+	color: #aeaeae;
+	border: 1px solid #e7eaeb;
+	cursor: pointer;
+
+	&.on
+	{
+		background: #fff;
+
+		.radio-knob
+		{
+			left: 34px; 
+			background: rgb(90, 222, 211); 
+		}
+	}
+
+	.left, .right
+	{
+		font-size: 12px;
+		font-family: $heading-font;
+		position: absolute;
+		line-height: 25px;
+		display: block;
+		top: -2px;
+	}
+
+	.left
+	{
+		left: 6px;
+		padding: 0 5px;
+	}
+
+	.right
+	{
+		right: 6px;
+		padding: 0 5px;
+	}
+
+	.radio-knob
+	{
+		width: 32px;
+		height: 19px;
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		background: #ccc;
+		display: block;
+		z-index: 1;
+		@include border-radius(40px);
+		@include transition(all 0.2s ease);
+	}
+}
+
+.radius-select
+{
+	position: relative;
+
+	.selected-item
+	{
+		background: #fff;
+	  border: 1px solid #DBDDE3;
+	  outline: none !important;
+	  padding: 0 14px;
+	  font-size: 13px;
+	  color: #000;
+		@include border-radius(7px);
+		position: relative;
+		line-height: 40px;
+		width: 100%;
+		cursor: pointer;
+
+		&.focused
+	  {
+	    box-shadow: 0 0 0 2px #f2f2ef;
+	  }
+
+		span
+		{
+			position: absolute;
+			display: block;
+			line-height: 40px;
+			width: 40px;
+			right: 0px;
+			top: 0px;
+			font-size: 18px;
+			color: darken(#DBDDE3, 10%);
+			text-align: center;
+		}
+	}
+
+	ul
+	{
+		position: absolute;
+		z-index: 5;
+		width: calc(100% - 20px);
+		visibility: hidden;
+		@include opacity(0);
+		@include transition(all 0.2s ease);
+		top: -10px;
+		left: 10px;
+		border: 1px solid #d6d7db;
+		padding: 10px 0;
+		@include border-radius(7px);
+		background: lighten(#ECEDF1, 2%);
+
+		&.show
+		{
+			visibility: visible;
+			@include opacity(1);
+		}
+
+		li
+		{
+			display: block;
+			line-height: 27px;
+			padding: 0 25px;
+			cursor: pointer;
+			color: #898c94;
+
+			&.selected
+			{
+				font-weight: 700;
+			}
+
+			span
+			{
+				font-weight: 700;
+			}
+
+			&:hover
+			{
+				background: #898c94;
+				color: #fff;
+			}
+		}
+	}
+}
+
+.radius-input
+{
+	position: relative;
+	
+	ul
+	{
+		position: absolute;
+		z-index: 5;
+		width: calc(100% + 20px);
+		visibility: hidden;
+		@include opacity(0);
+		@include transition(all 0.2s ease);
+		top: 50px;
+		left: -10px;
+		border: 1px solid #ffdf5b;
+		padding: 10px 0;
+		@include border-radius(7px);
+		background: #fff1c5;
+
+		.arrow-up {
+			position: absolute;
+			left: 50%;
+			margin-left: -5px;
+			top: -10px;
+			width: 0; 
+			height: 0; 
+			border-left: 10px solid transparent;
+			border-right: 10px solid transparent;
+			z-index: 10;
+			border-bottom: 10px solid #ffdf5b;
+		}
+
+		&.show
+		{
+			visibility: visible;
+			@include opacity(1);
+		}
+
+		li
+		{
+			display: block;
+			line-height: 27px;
+			padding: 0 25px;
+			cursor: pointer;
+			color: #f09e28;
+
+			span
+			{
+				font-weight: 700;
+			}
+
+			&:hover
+			{
+				background: #ffca68;
+				color: #fff;
+			}
+		}
+	}
+}
+
+
+.radius-progress
+{
+	display: block;
+	width: 100%;
+	height: 40px;
+	@include border-radius(40px);
+	font-size: 0;
+	overflow: hidden;
+	position: relative;
+
+	.lnr
+	{
+		background: #FE5E3A;
+		line-height: 40px;
+		width: 40px;
+		@include border-radius(50%);
+		display: inline-block;
+		font-size: 18px;
+		text-align: center;
+		color: white;
+		vertical-align: middle;
+		position: relative;
+		z-index: 2;
+		@include transition(all 0.2s ease);
+	}
+
+	.progress
+	{
+		position: absolute;
+		background: #F4E3DC;
+		line-height: 40px;
+		height: 40px;
+		left: 20px;
+		top: 0px;
+		width: calc(100% - 20px);
+		z-index: 1;
+		font-size: $font-size;
+
+		.done
+		{
+			height: 40px;
+			display: block;
+			background: #F6C8BB;
+			border-top-right-radius: 40px;
+			border-bottom-right-radius: 40px;
+			@include transition(all 0.2s ease);
+		}
+
+		em
+		{
+			font-style: normal;
+			position: absolute;
+			line-height: 40px;
+			display: block;
+			width: 100%;
+			text-align: center;
+			z-index: 3;
+			left: 0px;
+			top: 0px;
+			color: #FD5F3B;
+			@include transition(all 0.2s ease);
+		}
+	}
+
+	&.complete
+	{
+		.lnr
+		{
+			background: #5ADED3;
+		}
+
+		.progress
+		{
+			.done
+			{
+				background: #C0F7F2;
+				width: 100%;
+			}
+
+			em
+			{
+				color: #4FC3B8;
+			}
+		}
+	}
+}

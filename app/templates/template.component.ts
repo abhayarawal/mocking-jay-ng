@@ -5,6 +5,8 @@ import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGro
 import {LayoutHeader} from '../layouts/header.layout';
 import {Template} from '../interfaces/interface';
 
+import {RadiusInputComponent, RadiusSelectComponent, RadiusRadioComponent} from '../form/form.component';
+
 
 @Component({
 	selector: 'mj-radio',
@@ -92,7 +94,7 @@ export class MjNumber {
 			</div>
 		</div>
 	`,
-	directives: [MjRadio, MjNumber]
+	directives: [MjRadio, MjNumber, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent]
 })
 class TemplateCreate implements OnInit {
 	template: Template;
