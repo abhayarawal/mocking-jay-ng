@@ -1,6 +1,8 @@
 import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector, Pipe, PipeTransform} from "angular2/core";
 import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle} from 'angular2/common';
 
+
+
 export interface SelectObject {
 	value: any,
 	text: string
@@ -54,7 +56,7 @@ export class RadiusRadioComponent {
 		<div class="radius-select" tabindex="100" (blur)="hide()">
 			<div class="selected-item" (click)="show=true" [ngClass]="{focused: show}">
 				{{ items[selected].text }}
-				<span class="icon-unfold"></span>
+				<span class="lnr lnr-chevron-down"></span>
 			</div>
 			<ul [ngClass]="{show: show}">
 				<li *ngFor="#item of items; #i = index" (click)="select(i)" [ngClass]="{selected: i===selected}">{{ item.text }}</li>

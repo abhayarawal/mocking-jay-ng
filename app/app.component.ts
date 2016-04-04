@@ -5,6 +5,7 @@ import {ProfileViewport} from './profile/profile.component';
 import {User, UserType} from './interfaces/interface';
 import {AuthComponent, LogoutComponent} from './auth/auth.component';
 import {TemplateViewport} from './templates/template.component';
+import {SegmentViewport} from './segments/segment.component';
 
 
 @Component({
@@ -20,7 +21,8 @@ import {TemplateViewport} from './templates/template.component';
 	{ path: '/', name: 'AuthComponent', component: AuthComponent, useAsDefault: true },
 	{ path: '/logout', name: 'LogoutComponent', component: LogoutComponent },
 	{ path: '/calendar/...', name: 'ProfileViewport', component: ProfileViewport },
-	{ path: '/templates/...', name: 'TemplateViewport', component: TemplateViewport }
+	{ path: '/templates/...', name: 'TemplateViewport', component: TemplateViewport },
+	{ path: '/segments/...', name: 'SegmentViewport', component: SegmentViewport }
 ])
 export class MountNode {
 }

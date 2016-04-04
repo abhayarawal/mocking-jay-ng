@@ -29,7 +29,7 @@ export class MjRadio {
 @Component({
 	selector: 'mj-number',
 	template: `
-		<div class="mj__number">
+		<div class="mj__number" [ngClass]="{invalid: error}">
 			<input type="text" [(ngModel)]="val" (ngModelChange)="emitValue()" />
 			<div class="button__wrap">
 				<button (click)="down()">
@@ -46,14 +46,18 @@ export class MjNumber {
 	@Input() val: number;
 	@Input() min: number;
 	@Input() max: number;
+	@Input() error: boolean = false;
 	@Output() update = new EventEmitter<string>();
 
 	emitValue() {
+		this.update.next(`${this.val}`);
 	}
 
 	down() {
-		if (!(this.val == this.min)) {
-			this.val -= 1;
+		if (!this.error) {
+			if (!(this.val == this.min)) {
+				this.val -= 1;
+			}
 		}
 	}
 
@@ -64,6 +68,32 @@ export class MjNumber {
 	}
 }
 
+interface ValidationResult {
+	[key: string]: boolean;
+}
+
+class TemplateValidator {
+	static shouldBeName(control: Control): ValidationResult {
+		let validation = control.value.trim().match(/^[a-z0-9\s]+$/i);
+		if (!validation) {
+			return { "shouldBeName": true };
+		}
+		return null;
+	}
+
+	static shouldBeInterval(control: Control): ValidationResult {
+		let validation = control.value.toString().trim().match(/^[\d]+$/i);
+		if (!validation) {
+			return { "shouldBeInterval": true };
+		} else {
+			let v = parseInt(control.value);
+			if (v < 10 || v > 60) {
+				return { "shouldBeInterval": true };
+			}
+		}
+		return null;
+	}
+}
 
 @Component({
 	template: `
@@ -72,23 +102,43 @@ export class MjNumber {
 				<span class="lnr lnr-pencil"></span>
 				Create a new template
 			</h4>
-			<div class="form__wrap">
-				<form>
+			<div class="form__wrap" *ngIf="template">
+				{{json}}
+				<form [ngFormModel]="templateForm" (submit)="submit()">
 					<div class="form__group">
 						<label for="">Name</label>
-						<input type="text" name="" id="" />
+						<input type="hidden" [(ngModel)]="template.name" ngControl="name" />
+						<radius-input [error]="nameDirty && !name.valid" (update)="nameUpdate($event)" [suggestions]="defaultNames"></radius-input>
+						<div class="form__desc">
+							Enter name of the template
+							<span>e.g advising</span>
+						</div>
 					</div>
 					<div class="form__group">
 						<label for="">Interval (min)</label>
-						<mj-number [val]="0" [min]="10" [max]="60"></mj-number>
+						<input type="hidden" [(ngModel)]="template.interval" ngControl="interval" />
+						<mj-number [error]="intervalDirty && !interval.valid" (update)="intervalUpdate($event)" [val]="0" [min]="10" [max]="60"></mj-number>
+						<div class="form__desc">
+							Enter interval for each meeting
+						</div>
 					</div>
 					<div class="form__group">
 						<label for="">Allow multiple?</label>
-						<mj-radio></mj-radio>
+						<radius-radio [on]="false" [intext]="true"></radius-radio>
+						<div class="form__desc">
+							Can students select multiple time slots for meeting?
+						</div>
 					</div>
 					<div class="form__group">
 						<label for="">Require accept?</label>
-						<mj-radio [on]="true"></mj-radio>
+						<radius-radio [on]="true" [intext]="true"></radius-radio>
+						<div class="form__desc">
+							Do you want to approve each appointment in this template?
+						</div>
+					</div>
+					<div class="form__group">
+						<button type="submit" class="button type__3">Create Template</button>
+						<button class="button type__4">Cancel</button>
 					</div>
 				</form>
 			</div>
@@ -100,23 +150,50 @@ class TemplateCreate implements OnInit {
 	template: Template;
 
 	name: Control;
+	nameDirty: boolean = false;
 	interval: Control;
-	allow_multiple: Control;
-	color: Control;
-	require_accept: Control;
+	intervalDirty: boolean = false;
 
 	templateForm: ControlGroup;
 
-	constructor(private builder: FormBuilder) {
-		this.name = new Control('', Validators.compose([Validators.required]));
+	defaultNames: string[] = ['advising', 'office hour', 'open appointments'];
 
-		this.templateForm = builder.group({
-			'name': this.name
-		})
+	constructor(private fb: FormBuilder) {
+		this.name = new Control('', Validators.compose([Validators.required, TemplateValidator.shouldBeName]));
+		this.interval = new Control('', Validators.compose([Validators.required, TemplateValidator.shouldBeInterval]));
+
+		this.templateForm = fb.group({
+			'name': this.name,
+			'interval': this.interval
+		});
 	}
 
 	ngOnInit() {
+		this.template = {
+			id: "992jsdaf",
+			name: "",
+			interval: 15,
+			allow_multiple: false,
+			require_accept: true
+		}
+	}
 
+	submit() {
+		console.log(this.templateForm.valid, this.templateForm.value);
+	}
+
+	nameUpdate(event: string) {
+		this.nameDirty = true;
+		this.template.name = event;
+	}
+
+	intervalUpdate(event: string) {
+		this.intervalDirty = true;
+		this.template.interval = event;
+	}
+
+	get json() {
+		return JSON.stringify(this.template);
 	}
 }
 @Component({

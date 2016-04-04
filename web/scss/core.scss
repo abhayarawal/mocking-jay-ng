@@ -511,6 +511,49 @@ $top__height: 40px;
 				a
 				{
 					color: #626262;
+					position: relative;
+
+					&:hover
+					{
+						em
+						{
+							visibility: visible;
+							opacity: 1;
+						}
+					}
+
+					em
+					{
+						position: absolute;
+						background: #565656;
+						color: #fff;
+						top: calc(100% + 5px);
+						width: 120px;
+						left: 50%;
+						margin-left: -60px;
+						z-index: 1;
+						visibility: hidden;
+						opacity: 0;
+						font-style: normal;
+						text-align: center;
+						font-size: 13px;
+						@include border-radius(4px);
+
+						&:after
+						{
+							width: 0; 
+							height: 0; 
+							border-left: 5px solid transparent;
+							border-right: 5px solid transparent;
+							border-bottom: 5px solid #565656;
+							position: absolute;
+							top: -4px;
+							left: 50%;
+							display: block;
+							content: "";
+							margin-left: -5px;
+						}
+					}
 				}
 				
 				&:not(:last-child)
@@ -834,40 +877,32 @@ $top__height: 40px;
 input[type="text"], input[type="password"], input[type="telephone"], input[type="email"], textarea, select, input[type="email"], input[type="number"]
 {
   background: #fff;
-  border: 1px solid #cdcfd2;
+  border: 1px solid #DBDDE3;
   border-radius: 0;
   outline: none !important;
   padding: 0 14px;
   width: 100%;
-  font-size: 13px;
-  color: #1b2432;
-  @include border-radius(3px);
+  font-size: 15px;
   @include transition(all 0.1s ease);
+	@include border-radius(7px);
+	position: relative;
+	color: #7d7d7d;
 
   &:focus
   {
-  	@include box-shadow(0px, 0px, 2px, 0px, #eee inset);
-  	border-color: darken(#cdcfd2, 5%);
-  }
-    
-  .no-boxshadow &
-  {
-    line-height: 45px;
+    box-shadow: 0 0 0 2px #f2f2ef;
   }
 }
 
 input[type="text"], input[type="email"], input[type="number"], input[type="password"], input[type="telephone"], select
 {
-  height: 45px;
+  height: 40px;
 }
 
 label
 {
   margin-bottom: 6px;
   display: block;
-  color: #a1a4aa;
-  text-transform: uppercase;
-  font-size: 12px;
 }
 
 textarea
@@ -875,6 +910,22 @@ textarea
   padding-top: 10px;
   padding-bottom: 10px;
   height: 150px;
+  resize: none;
+}
+
+.invalid
+{
+	box-shadow: 0 0 0 2px #F6C8BB !important;
+  border: 1px solid #f6a595 !important;
+}
+
+.ng-touched 
+{
+	&.ng-invalid 
+	{
+	  box-shadow: 0 0 0 2px #F6C8BB !important;
+	  border: 1px solid #f6a595 !important;
+	}
 }
 
 
@@ -900,9 +951,10 @@ textarea
   }
 
   $button-types: (
-    (type__1 #6a67ce)
+    (type__1 #ff5c61)
     (type__2 #ffbe63)
-    (type__3 #ffbf6f)
+    (type__3 #5aded3)
+    (type__4 #d4d4d4)
   ) !default;
 
   @each $button-type in $button-types
@@ -926,12 +978,6 @@ textarea
       }
     }
   }
-}
-
-.ng-touched.ng-invalid
-{
-	// box-shadow: 0 0 0 2px #F6C8BB !important;
-	border: 1px solid #f6a595 !important;
 }
 
 
@@ -1232,8 +1278,11 @@ textarea
 		@extend %card;
 		top: 80px;
 		width: 80%;
+		height: calc(100% - 105px);
 		left: 10%;
 		position: absolute;
+		overflow-x: hidden;
+		overflow-y: auto;
 	}
 }
 
@@ -1264,71 +1313,109 @@ textarea
 		.form__group
 		{
 			margin-top: 25px;
+
+			.form__desc
+			{
+				display: block;
+				margin-top: 15px;
+				font-size: 12px;
+				color: #a1a1a1;
+
+				span
+				{
+					display: block;
+				}
+			}
+
+			.weekdays
+			{
+				@include row();
+
+				section
+				{
+					@include col(1/7, false);
+				}
+			}
 		}
 	}
 }
 
-.mj__radio
+.mj__radio__wrap
 {
-	display: inline-block;
-	height: 30px;
-	width: 30px;
-	@include border-radius(100%);
-	border: 1px solid #ccc;
-	position: relative;
-	vertical-align: middle;
 	cursor: pointer;
 
-	&:after 
+	.mj__radio
 	{
-		position: absolute;
-		left: 3px;
-		top: 3px;
-		width: 22px;
-		height: 22px;
-		background: #fff;
-		display: block;
-		content: "";
-		@include border-radius(100%);
-		@include transition(all 0.1s ease);
-	}
+		display: inline-block;
+		height: 25px;
+		width: 25px;
+		@include border-radius(10px);
+		border: 1px solid #ccc;
+		position: relative;
+		vertical-align: middle;
+		cursor: pointer;
 
-	&.on
-	{
 		&:after 
 		{
-			background: #ffbf6f;
+			position: absolute;
+			left: 3px;
+			top: 3px;
+			width: 17px;
+			height: 17px;
+			background: #fff;
+			display: block;
+			content: "";
+			@include border-radius(7px);
+			@include transition(all 0.1s ease);
 		}
+
+		&.on
+		{
+			&:after 
+			{
+				background: #ffbf6f;
+			}
+		}
+	}
+
+	.mj__radio__text
+	{
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 5px;
 	}
 }
 
 .mj__number
 {
 	background: #fff;
-  border: 1px solid #cdcfd2;
+  border: 1px solid #DBDDE3;
   border-radius: 0;
   outline: none !important;
   padding: 0 14px;
   width: 100%;
   font-size: 13px;
-  color: #1b2432;
-  @include border-radius(3px);
+  color: #000;
   @include transition(all 0.1s ease);
-  line-height: 45px;
-  position: relative;
+	@include border-radius(7px);
+	position: relative;
 
   input
   {
   	border: none;
   	padding: 0;
   	height: 43px;
+
+  	&:focus {
+  		@include box-shadow(0,0,0,0,rgba(0,0,0,0));
+  	}
   }
 
   .button__wrap
   {
 		position: absolute;
 		right: 4px;
-		top: 1px;
+		top: 4px;
 
 		button
 		{
@@ -1336,7 +1423,7 @@ textarea
 			display: inline-block;
 			@include box-shadow(0, 1px, 3px, 0, rgba(0, 0, 0, .06));
 			border: 1px solid rgba(0, 0, 0, 0.17);
-			border-radius: 2px;
+			@include border-radius(4px);
 			height: 35px;
 			width: 35px;
 			font-size: 15px;
@@ -1355,6 +1442,30 @@ textarea
 			}
 		}
   }
+}
+
+.mj__time
+{
+	.row
+	{
+		@include row();
+
+		& > section
+		{
+			@include col(1, false);
+			@include mq($brk__md) {
+				&:first-child
+				{
+					@include col(2/4, false);	
+				}
+
+				&:not(:first-child) {
+					@include col(1/4, false);
+					padding-left: 15px;
+				}
+			}
+		}
+	}
 }
 
 .radius-radio

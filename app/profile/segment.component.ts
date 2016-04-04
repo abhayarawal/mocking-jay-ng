@@ -26,7 +26,6 @@ var template: Template = {
 	name: "advising",
 	interval: 15,
 	allow_multiple: true,
-	color: "#885EC4",
 	require_accept: true
 };
 
@@ -35,7 +34,6 @@ var template2: Template = {
 	name: "Office hour",
 	interval: 30,
 	allow_multiple: true,
-	color: "#885EC4",
 	require_accept: true
 };
 
