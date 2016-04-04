@@ -23,7 +23,10 @@ import {SegmentViewport} from './segment.component';
 					</ul>
 				</section>
 				<section class="context__header">
-					<h4>Taylor Swifts calendar</h4>
+					<h4>
+						<span class="lnr lnr-star"></span>
+						Taylor Swifts calendar
+					</h4>
 				</section>
 				<section>
 					<ul>
@@ -121,7 +124,7 @@ class DaySegment implements OnInit {
 				<h3>{{user.fname}} {{user.lname}}</h3>
 				<ul>
 					<li><a href="">{{user.fname}}'s contact card</a></li>
-					<li><a [routerLink]="['/ProfileViewport', 'DaySegment', {id: user.id, month: month, day: day, year: year}]">{{user.fname}}'s calendar</a></li>
+					<li><a [routerLink]="['/ProfileViewport', 'Calendar', {id: user.id}]">{{user.fname}}'s calendar</a></li>
 					<li><a href="">My events with {{user.fname}}</a></li>
 				</ul>
 			</div>
@@ -169,7 +172,7 @@ class ProfileNav implements OnInit {
 })
 @RouteConfig([
 	{ path: '/', name: 'None', component: None, useAsDefault: true },
-	{ path: '/:id', name: 'Cal', component: Cal },
+	{ path: '/:id', name: 'Calendar', component: Cal },
 	{ path: '/:id/day/:month/:day/:year', name: 'DaySegment', component: DaySegment }
 ])
 export class ProfileViewport implements OnInit {

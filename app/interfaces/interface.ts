@@ -46,7 +46,8 @@ export enum Status {
 	default,
 	in_progress,
 	approved, 
-	denied
+	denied,
+	unavailable
 }
 
 

@@ -4,6 +4,7 @@ import {RouteConfig, RouterOutlet, RouterLink, Router, RouteParams, Redirect} fr
 import {ProfileViewport} from './profile/profile.component';
 import {User, UserType} from './interfaces/interface';
 import {AuthComponent, LogoutComponent} from './auth/auth.component';
+import {TemplateViewport} from './templates/template.component';
 
 
 @Component({
@@ -19,6 +20,7 @@ import {AuthComponent, LogoutComponent} from './auth/auth.component';
 	{ path: '/', name: 'AuthComponent', component: AuthComponent, useAsDefault: true },
 	{ path: '/logout', name: 'LogoutComponent', component: LogoutComponent },
 	{ path: '/calendar/...', name: 'ProfileViewport', component: ProfileViewport },
+	{ path: '/templates/...', name: 'TemplateViewport', component: TemplateViewport }
 ])
 export class MountNode {
 }

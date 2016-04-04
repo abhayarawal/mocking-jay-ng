@@ -7,7 +7,7 @@ import {Observable} from 'rxjs/Rx';
 import 'rxjs/Rx';
 
 import {SegmentService} from './segment.service';
-import {CalendarService, MonthPipe, WeekFullPipe} from './calendar.service';
+import {CalendarService, MonthPipe, WeekPipe, WeekFullPipe} from './calendar.service';
 import {Time, Template, Segment, Status, Fragment} from '../interfaces/interface';
 
 var range = (x, y): number[] => {
@@ -198,7 +198,7 @@ class SegmentUnavailable implements OnInit {
 				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
 				<span *ngSwitchWhen="3" [innerHTML]="'Denied bitch'"></span>
 			</span>
-			<span class="lnr lnr-chevron-right-circle" *ngIf="selected"></span>
+			<span class="lnr lnr-pencil" *ngIf="selected"></span>
 		</li>
 	`,
 	pipes: [TimePipe]
@@ -284,14 +284,16 @@ class SegmentWrap {
 	template: `
 		<div class="day__component">
 			<div *ngIf="month" class="day__header">
-				<h3 class="day__date">{{month | monthPipe}} {{day}}, <span>{{year}}</span></h3>
-				<h4>{{ weekDay | weekFullPipe }}</h4>
+				<h3 class="day__date">
+					<span>{{ weekDay | weekPipe }}</span>
+					{{month | monthPipe}} {{day}}, <span>{{year}}</span>
+				</h3>
 			</div>
 			<segment-wrap></segment-wrap>
 		</div>
 	`,
 	directives: [SegmentWrap],
-	pipes: [MonthPipe, WeekFullPipe],
+	pipes: [MonthPipe, WeekPipe],
 	providers: [CalendarService]
 })
 class DayComponent implements OnInit {
@@ -325,14 +327,13 @@ class DayComponent implements OnInit {
 				<h2>Nothing selected</h2>
 			</div>
 			<div *ngIf="fragment">
-				<h2>{{fragment.id}}</h2>
 				<h3>
 					{{fragment.segment.template.name}}
 				</h3>
 				<div>
 					From: {{fragment | timePipe:false}} To: {{fragment | timePipe:true}}
 				</div>
-				<div [ngSwitch]="fragment.status" *ngIf="fragment.status">
+				<div [ngSwitch]="fragment.status">
 					<template [ngSwitchWhen]="1">
 						<strong>Appointment not approved yet</strong>
 						<button class="button type__2">Cancel appointment</button>
@@ -342,6 +343,9 @@ class DayComponent implements OnInit {
 					</template>
 					<template [ngSwitchWhen]="3">
 						<strong>Appointment denied</strong>
+					</template>
+					<template ngSwitchDefault>
+						<button class="button type__1">Create appointment</button>
 					</template>
 				</div>
 			</div>

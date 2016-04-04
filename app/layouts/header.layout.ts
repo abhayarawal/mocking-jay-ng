@@ -71,7 +71,7 @@ export class LayoutHeader {
 
 	navs: Object[] = [
 		{ location: ['/ProfileViewport'], lnr: 'calendar-full' },
-		{ location: ['/ProfileViewport'], lnr: 'layers' },
+		{ location: ['/TemplateViewport'], lnr: 'layers' },
 		{ location: ['/ProfileViewport'], lnr: 'flag' },
 		{ location: ['/ProfileViewport'], lnr: 'cog' },
 	]
