@@ -236,9 +236,9 @@ html, body {
     left: 0px;
     top: 0px;
     background: #fff;
-    -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
+    -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
     z-index: 3; }
 
 .app__top {
@@ -318,6 +318,8 @@ html, body {
     .app__top .top__right .main__nav > li {
       display: inline-block;
       vertical-align: middle; }
+      .app__top .top__right .main__nav > li a {
+        color: #626262; }
       .app__top .top__right .main__nav > li:not(:last-child) {
         padding-right: 10px; }
         .app__top .top__right .main__nav > li:not(:last-child) a {
@@ -381,7 +383,7 @@ html, body {
     @media only screen and (min-width: 768px) {
       .profile__viewport .profile__outlet .profile__context .row section {
         float: left;
-        width: 50%; } }
+        width: 33.33333%; } }
   .profile__viewport .profile__outlet .profile__context .row section:first-child {
     padding: 8px 10px; }
     .profile__viewport .profile__outlet .profile__context .row section:first-child ul li {
@@ -389,6 +391,14 @@ html, body {
       .profile__viewport .profile__outlet .profile__context .row section:first-child ul li a {
         display: block;
         line-height: 25px; }
+  .profile__viewport .profile__outlet .profile__context .row .context__header {
+    text-align: center;
+    padding: 8px 10px; }
+    .profile__viewport .profile__outlet .profile__context .row .context__header h4 {
+      line-height: 25px;
+      font-weight: 500;
+      display: block;
+      font-size: 16px; }
   .profile__viewport .profile__outlet .profile__context .row section:last-child {
     text-align: right;
     padding: 8px 10px; }
@@ -503,11 +513,11 @@ html, body {
       -ms-transform: scale(0.85);
       transform: scale(0.85); }
 
-.auth, .segment__viewport .day__component {
+.auth, .segment__viewport .day__component, .segment__viewport .fragment__context {
   background: #fff;
-  -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.04);
-  -moz-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.04);
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.04);
+  -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
+  -moz-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.09);
   border-radius: 3px;
   padding: 15px; }
@@ -625,46 +635,60 @@ textarea {
   top: 52px; }
   .segment__viewport .day__component {
     position: absolute;
-    left: 20px;
-    top: 20px;
+    left: 30px;
+    top: 8px;
     width: 60%;
-    height: calc(100% - 40px);
+    height: calc(100% - 16px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 20px 30px; }
+    .segment__viewport .day__component .day__header .day__date {
+      font-weight: 400; }
+      .segment__viewport .day__component .day__header .day__date span {
+        font-weight: 300; }
+    .segment__viewport .day__component .day__header h4, .segment__viewport .day__component .day__header h5 {
+      margin: 0;
+      padding: 0; }
+  .segment__viewport .fragment__context {
+    position: absolute;
+    right: 30px;
+    top: 8px;
+    width: calc(100% - 60% - 80px);
+    height: calc(100% - 16px);
     overflow-x: hidden;
     overflow-y: auto; }
-    .segment__viewport .day__component .day__date {
-      font-weight: 400; }
-      .segment__viewport .day__component .day__date span {
-        font-weight: 300; }
 
 .segment__wrap .segments {
   margin-top: 20px; }
   .segment__wrap .segments .segment {
     position: relative;
-    padding-left: 60px;
-    color: #aaa; }
-    .segment__wrap .segments .segment .segment__time {
-      position: absolute;
-      height: 100%;
-      left: 0px;
-      top: -22px;
-      font-size: 13px;
-      text-transform: uppercase;
-      text-align: right;
-      width: 60px;
-      padding-right: 7px; }
-      .segment__wrap .segments .segment .segment__time ul li {
-        line-height: 45px;
-        display: block; }
+    padding-left: 0px;
+    color: #999; }
+    .segment__wrap .segments .segment .segment__title {
+      margin: 15px 0;
+      text-transform: uppercase; }
+      .segment__wrap .segments .segment .segment__title span {
+        font-size: 18px;
+        display: block;
+        text-transform: capitalize; }
     .segment__wrap .segments .segment .fragments ul li {
       display: block;
-      background: #f5f5f5;
+      background: #f8f8f8;
       line-height: 15px;
-      padding-left: 15px;
       position: relative;
-      color: #fff;
+      color: #b7b7b7;
       border: none;
       font-size: 15px;
-      border-bottom: 1px solid #e3e3e3; }
+      padding-left: 10px;
+      border-bottom: 1px dotted #e3e3e3;
+      cursor: pointer;
+      -webkit-transition: 0.1s ease all;
+      -moz-transition: 0.1s ease all;
+      -o-transition: 0.1s ease all;
+      -ms-transition: 0.1s ease all;
+      transition: 0.1s ease all; }
+      .segment__wrap .segments .segment .fragments ul li:hover {
+        border-bottom: 1px solid #cacaca; }
       .segment__wrap .segments .segment .fragments ul li span {
         display: block; }
         .segment__wrap .segments .segment .fragments ul li span.time {
@@ -675,30 +699,53 @@ textarea {
         .segment__wrap .segments .segment .fragments ul li span.event__title {
           font-size: 14px;
           font-weight: 500; }
-      .segment__wrap .segments .segment .fragments ul li.segment__01 {
+        .segment__wrap .segments .segment .fragments ul li span.lnr {
+          position: absolute;
+          right: 10px;
+          line-height: 40px;
+          top: 0px;
+          font-size: 20px; }
+      .segment__wrap .segments .segment .fragments ul li.segment {
         background: #fff;
-        border-left: 4px solid;
-        height: 45px;
+        height: 50px;
+        position: relative;
         overflow: hidden;
-        border-color: rgba(136, 94, 196, 0.43);
-        border-bottom: 1px solid #f2f2f2; }
-      .segment__wrap .segments .segment .fragments ul li.segment__02 {
-        background: #fff;
-        border-left: 4px solid;
-        height: 45px;
-        overflow: hidden;
-        border-color: rgba(239, 91, 39, 0.31);
-        border-bottom: 1px solid #f2f2f2; }
+        border-bottom: 1px solid #ececec; }
+        .segment__wrap .segments .segment .fragments ul li.segment:hover {
+          border-bottom: 1px solid #cacaca; }
       .segment__wrap .segments .segment .fragments ul li.active {
         z-index: 1; }
       .segment__wrap .segments .segment .fragments ul li.unavailable {
         background: #f5f5f5; }
-      .segment__wrap .segments .segment .fragments ul li.scheduled {
-        background: rgba(59, 185, 100, 0.73);
-        border: none; }
-      .segment__wrap .segments .segment .fragments ul li.declined {
-        background: rgba(255, 19, 43, 0.79);
-        border: none; }
-      .segment__wrap .segments .segment .fragments ul li.in__progress {
-        background: #ffb949;
-        border: none; }
+      .segment__wrap .segments .segment .fragments ul li.status__2 {
+        border-color: rgba(59, 185, 100, 0.73);
+        color: rgba(47, 146, 79, 0.73);
+        border-bottom: none;
+        background: rgba(71, 223, 120, 0.12);
+        height: 70px;
+        border-left: 2px solid;
+        padding-left: 10px; }
+        .segment__wrap .segments .segment .fragments ul li.status__2:hover {
+          border-color: rgba(59, 185, 100, 0.73); }
+      .segment__wrap .segments .segment .fragments ul li.status__3 {
+        border-color: rgba(255, 19, 43, 0.79);
+        color: rgba(255, 19, 43, 0.79);
+        border-bottom: none;
+        background: rgba(255, 19, 43, 0.09);
+        height: 70px;
+        border-left: 2px solid;
+        padding-left: 10px; }
+        .segment__wrap .segments .segment .fragments ul li.status__3:hover {
+          border-color: rgba(255, 19, 43, 0.79); }
+      .segment__wrap .segments .segment .fragments ul li.status__1 {
+        border-color: #ffb949;
+        color: #e28b00;
+        border-bottom: none;
+        background: rgba(255, 185, 73, 0.17);
+        height: 70px;
+        border-left: 2px solid;
+        padding-left: 10px; }
+        .segment__wrap .segments .segment .fragments ul li.status__1:hover {
+          border-color: #ffb949; }
+      .segment__wrap .segments .segment .fragments ul li.selected {
+        background: #fcfcfc; }

@@ -2,6 +2,11 @@ import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector, Pi
 import {RouteConfig, RouterOutlet, RouterLink, Router, Location, RouteParams} from 'angular2/router';
 import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGroup, NgControl, FormBuilder, NgFormModel, ControlGroup, Validators} from 'angular2/common';
 
+import {Http, Response, Headers} from 'angular2/http';
+import {Observable} from 'rxjs/Rx';
+import 'rxjs/Rx';
+
+import {SegmentService} from './segment.service';
 import {CalendarService, MonthPipe, WeekFullPipe} from './calendar.service';
 import {Time, Template, Segment, Status, Fragment} from '../interfaces/interface';
 
@@ -20,6 +25,15 @@ var template: Template = {
 	id: genId(),
 	name: "advising",
 	interval: 15,
+	allow_multiple: true,
+	color: "#885EC4",
+	require_accept: true
+};
+
+var template2: Template = {
+	id: genId(),
+	name: "Office hour",
+	interval: 30,
 	allow_multiple: true,
 	color: "#885EC4",
 	require_accept: true
@@ -48,7 +62,7 @@ var segment: Segment = {
 
 var segment2: Segment = {
 	id: genId(),
-	template: template,
+	template: template2,
 	start: {
 		day: 2,
 		month: 3,
@@ -77,8 +91,8 @@ var genFragments = (segment: Segment): Fragment[] => {
 	let [t1, m1] = [segment.start.hour, segment.start.minute],
 			[t2, m2] = [segment.end.hour, segment.end.minute];
 
-	let d1 = new Date(segment.start.year, segment.start.month, segment.start.day, t1, m1),
-			d2 = new Date(segment.start.year, segment.start.month, segment.start.day, t2, m2);
+	let d1: any = new Date(segment.start.year, segment.start.month, segment.start.day, t1, m1),
+			d2: any = new Date(segment.start.year, segment.start.month, segment.start.day, t2, m2);
 
 	let diff = (d2 - d1)/1000/60;	
 	let fragments = diff / segment.template.interval;
@@ -112,10 +126,43 @@ var genFragments = (segment: Segment): Fragment[] => {
 				hour: now[0],
 				minute: now[1]
 			},
+			segment: segment
 		});
 	}
 
+	ret[3].status = Status.approved;
+	ret[5].status = Status.in_progress;
+	ret[6].status = Status.denied;
+
 	return ret;
+}
+
+
+@Pipe({
+	name: 'timePipe'
+})
+export class TimePipe implements PipeTransform {
+	transform(obj: Fragment, args: string[]): any {
+		let h = obj.start.hour,
+			m: any = obj.start.minute;
+
+		if (args[0]) {
+			h = obj.end.hour;
+			m = obj.end.minute;
+		}
+
+		if (m < 10) {
+			m = `0${m}`;
+		}
+
+		if (h == 12) {
+			return `${h}:${m} Pm`;
+		}
+		else if (h > 12) {
+			return `${h - 12}:${m} Pm`;
+		}
+		return `${h}:${m} Am`;
+	}
 }
 
 @Component({
@@ -144,13 +191,42 @@ class SegmentUnavailable implements OnInit {
 @Component({
 	selector: 'fragment-component',
 	template: `
-		<li *ngIf="fragment" class="segment__02">
-			{{fragment.id}}
+		<li *ngIf="fragment" (click)="send()" [ngClass]="{selected: selected}" class="segment status__{{fragment.status}}">
+			<span class="time">{{fragment | timePipe:false}}</span>
+			<span class="event__title" [ngSwitch]="fragment.status" *ngIf="fragment.status">
+				<span *ngSwitchWhen="1" [innerHTML]="'In progress'"></span>
+				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
+				<span *ngSwitchWhen="3" [innerHTML]="'Denied bitch'"></span>
+			</span>
+			<span class="lnr lnr-chevron-right-circle" *ngIf="selected"></span>
 		</li>
-	`
+	`,
+	pipes: [TimePipe]
 })
-class FragmentComponent {
+class FragmentComponent implements OnInit {
 	@Input() fragment;
+	observable: Observable<Fragment>;
+	selected: boolean = false;
+
+	constructor(private segmentService: SegmentService) {}
+
+	send() {
+		if (this.fragment) {
+			this.segmentService.triggerContext(this.fragment);
+		}
+	}
+
+	ngOnInit() {
+		this.observable = this.segmentService.contextObservable$;
+		this.observable.subscribe(
+			data => {
+				this.selected = false;
+				if (data.id === this.fragment.id) {
+					this.selected = true;
+				}
+			}
+		)
+	}
 }
 
 
@@ -158,16 +234,10 @@ class FragmentComponent {
 	selector: 'segment-component',
 	template: `
 		<div class="segment" *ngIf="segment">
-			<div class="segment__time">
-				<ul>
-					<li *ngFor="#fragment of fragments">
-						{{fragment.start.hour}}:{{fragment.start.minute}}
-					</li>
-					<li>
-						{{fragments[fragments.length-1].end.hour}}:{{fragments[fragments.length-1].end.minute}}
-					</li>
-				</ul>
-			</div>
+			<h3 class="segment__title">
+				<span>{{ segment.template.name }}</span>
+				{{fragments[0] | timePipe:false}} - {{fragments[fragments.length-1] | timePipe:true}}
+			</h3>
 			<div class="fragments">
 				<ul *ngIf="fragments">
 					<fragment-component *ngFor="#fragment of fragments" [fragment]="fragment"></fragment-component>
@@ -176,7 +246,8 @@ class FragmentComponent {
 		</div>
 		<segment-unavailable [count]="5"></segment-unavailable>
 	`,
-	directives: [FragmentComponent, SegmentUnavailable]
+	directives: [FragmentComponent, SegmentUnavailable],
+	pipes: [TimePipe]
 })
 class SegmentComponent implements OnInit {
 	@Input() segment: Segment;
@@ -212,7 +283,7 @@ class SegmentWrap {
 	selector: 'day-component',
 	template: `
 		<div class="day__component">
-			<div *ngIf="month">
+			<div *ngIf="month" class="day__header">
 				<h3 class="day__date">{{month | monthPipe}} {{day}}, <span>{{year}}</span></h3>
 				<h4>{{ weekDay | weekFullPipe }}</h4>
 			</div>
@@ -247,13 +318,71 @@ class DayComponent implements OnInit {
 
 
 @Component({
+	selector: 'fragment-context',
+	template: `
+		<div class="fragment__context">
+			<div *ngIf="!fragment">
+				<h2>Nothing selected</h2>
+			</div>
+			<div *ngIf="fragment">
+				<h2>{{fragment.id}}</h2>
+				<h3>
+					{{fragment.segment.template.name}}
+				</h3>
+				<div>
+					From: {{fragment | timePipe:false}} To: {{fragment | timePipe:true}}
+				</div>
+				<div [ngSwitch]="fragment.status" *ngIf="fragment.status">
+					<template [ngSwitchWhen]="1">
+						<strong>Appointment not approved yet</strong>
+						<button class="button type__2">Cancel appointment</button>
+					</template>
+					<template [ngSwitchWhen]="2">
+						<strong>Appointment approved</strong>
+					</template>
+					<template [ngSwitchWhen]="3">
+						<strong>Appointment denied</strong>
+					</template>
+				</div>
+			</div>
+		</div>
+	`,
+	pipes: [TimePipe]
+})
+class FragmentContext implements OnInit {
+	observable: Observable<Fragment>;
+	fragment: Fragment;
+
+	constructor(private segmentService:SegmentService) {
+	}
+
+	ngOnInit() { 
+		this.observable = this.segmentService.contextObservable$;
+		this.observable.subscribe(
+			data => {
+				this.fragment = data;
+			},
+			err => {},
+			() => {}
+		)
+	}
+}
+
+
+@Component({
 	selector: 'segment-viewport',
 	template: `
 		<div class="segment__viewport">
 			<day-component [id]="id" [year]="year" [month]="month" [day]="day"></day-component>
+			<fragment-context></fragment-context>
 		</div>
 	`,
-	directives: [DayComponent]
+	directives: [DayComponent, FragmentContext]
 })
 export class SegmentViewport {
 }
+
+
+
+
+// end

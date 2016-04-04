@@ -17,10 +17,13 @@ import {SegmentViewport} from './segment.component';
 			<div class="row">
 				<section>
 					<ul>
-						<li>
-							<h4>{{ today }}</h4>
-						</li>
+						<a href="">Day</a>
+						<a href="">Week</a>
+						<a href="">Month</a>
 					</ul>
+				</section>
+				<section class="context__header">
+					<h4>Taylor Swifts calendar</h4>
 				</section>
 				<section>
 					<ul>

@@ -43,6 +43,7 @@ export interface Segment {
 
 
 export enum Status {
+	default,
 	in_progress,
 	approved, 
 	denied
@@ -53,6 +54,8 @@ export interface Fragment {
 	id: string,
 	start: Time,
 	end: Time,
+	segment: Segment,
+	message?: string,
 	status?: Status,
 	response?: string,
 	instance_id?: string
