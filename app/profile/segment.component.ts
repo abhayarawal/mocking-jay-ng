@@ -129,8 +129,8 @@ var genFragments = (segment: Segment): Fragment[] => {
 	}
 
 	ret[3].status = Status.approved;
-	ret[5].status = Status.in_progress;
-	ret[6].status = Status.denied;
+	ret[6].status = Status.in_progress;
+	// ret[6].status = Status.denied;
 
 	return ret;
 }

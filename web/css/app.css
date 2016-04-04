@@ -323,12 +323,13 @@ html, body {
         position: relative; }
         .app__top .top__right .main__nav > li a:hover em {
           visibility: visible;
-          opacity: 1; }
+          opacity: 1;
+          margin-top: 5px; }
         .app__top .top__right .main__nav > li a em {
           position: absolute;
           background: #565656;
           color: #fff;
-          top: calc(100% + 5px);
+          top: 100%;
           width: 120px;
           left: 50%;
           margin-left: -60px;
@@ -342,7 +343,12 @@ html, body {
           -moz-border-radius: 4px;
           -o-border-radius: 4px;
           -ms-border-radius: 4px;
-          border-radius: 4px; }
+          border-radius: 4px;
+          -webkit-transition: all 0.2s ease;
+          -moz-transition: all 0.2s ease;
+          -o-transition: all 0.2s ease;
+          -ms-transition: all 0.2s ease;
+          transition: all 0.2s ease; }
           .app__top .top__right .main__nav > li a em:after {
             width: 0;
             height: 0;

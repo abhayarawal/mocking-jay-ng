@@ -519,6 +519,7 @@ $top__height: 40px;
 						{
 							visibility: visible;
 							opacity: 1;
+							margin-top: 5px;
 						}
 					}
 
@@ -527,7 +528,7 @@ $top__height: 40px;
 						position: absolute;
 						background: #565656;
 						color: #fff;
-						top: calc(100% + 5px);
+						top: 100%;
 						width: 120px;
 						left: 50%;
 						margin-left: -60px;
@@ -538,6 +539,7 @@ $top__height: 40px;
 						text-align: center;
 						font-size: 13px;
 						@include border-radius(4px);
+						@include transition(all 0.2s ease);
 
 						&:after
 						{
