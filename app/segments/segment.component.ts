@@ -108,7 +108,7 @@ class DateTimeValidator {
 				error: ValidationResult = { "shouldBeDate": true };
 
 		if (!validation) {
-			return { "shouldBeDate": true };
+			return error;
 		} else {
 			let [m, d, _] = control.value.trim().split("/");
 			m = parseInt(m); d = parseInt(d);
@@ -127,7 +127,7 @@ class DateTimeValidator {
 				<div class="row">
 					<div>{{ formatted }}</div>
 					<section>
-						<input type="text" ngControl="dateControl" (ngModelChange)="emitEvent()" />
+						<input type="text" [disabled]="disabled" ngControl="dateControl" (ngModelChange)="emitEvent()" />
 					</section>
 					<section>
 						<input type="text" ngControl="timeControl" (ngModelChange)="emitEvent()" />
@@ -143,6 +143,7 @@ class DateTimeValidator {
 })
 export class MjTime implements OnInit {
 	@Input() time: Time;
+	@Input() disabled: boolean = false;
 	timeControl: Control;
 	dateControl: Control;
 	dateTimeForm: ControlGroup;
@@ -211,7 +212,7 @@ export class MjTime implements OnInit {
 					</div>
 					<div class="form__group">
 						<label for="">To</label>
-						<mj-time></mj-time>
+						<mj-time [disabled]="true"></mj-time>
 					</div>
 					<div class="form__group">
 						<label for="">Repeat?</label>
