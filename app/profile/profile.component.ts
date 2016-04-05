@@ -84,7 +84,7 @@ class Cal {
 
 @Component({
 	template: `
-		<h2>No one selected</h2>
+		<h2>Upcoming events</h2>
 	`
 })
 class None {}

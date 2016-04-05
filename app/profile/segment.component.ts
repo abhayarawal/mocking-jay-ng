@@ -8,7 +8,7 @@ import 'rxjs/Rx';
 
 import {SegmentService} from './segment.service';
 import {CalendarService, MonthPipe, WeekPipe, WeekFullPipe} from './calendar.service';
-import {Time, Template, Segment, Status, Fragment} from '../interfaces/interface';
+import {Time, Template, Segment, Status, Fragment, User} from '../interfaces/interface';
 
 var range = (x, y): number[] => {
 	let temp = [];
@@ -347,6 +347,8 @@ class DayComponent implements OnInit {
 					</template>
 				</div>
 			</div>
+
+
 		</div>
 	`,
 	pipes: [TimePipe]
@@ -354,8 +356,10 @@ class DayComponent implements OnInit {
 class FragmentContext implements OnInit {
 	observable: Observable<Fragment>;
 	fragment: Fragment;
+	user: User;
 
-	constructor(private segmentService:SegmentService) {
+	constructor(private segmentService:SegmentService,
+							private routeParams: RouteParams) {
 	}
 
 	ngOnInit() { 

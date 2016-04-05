@@ -49,7 +49,11 @@ class SearchBox {
 	template: `
 		<div class="app__top">
 			<div class="row">
-				<div class="top__left">&nbsp;</div>
+				<div class="top__left">
+					<div>
+						<img src="https://cdn.shopify.com/s/files/1/0521/5917/files/mj__logo.png?714379856798195830" alt="" />
+					</div>
+				</div>
 				<div class="top__search">
 					<search-box></search-box>
 				</div>

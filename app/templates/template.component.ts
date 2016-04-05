@@ -124,14 +124,16 @@ class TemplateValidator {
 					</div>
 					<div class="form__group">
 						<label for="">Allow multiple?</label>
-						<radius-radio [on]="false" [intext]="true"></radius-radio>
+						<input type="hidden" [(ngModel)]="template.allow_multiple" ngControl="allowMultiple" />
+						<radius-radio (update)="allowMultipleUpdate($event)" [on]="template.allow_multiple" [intext]="true"></radius-radio>
 						<div class="form__desc">
 							Can students select multiple time slots for meeting?
 						</div>
 					</div>
 					<div class="form__group">
 						<label for="">Require accept?</label>
-						<radius-radio [on]="true" [intext]="true"></radius-radio>
+						<input type="hidden" [(ngModel)]="template.require_accept" ngControl="requireAccept" />
+						<radius-radio [on]="template.require_accept"(update)="requireAcceptUpdate($event)" [intext]="true"></radius-radio>
 						<div class="form__desc">
 							Do you want to approve each appointment in this template?
 						</div>
@@ -141,6 +143,7 @@ class TemplateValidator {
 						<button class="button type__4">Cancel</button>
 					</div>
 				</form>
+				{{templateForm.valid}}
 			</div>
 		</div>
 	`,
@@ -153,6 +156,8 @@ class TemplateCreate implements OnInit {
 	nameDirty: boolean = false;
 	interval: Control;
 	intervalDirty: boolean = false;
+	allowMultiple: Control;
+	requireAccept: Control;
 
 	templateForm: ControlGroup;
 
@@ -160,11 +165,15 @@ class TemplateCreate implements OnInit {
 
 	constructor(private fb: FormBuilder) {
 		this.name = new Control('', Validators.compose([Validators.required, TemplateValidator.shouldBeName]));
-		this.interval = new Control('', Validators.compose([Validators.required, TemplateValidator.shouldBeInterval]));
+		this.interval = new Control(10, Validators.compose([Validators.required, TemplateValidator.shouldBeInterval]));
+		this.allowMultiple = new Control(false, Validators.required);
+		this.requireAccept = new Control(true, Validators.required);
 
 		this.templateForm = fb.group({
 			'name': this.name,
-			'interval': this.interval
+			'interval': this.interval,
+			'allowMultiple': this.allowMultiple,
+			'requireAccept': this.requireAccept
 		});
 	}
 
@@ -190,6 +199,14 @@ class TemplateCreate implements OnInit {
 	intervalUpdate(event: string) {
 		this.intervalDirty = true;
 		this.template.interval = event;
+	}
+
+	allowMultipleUpdate(event: boolean) {
+		this.template.allow_multiple = event;
+	}
+
+	requireAcceptUpdate(event: boolean) {
+		this.template.require_accept = event;
 	}
 
 	get json() {
