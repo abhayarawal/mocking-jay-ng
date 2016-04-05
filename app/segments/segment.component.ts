@@ -216,12 +216,12 @@ export class MjTime implements OnInit {
 					</div>
 					<div class="form__group">
 						<label for="">Repeat?</label>
-						<radius-radio [on]="false" [intext]="true"></radius-radio>
+						<radius-radio (update)="updateRepeat($event)" [on]="false" [intext]="true"></radius-radio>
 						<div class="form__desc">
 							Do you want to repeat the event
 						</div>
 					</div>
-					<div>
+					<div *ngIf="repeatView">
 						<div class="form__group">
 							<label for="">Repeat from</label>
 							<mj-time></mj-time>
@@ -230,31 +230,31 @@ export class MjTime implements OnInit {
 							<label for="">Repeat to</label>
 							<mj-time></mj-time>
 						</div>
-					</div>
-					<div class="form__group">
-						<label for="">Select repeat days</label>
-						<div class="weekdays">
-							<section>
-								<mj-radio [on]="false" [text]="'Mon'"></mj-radio>
-							</section>
-							<section>
-								<mj-radio [on]="false" [text]="'Tue'"></mj-radio>
-							</section>
-							<section>
-								<mj-radio [on]="false" [text]="'Wed'"></mj-radio>
-							</section>
-							<section>
-								<mj-radio [on]="false" [text]="'Thu'"></mj-radio>
-							</section>
-							<section>
-								<mj-radio [on]="false" [text]="'Fri'"></mj-radio>
-							</section>
-							<section>
-								<mj-radio [on]="false" [text]="'Sat'"></mj-radio>
-							</section>
-							<section>
-								<mj-radio [on]="false" [text]="'Sun'"></mj-radio>
-							</section>
+						<div class="form__group">
+							<label for="">Select repeat days</label>
+							<div class="weekdays">
+								<section>
+									<mj-radio [on]="false" [text]="'Mon'"></mj-radio>
+								</section>
+								<section>
+									<mj-radio [on]="false" [text]="'Tue'"></mj-radio>
+								</section>
+								<section>
+									<mj-radio [on]="false" [text]="'Wed'"></mj-radio>
+								</section>
+								<section>
+									<mj-radio [on]="false" [text]="'Thu'"></mj-radio>
+								</section>
+								<section>
+									<mj-radio [on]="false" [text]="'Fri'"></mj-radio>
+								</section>
+								<section>
+									<mj-radio [on]="false" [text]="'Sat'"></mj-radio>
+								</section>
+								<section>
+									<mj-radio [on]="false" [text]="'Sun'"></mj-radio>
+								</section>
+							</div>
 						</div>
 					</div>
 					<div class="form__group">
@@ -269,6 +269,7 @@ export class MjTime implements OnInit {
 })
 class SegmentCreate implements OnInit {
 	segment: Segment;
+	repeatView: boolean = false;
 
 	templateId: string;
 	template: Control;
@@ -301,6 +302,7 @@ class SegmentCreate implements OnInit {
 	}
 
 	updateTemplate(event: string) { this.templateId = event };
+	updateRepeat(event: boolean) { this.repeatView = event };
 }
 @Component({
 	template: `
