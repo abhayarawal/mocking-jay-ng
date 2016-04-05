@@ -1319,6 +1319,8 @@ textarea
 		position: absolute;
 		overflow-x: hidden;
 		overflow-y: auto;
+		-webkit-transform: translateZ(0);
+		-webkit-backface-visibility: hidden;
 	}
 }
 
@@ -1436,11 +1438,16 @@ textarea
 	@include border-radius(7px);
 	position: relative;
 
+	&.focus
+	{
+    @include box-shadow(0, 0, 0, 2px, #f2f2ef);
+	}
+
   input
   {
   	border: none;
   	padding: 0;
-  	height: 43px;
+  	height: 40px;
 
   	&:focus {
   		@include box-shadow(0,0,0,0,rgba(0,0,0,0));
@@ -1460,8 +1467,8 @@ textarea
 			@include box-shadow(0, 1px, 3px, 0, rgba(0, 0, 0, .06));
 			border: 1px solid rgba(0, 0, 0, 0.17);
 			@include border-radius(4px);
-			height: 35px;
-			width: 35px;
+			height: 32px;
+			width: 32px;
 			font-size: 15px;
 			color: #a3a3a3;
 			@include transition(all 0.2s ease);
@@ -1575,8 +1582,8 @@ textarea
 	  border: 1px solid #DBDDE3;
 	  outline: none !important;
 	  padding: 0 14px;
-	  font-size: 13px;
-	  color: #000;
+	  font-size: 15px;
+	  color: #7d7d7d;
 		@include border-radius(7px);
 		position: relative;
 		line-height: 40px;
@@ -1596,7 +1603,7 @@ textarea
 			width: 40px;
 			right: 0px;
 			top: 0px;
-			font-size: 18px;
+			font-size: 12px;
 			color: darken(#DBDDE3, 10%);
 			text-align: center;
 		}

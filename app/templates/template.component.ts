@@ -7,6 +7,9 @@ import {Template} from '../interfaces/interface';
 
 import {RadiusInputComponent, RadiusSelectComponent, RadiusRadioComponent} from '../form/form.component';
 
+var genId = () => {
+	return Math.random().toString(36).substr(2, 9);
+};
 
 @Component({
 	selector: 'mj-radio',
@@ -29,8 +32,8 @@ export class MjRadio {
 @Component({
 	selector: 'mj-number',
 	template: `
-		<div class="mj__number" [ngClass]="{invalid: error}">
-			<input type="text" [(ngModel)]="val" (ngModelChange)="emitValue()" />
+		<div class="mj__number" [ngClass]="{focus: focus, invalid: error}">
+			<input type="text" (focus)="focus=true" (blur)="focus=false" [(ngModel)]="val" (ngModelChange)="emitValue()" />
 			<div class="button__wrap">
 				<button (click)="down()">
 					<span class="lnr lnr-chevron-down"></span>
@@ -48,6 +51,8 @@ export class MjNumber {
 	@Input() max: number;
 	@Input() error: boolean = false;
 	@Output() update = new EventEmitter<string>();
+
+	focus: boolean = false;
 
 	emitValue() {
 		this.update.next(`${this.val}`);
@@ -82,13 +87,14 @@ class TemplateValidator {
 	}
 
 	static shouldBeInterval(control: Control): ValidationResult {
-		let validation = control.value.toString().trim().match(/^[\d]+$/i);
+		let error: ValidationResult = { "shouldBeInterval": true },
+				validation = control.value.toString().trim().match(/^[\d]+$/i);
 		if (!validation) {
-			return { "shouldBeInterval": true };
+			return error;
 		} else {
 			let v = parseInt(control.value);
 			if (v < 10 || v > 60) {
-				return { "shouldBeInterval": true };
+				return error;
 			}
 		}
 		return null;
@@ -103,7 +109,6 @@ class TemplateValidator {
 				Create a new template
 			</h4>
 			<div class="form__wrap" *ngIf="template">
-				{{json}}
 				<form [ngFormModel]="templateForm" (submit)="submit()">
 					<div class="form__group">
 						<label for="">Name</label>
@@ -115,9 +120,9 @@ class TemplateValidator {
 						</div>
 					</div>
 					<div class="form__group">
-						<label for="">Interval (min)</label>
+						<label for="">Interval [minute 10-60]</label>
 						<input type="hidden" [(ngModel)]="template.interval" ngControl="interval" />
-						<mj-number [error]="intervalDirty && !interval.valid" (update)="intervalUpdate($event)" [val]="0" [min]="10" [max]="60"></mj-number>
+						<mj-number [error]="intervalDirty && !interval.valid" (update)="intervalUpdate($event)" [val]="template.interval" [min]="10" [max]="60"></mj-number>
 						<div class="form__desc">
 							Enter interval for each meeting
 						</div>
@@ -143,7 +148,8 @@ class TemplateValidator {
 						<button class="button type__4">Cancel</button>
 					</div>
 				</form>
-				{{templateForm.valid}}
+				<div>{{json}}</div>
+				valid? {{templateForm.valid}}
 			</div>
 		</div>
 	`,
@@ -188,26 +194,12 @@ class TemplateCreate implements OnInit {
 	}
 
 	submit() {
-		console.log(this.templateForm.valid, this.templateForm.value);
 	}
 
-	nameUpdate(event: string) {
-		this.nameDirty = true;
-		this.template.name = event;
-	}
-
-	intervalUpdate(event: string) {
-		this.intervalDirty = true;
-		this.template.interval = event;
-	}
-
-	allowMultipleUpdate(event: boolean) {
-		this.template.allow_multiple = event;
-	}
-
-	requireAcceptUpdate(event: boolean) {
-		this.template.require_accept = event;
-	}
+	nameUpdate(event: string) { this.nameDirty = true; this.template.name = event; }
+	intervalUpdate(event: string) { this.intervalDirty = true; this.template.interval = event; }
+	allowMultipleUpdate(event: boolean) { this.template.allow_multiple = event; }
+	requireAcceptUpdate(event: boolean) { this.template.require_accept = event; }
 
 	get json() {
 		return JSON.stringify(this.template);

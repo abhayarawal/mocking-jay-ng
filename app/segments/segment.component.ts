@@ -68,7 +68,7 @@ export class MjNumber {
 	}
 }
 
-enum MM {
+enum TimeOfDay {
 	AM,
 	PM
 }
@@ -83,36 +83,79 @@ enum Weekday {
 	Sun
 }
 
+interface ValidationResult {
+	[key: string]: boolean;
+}
+
+class DateTimeValidator {
+	static shouldBeTime(control: Control): ValidationResult {
+		let validation = control.value.trim().match(/^\d{1,2}:\d{1,2}$/i),
+				error: ValidationResult = { "shouldBeTime": true };
+		if (!validation) {
+			return error;
+		} else {
+			let [hr, min] = control.value.trim().split(":");
+			hr = parseInt(hr);
+			min = parseInt(min);
+			if (hr < 0 || hr > 24) { return error; }
+			if (min < 0 || min > 60) { return error; }
+		}
+		return null;
+	}
+
+	static shouldBeDate(control: Control): ValidationResult {
+		let validation = control.value.trim().match(/^\d{1,2}\/\d{1,2}\/\d{4}$/i),
+				error: ValidationResult = { "shouldBeDate": true };
+
+		if (!validation) {
+			return { "shouldBeDate": true };
+		} else {
+			let [m, d, _] = control.value.trim().split("/");
+			m = parseInt(m); d = parseInt(d);
+			if (m < 1 || m > 12) { return error; }
+			if (d < 1 || d > 31) { return error; }
+		}
+		return null;
+	}
+}
+
 @Component({
 	selector: 'mj-time',
 	template: `
 		<div class="mj__time">
-			<div class="row">
-				<section>
-					<input type="text" [(ngModel)]="date" />
-				</section>
-				<section>
-					<input type="text" [(ngModel)]="hrMin" />
-				</section>
-				<section>
-					<radius-select [items]="mm" [selected]="0"></radius-select>
-				</section>
-			</div>
+			<form [ngFormModel]="dateTimeForm">
+				<div class="row">
+					<div>{{ formatted }}</div>
+					<section>
+						<input type="text" ngControl="dateControl" (ngModelChange)="emitEvent()" />
+					</section>
+					<section>
+						<input type="text" ngControl="timeControl" (ngModelChange)="emitEvent()" />
+					</section>
+					<section>
+						<radius-select [items]="timeOfDay" [selected]="0"></radius-select>
+					</section>
+				</div>
+			</form>
 		</div>
 	`,
 	directives: [RadiusSelectComponent]
 })
 export class MjTime implements OnInit {
 	@Input() time: Time;
-	hrMin: String;
-	date: String;
+	timeControl: Control;
+	dateControl: Control;
+	dateTimeForm: ControlGroup;
 
-	mm: SelectObject[] = [
-		{value: MM.AM, text: 'AM'},
-		{value: MM.PM, text: 'PM'}
+	timeOfDay: SelectObject[] = [
+		{ value: TimeOfDay.AM, text: 'AM' },
+		{ value: TimeOfDay.PM, text: 'PM' }
 	]
 
-	ngOnInit() {
+	emitEvent() {
+	}
+
+	constructor(private fb: FormBuilder) {
 		let date = new Date();
 		this.time = {
 			day: date.getDate(),
@@ -122,8 +165,25 @@ export class MjTime implements OnInit {
 			minute: 0
 		}
 
-		this.hrMin = `${this.time.hour}:${this.time.minute}`;
-		this.date = `${this.time.month}/${this.time.day}/${this.time.year}`;
+		this.timeControl = new Control(
+			`${this.time.hour}:${this.time.minute}`,
+			Validators.compose([Validators.required, DateTimeValidator.shouldBeTime]));
+
+		this.dateControl = new Control(
+			`${this.time.month}/${this.time.day}/${this.time.year}`,
+			Validators.compose([Validators.required, DateTimeValidator.shouldBeDate]));
+
+		this.dateTimeForm = fb.group({
+			'timeControl': this.timeControl,
+			'dateControl': this.dateControl
+		});
+	}
+
+	ngOnInit() {
+	}
+
+	get formatted() {
+		return `${JSON.stringify(this.dateTimeForm.value)} -- Valid: ${this.dateTimeForm.valid}`;
 	}
 }
 
@@ -139,7 +199,8 @@ export class MjTime implements OnInit {
 				<form>
 					<div class="form__group">
 						<label for="">Template</label>
-						<radius-select [items]="templates" [selected]="0"></radius-select>
+						<input type="hidden" [(ngModel)]="templateId" ngControl="template" />
+						<radius-select (update)="updateTemplate($event)" [items]="templates" [selected]="0"></radius-select>
 						<div class="form__desc">
 							Select the template you want this event to use
 						</div>
@@ -206,24 +267,27 @@ export class MjTime implements OnInit {
 	directives: [MjRadio, MjNumber, MjTime, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent]
 })
 class SegmentCreate implements OnInit {
-	template: Segment;
+	segment: Segment;
 
-	name: Control;
-	interval: Control;
-	allow_multiple: Control;
-	color: Control;
-	require_accept: Control;
+	templateId: string;
+	template: Control;
+	start: Control;
+	end: Control;
+	repeat: Control;
+	repeatStart: Control;
+	repeatEnd: Control;
+	instanceOf: Control;
+	location: Control;
 
-	templateForm: ControlGroup;
+	segmentForm: ControlGroup;
 
 	templates: SelectObject[];
 
-
 	constructor(private builder: FormBuilder) {
-		this.name = new Control('', Validators.compose([Validators.required]));
+		this.template = new Control('', Validators.required);
 
-		this.templateForm = builder.group({
-			'name': this.name
+		this.segmentForm = builder.group({
+			'template': this.template,
 		})
 	}
 
@@ -234,6 +298,8 @@ class SegmentCreate implements OnInit {
 			{ value: '9asjkc1924', text: 'Open appointment' },
 		];
 	}
+
+	updateTemplate(event: string) { this.templateId = event };
 }
 @Component({
 	template: `
