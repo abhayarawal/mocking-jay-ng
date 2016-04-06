@@ -240,7 +240,7 @@ class SegmentWrap {
 @Component({
 	selector: 'day-component',
 	template: `
-		<div class="day__component">
+		<div class="day__component" [ngClass]="{move: fragView}">
 			<div *ngIf="month" class="day__header">
 				<h3 class="day__date">
 					<span>{{ weekDay | weekPipe }}</span>
@@ -256,6 +256,9 @@ class SegmentWrap {
 })
 class DayComponent implements OnInit {
 	arr: number[] = range(1, 50);
+	observable: Observable<Fragment>;
+
+	fragView: boolean = false;
 
 	id: string;
 	month: number;
@@ -263,7 +266,8 @@ class DayComponent implements OnInit {
 	day: number;
 	weekDay: number;
 
-	constructor(private calendarService: CalendarService) {}
+	constructor(private calendarService: CalendarService,
+							private segmentViewService: SegmentViewService) {}
 
 	ngOnInit() {
 		let [id, date] = this.calendarService.getRouteParams();
@@ -273,6 +277,15 @@ class DayComponent implements OnInit {
 		this.year = date.getFullYear();
 		this.day = date.getDate();
 		this.weekDay = date.getDay();
+
+		this.observable = this.segmentViewService.contextObservable$;
+		this.observable.subscribe(
+			data => {
+				this.fragView = true;
+			},
+			err => { },
+			() => { }
+		)
 	}
 }
 
@@ -280,11 +293,8 @@ class DayComponent implements OnInit {
 @Component({
 	selector: 'fragment-context',
 	template: `
-		<div class="fragment__context">
-			<div *ngIf="!fragment">
-				<h2>Nothing selected</h2>
-			</div>
-			<div *ngIf="fragment" class="fragment__ctx">
+		<div class="fragment__context" *ngIf="fragment">
+			<div class="fragment__ctx">
 				<h3>
 					{{fragment.segment.template.name}}
 					<span>Taylor Swift</span>
@@ -341,7 +351,7 @@ class FragmentContext implements OnInit {
 
 	cancel() {
 		this.fragment.status = Status.default;
-		this.notificationService.notify("Appointment canceled", true);
+		this.notificationService.notify("Appointment canceled", true, true);
 	}
 
 	create() {
@@ -350,7 +360,9 @@ class FragmentContext implements OnInit {
 		} else {
 			this.fragment.status = Status.approved;
 		}
-		this.notificationService.notify(`Appointment created for ${this.fragment.segment.template.name}`, true);
+		this.notificationService.notify(`
+			Appointment created for ${this.fragment.segment.template.name} at ${this.fragment.start.hour}:${this.fragment.start.minute}
+		`, true, false);
 
 	}
 }

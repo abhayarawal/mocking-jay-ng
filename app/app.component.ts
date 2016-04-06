@@ -16,7 +16,8 @@ import 'rxjs/Rx';
 @Component({
 	selector: 'notification-component',
 	template: `
-		<div *ngIf="notification" class="notification__component" [ngClass]="{show: notification.type}">
+		<div *ngIf="notification" class="notification__component" [ngClass]="{show: notification.type, red: notification.error}">
+			<div class="notification__bar"></div>
 			<strong>Notification</strong>
 			<div>
 				{{notification.message}}

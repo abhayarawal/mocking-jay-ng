@@ -700,13 +700,25 @@ textarea {
   top: 52px; }
   .segment__viewport .day__component {
     position: absolute;
-    left: 30px;
+    left: 50%;
+    margin-left: -400px;
+    width: 90%;
+    max-width: 800px;
     top: 8px;
-    width: 60%;
     height: calc(100% - 16px);
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 20px 30px; }
+    padding: 20px 30px;
+    -webkit-transition: all 0.1s ease;
+    -moz-transition: all 0.1s ease;
+    -o-transition: all 0.1s ease;
+    -ms-transition: all 0.1s ease;
+    transition: all 0.1s ease; }
+    .segment__viewport .day__component.move {
+      left: 30px;
+      width: 60%;
+      margin-left: 0px;
+      max-width: 100%; }
     .segment__viewport .day__component .day__header .day__date {
       font-weight: 400; }
       .segment__viewport .day__component .day__header .day__date span {
@@ -841,7 +853,12 @@ textarea {
           z-index: 2;
           -webkit-box-shadow: 0px 0px 4px 0 rgba(97, 97, 97, 0.25);
           -moz-box-shadow: 0px 0px 4px 0 rgba(97, 97, 97, 0.25);
-          box-shadow: 0px 0px 4px 0 rgba(97, 97, 97, 0.25); }
+          box-shadow: 0px 0px 4px 0 rgba(97, 97, 97, 0.25);
+          -webkit-transform: scale(1.02);
+          -moz-transform: scale(1.02);
+          -o-transform: scale(1.02);
+          -ms-transform: scale(1.02);
+          transform: scale(1.02); }
 
 .wrapping__viewport .contextual__menu {
   position: absolute;
@@ -1357,16 +1374,14 @@ textarea {
 .notification__component {
   position: fixed;
   bottom: 20px;
-  border: 1px solid #ccc;
-  border-top: 4px solid #0099ff;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -o-border-radius: 5px;
-  -ms-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  border-radius: 4px;
   display: block;
   background: rgba(255, 255, 255, 0.95);
-  padding: 10px 20px;
+  padding: 15px 20px 10px 20px;
   visibility: hidden;
   opacity: 0;
   left: 0px;
@@ -1376,8 +1391,34 @@ textarea {
   -o-transition: all 0.4s ease;
   -ms-transition: all 0.4s ease;
   transition: all 0.4s ease;
-  z-index: 20; }
+  z-index: 20;
+  overflow: hidden;
+  -webkit-box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.74);
+  -moz-box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.74);
+  box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.74); }
   .notification__component.show {
     visibility: visible;
     opacity: 1;
     margin-left: 20px; }
+  .notification__component.red .notification__bar {
+    background: #ffba44;
+    background-repeat: repeat-y;
+    background: -webkit-gradient(linear, left top, right top, from(#e55005), to(#ffba44));
+    background: -webkit-linear-gradient(left, #ffba44, #e55005);
+    background: -moz-linear-gradient(left, #ffba44, #e55005);
+    background: -ms-linear-gradient(left, #ffba44, #e55005);
+    background: -o-linear-gradient(left, #ffba44, #e55005); }
+  .notification__component .notification__bar {
+    z-index: 21;
+    position: absolute;
+    left: 0%;
+    width: 100%;
+    top: 0px;
+    height: 10px;
+    background: #57f0cd;
+    background-repeat: repeat-y;
+    background: -webkit-gradient(linear, left top, right top, from(#0099cc), to(#57f0cd));
+    background: -webkit-linear-gradient(left, #57f0cd, #0099cc);
+    background: -moz-linear-gradient(left, #57f0cd, #0099cc);
+    background: -ms-linear-gradient(left, #57f0cd, #0099cc);
+    background: -o-linear-gradient(left, #57f0cd, #0099cc); }

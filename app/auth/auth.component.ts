@@ -102,7 +102,7 @@ export class AuthComponent implements OnInit {
 					this.router.navigateByUrl('/calendar/');
 				} else {
 					this.notification = data;
-					this.notificationService.notify(this.notification.message, true);
+					this.notificationService.notify(this.notification.message, true, true);
 				}
 			}
 		)
@@ -117,7 +117,7 @@ export class AuthComponent implements OnInit {
 				type: false
 			}
 
-			this.notificationService.notify(this.notification.message, true);
+			this.notificationService.notify(this.notification.message, true, true);
 
 		}
 	}

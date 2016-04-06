@@ -1060,13 +1060,25 @@ textarea
 	{
 		@extend %card;
 		position: absolute;
-		left: 30px;
+		left: 50%;
+		margin-left: -400px;
+		width: 90%;
+		max-width: 800px;
 		top: 8px;
-		width: 60%;
+		// width: 60%;
 		height: calc(100% - 16px);
 		overflow-x: hidden;
 		overflow-y: auto;
 		padding: 20px 30px;
+		@include transition(all 0.1s ease);
+
+		&.move
+		{
+			left: 30px;
+			width: 60%;
+			margin-left: 0px;
+			max-width: 100%;
+		}
 
 		.day__header
 		{
@@ -1295,6 +1307,7 @@ textarea
 							background: #fcfcfc;
 							z-index: 2;
 							@include box-shadow(0px, 0px, 4px, 0, rgba(97, 97, 97, 0.25));
+							@include transform(scale(1.02));
 						}
 					}
 				}
@@ -1888,24 +1901,43 @@ textarea
 {
 	position: fixed;
 	bottom: 20px;
-	border: 1px solid #ccc;
-	border-top: 4px solid #0099ff;
-	@include border-radius(5px);
+	@include border-radius(4px);
 	display: block;
 	background: rgba(255, 255, 255, 0.95);
-	padding: 10px 20px;
+	padding: 15px 20px 10px 20px;
 	visibility: hidden;
 	opacity: 0;
 	left: 0px;
 	margin-left: -100px;
 	@include transition(all 0.4s ease);
 	z-index: 20;
+	overflow: hidden;
+	@include box-shadow(0px, 0px, 4px, 0, rgba(113, 113, 113, 0.74));
 
 	&.show
 	{
 		visibility: visible;
 		opacity: 1;
 		margin-left: 20px;
+	}
+
+	&.red
+	{
+		.notification__bar
+		{
+			@include bg-left-right(#ffba44, #e55005);
+		}
+	}
+
+	.notification__bar
+	{
+		z-index: 21;
+		position: absolute;
+		left: 0%;
+		width: 100%;
+		top: 0px;
+		height: 10px;
+		@include bg-left-right(#57f0cd, #0099cc);
 	}
 }
 

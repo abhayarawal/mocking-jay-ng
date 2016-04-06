@@ -9,7 +9,8 @@ import 'rxjs/Rx';
 
 export interface Notification {
 	message: string,
-	type: boolean
+	type: boolean,
+	error: boolean
 }
 
 
@@ -20,22 +21,33 @@ export class NotificationService {
 
 	timeout: any;
 
+	notification: Notification;
+
 	constructor(private http: Http) {
 		this.notification$ = new Observable<Notification>(observer => this.observer = observer).share();
 	}
 
-	notify(message, type): void {
+	notify(message, type, error): void {
+		this.notification = {
+			message: message,
+			type: type,
+			error: error
+		};
+
 		clearTimeout(this.timeout);
 
 		this.observer.next({
 			message: message,
-			type: type
+			type: type,
+			error: error
 		});
 
 		this.timeout = setTimeout(() => {
+			let {message, error} = this.notification;
 			this.observer.next({
-				message: "---",
-				type: false
+				message: message,
+				type: false,
+				error: error
 			});
 		}, 4000);
 	}

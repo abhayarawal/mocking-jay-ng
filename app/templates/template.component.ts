@@ -204,9 +204,9 @@ class TemplateCreate implements OnInit {
 	submit() {
 		if (this.templateForm.valid) {
 			this.templateService.addTemplate(this.template);
-			this.notificationService.notify("new template created", true);
+			this.notificationService.notify("new template created", true, false);
 		} else {
-			this.notificationService.notify("template form invalid", true);
+			this.notificationService.notify("template form invalid", true, true);
 		}
 	}
 
@@ -260,7 +260,7 @@ class Templates implements OnInit {
 
 	remove(id: string) {
 		this.templateService.removeTemplate(id);
-		this.notificationService.notify("template removed", true);
+		this.notificationService.notify("Template has been removed", true, true);
 	}
 
 	flush() {
