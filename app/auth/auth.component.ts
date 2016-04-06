@@ -7,6 +7,7 @@ import {Observable} from 'rxjs/Rx';
 import 'rxjs/Rx';
 
 import {AuthService, Notification} from './auth.service';
+import {NotificationService} from '../notification.service';
 
 
 interface ValidationResult {
@@ -54,9 +55,9 @@ export class LogoutComponent implements OnInit {
 					<button type="submit" class="button type__1">Login</button>
 				</div>
 			</form>
-			<div *ngIf="notification">
+			<!--<div *ngIf="notification">
 				{{ notification.message }} --- {{ notification.type }}
-			</div>
+			</div>-->
 		</div>
 	`,
 	providers: [AuthService]
@@ -71,7 +72,8 @@ export class AuthComponent implements OnInit {
 
 	constructor(private router: Router,
 		private authService: AuthService,
-		private builder: FormBuilder) {
+		private builder: FormBuilder,
+		private notificationService: NotificationService) {
 		this.username = new Control('', Validators.compose([
 			Validators.required, Validators.minLength(3), AuthValidator.isUsername
 		]));
@@ -100,6 +102,7 @@ export class AuthComponent implements OnInit {
 					this.router.navigateByUrl('/calendar/');
 				} else {
 					this.notification = data;
+					this.notificationService.notify(this.notification.message, true);
 				}
 			}
 		)
@@ -113,6 +116,9 @@ export class AuthComponent implements OnInit {
 				message: `Username or password not valid`,
 				type: false
 			}
+
+			this.notificationService.notify(this.notification.message, true);
+
 		}
 	}
 }

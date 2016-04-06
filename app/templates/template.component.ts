@@ -223,7 +223,7 @@ class TemplateCreate implements OnInit {
 
 @Component({
 	template: `
-		<h2>Templates</h2>
+		<h3>Templates</h3>
 		<!-- <a class="button type__1" (click)="flush()">Flush storage</a> -->
 		<ul *ngIf="templates" class="table">
 			<li *ngFor="#template of templates">

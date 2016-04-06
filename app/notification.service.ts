@@ -37,6 +37,6 @@ export class NotificationService {
 				message: "---",
 				type: false
 			});
-		}, 3000);
+		}, 4000);
 	}
 }

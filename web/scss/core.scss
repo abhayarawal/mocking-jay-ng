@@ -1013,12 +1013,12 @@ textarea
 
 	@include mq($brk__md) {
 		width: 350px;
-		height: 600px;
+		height: 400px;
 		position: absolute;
 		left: 50%;
 		top: 50%;
 		margin-left: -175px;
-		margin-top: -300px;
+		margin-top: -200px;
 
 		@extend %card;
 	}
@@ -1873,6 +1873,12 @@ textarea
 			{
 				text-transform: capitalize;
 			}
+
+			h1, h2, h3, h4, h5, h6
+			{
+				margin: 0;
+				padding: 0;
+			}
 		}
 	}
 }
@@ -1886,13 +1892,14 @@ textarea
 	border-top: 4px solid #0099ff;
 	@include border-radius(5px);
 	display: block;
-	background: rgba(255, 255, 255, 0.8);
+	background: rgba(255, 255, 255, 0.95);
 	padding: 10px 20px;
 	visibility: hidden;
 	opacity: 0;
 	left: 0px;
 	margin-left: -100px;
 	@include transition(all 0.4s ease);
+	z-index: 20;
 
 	&.show
 	{

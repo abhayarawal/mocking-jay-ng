@@ -673,12 +673,12 @@ textarea {
   @media only screen and (min-width: 768px) {
     .auth {
       width: 350px;
-      height: 600px;
+      height: 400px;
       position: absolute;
       left: 50%;
       top: 50%;
       margin-left: -175px;
-      margin-top: -300px; } }
+      margin-top: -200px; } }
   .auth h2 {
     text-align: center; }
   .auth .form__group {
@@ -1350,6 +1350,9 @@ textarea {
     padding-right: 1.25rem; }
     .table li section:first-child {
       text-transform: capitalize; }
+    .table li section h1, .table li section h2, .table li section h3, .table li section h4, .table li section h5, .table li section h6 {
+      margin: 0;
+      padding: 0; }
 
 .notification__component {
   position: fixed;
@@ -1362,7 +1365,7 @@ textarea {
   -ms-border-radius: 5px;
   border-radius: 5px;
   display: block;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   padding: 10px 20px;
   visibility: hidden;
   opacity: 0;
@@ -1372,7 +1375,8 @@ textarea {
   -moz-transition: all 0.4s ease;
   -o-transition: all 0.4s ease;
   -ms-transition: all 0.4s ease;
-  transition: all 0.4s ease; }
+  transition: all 0.4s ease;
+  z-index: 20; }
   .notification__component.show {
     visibility: visible;
     opacity: 1;

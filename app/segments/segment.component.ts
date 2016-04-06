@@ -335,16 +335,22 @@ class SegmentCreate implements OnInit {
 
 @Component({
 	template: `
-		<h2>Segment Show</h2>
-		<ul *ngIf="segments">
+		<h3>Segments</h3>
+		<ul *ngIf="segments" class="table">
 			<li *ngFor="#segment of segments">
+				<section>
 				<h4>{{segment.template.name}}</h4>
-				{{segment.start.month}}/{{segment.start.day}}/{{segment.start.year}}
-				<div>
-					<strong>From</strong> {{segment.start.hour}}:{{segment.start.minute}} 
-					<strong>To:</strong> {{segment.end.hour}}:{{segment.end.minute}}
-				</div>
-				<a class="button type__2" (click)="remove(segment.id)">Remove</a>
+				</section>
+				<section>
+					<h5>{{segment.start.month}}/{{segment.start.day}}/{{segment.start.year}}</h5>
+					<div>
+						<strong>From</strong> {{segment.start.hour}}:{{segment.start.minute}} 
+						<strong>To:</strong> {{segment.end.hour}}:{{segment.end.minute}}
+					</div>
+				</section>
+				<section>
+					<a class="button type__2" (click)="remove(segment.id)">Remove</a>
+				</section>
 			</li>
 		</ul>
 	`
