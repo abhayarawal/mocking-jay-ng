@@ -6,6 +6,8 @@ import {Http, Response, Headers} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/Rx';
 
+import {NotificationService, Notification} from '../notification.service';
+
 import {LayoutHeader} from '../layouts/header.layout';
 import {Template} from '../interfaces/interface';
 import {TemplateService} from './template.service';
@@ -179,7 +181,8 @@ class TemplateCreate implements OnInit {
 
 	constructor(private fb: FormBuilder,
 							private templateService: TemplateService,
-							private router: Router) 
+							private router: Router,
+							private notificationService: NotificationService) 
 	{
 		this.name = new Control('', Validators.compose([Validators.required, TemplateValidator.shouldBeName]));
 		this.interval = new Control(10, Validators.compose([Validators.required, TemplateValidator.shouldBeInterval]));
@@ -201,11 +204,14 @@ class TemplateCreate implements OnInit {
 	submit() {
 		if (this.templateForm.valid) {
 			this.templateService.addTemplate(this.template);
+			this.notificationService.notify("new template created", true);
+		} else {
+			this.notificationService.notify("template form invalid", true);
 		}
 	}
 
 	nameUpdate(event: string) { this.nameDirty = true; this.template.name = event; }
-	intervalUpdate(event: string) { this.intervalDirty = true; this.template.interval = event; }
+	intervalUpdate(event: string) { this.intervalDirty = true; this.template.interval = parseInt(event); }
 	allowMultipleUpdate(event: boolean) { this.template.allow_multiple = event; }
 	requireAcceptUpdate(event: boolean) { this.template.require_accept = event; }
 
@@ -218,13 +224,18 @@ class TemplateCreate implements OnInit {
 @Component({
 	template: `
 		<h2>Templates</h2>
-		<a class="button type__1" (click)="flush()">Flush storage</a>
-		<ul *ngIf="templates">
+		<!-- <a class="button type__1" (click)="flush()">Flush storage</a> -->
+		<ul *ngIf="templates" class="table">
 			<li *ngFor="#template of templates">
-				<strong>{{template.id}}</strong>
-				<h3>{{template.name}}</h3>
-				<div>Interval {{template.interval}}</div>
-				<a class="button type__2" (click)="remove(template.id)">Remove</a>
+				<section>
+					<strong>{{template.name}}</strong>
+				</section>
+				<section>
+					Interval {{template.interval}} min
+				</section>
+				<section>
+					<a class="button type__2" (click)="remove(template.id)">Remove</a>
+				</section>
 			</li>
 		</ul>
 	`
@@ -233,7 +244,8 @@ class Templates implements OnInit {
 	templates: Template[];
 	templates$: Observable<Template[]>;
 
-	constructor(private templateService: TemplateService) {
+	constructor(private templateService: TemplateService,
+		private notificationService: NotificationService) {
 	}
 
 	ngOnInit() {
@@ -248,6 +260,7 @@ class Templates implements OnInit {
 
 	remove(id: string) {
 		this.templateService.removeTemplate(id);
+		this.notificationService.notify("template removed", true);
 	}
 
 	flush() {

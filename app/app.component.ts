@@ -6,6 +6,40 @@ import {User, UserType} from './interfaces/interface';
 import {AuthComponent, LogoutComponent} from './auth/auth.component';
 import {TemplateViewport} from './templates/template.component';
 import {SegmentViewport} from './segments/segment.component';
+import {NotificationService, Notification} from './notification.service';
+
+
+import {Http, Response, Headers} from 'angular2/http';
+import {Observable} from 'rxjs/Rx';
+import 'rxjs/Rx';
+
+@Component({
+	selector: 'notification-component',
+	template: `
+		<div *ngIf="notification" class="notification__component" [ngClass]="{show: notification.type}">
+			<strong>Notification</strong>
+			<div>
+				{{notification.message}}
+			</div>
+		</div>
+	`
+})
+class NotificationComponent  implements OnInit {
+	notification: Notification;
+	notification$: Observable<Notification>;
+
+	constructor(private notificationService: NotificationService) {
+	}
+
+	ngOnInit() {
+		this.notification$ = this.notificationService.notification$;
+		this.notification$.subscribe(
+			(data) => {
+				this.notification = data;
+			}
+		)
+	}
+}
 
 
 @Component({
@@ -14,8 +48,9 @@ import {SegmentViewport} from './segments/segment.component';
 		<div class="app__wrap">
 			<router-outlet></router-outlet>
 		</div>
+		<notification-component></notification-component>
 	`,
-	directives: [RouterOutlet, RouterLink]
+	directives: [RouterOutlet, RouterLink, NotificationComponent]
 })
 @RouteConfig([
 	{ path: '/', name: 'AuthComponent', component: AuthComponent, useAsDefault: true },

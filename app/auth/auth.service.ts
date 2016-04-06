@@ -66,32 +66,45 @@ export class AuthService {
 		let headers = new Headers();
 		headers.append('Content-Type', 'application/json');
 
-		this.http.post(`${this.baseUri}/authenticate/`, packet, {
-			headers: headers
-		})
-		.map(res => res.json())
-		.subscribe(
-			data => {
-				if (data.success && ("token" in data)) {
-					this.saveJwt(data.token);
-				} else {
-					this.deleteJwt();
-				}
+		if (password !== 'dummy') {
+			this.observer.next({
+				message: "invalid authentication",
+				type: false
+			});
+		} else {
 
-				this.observer.next({
-					message: data.message,
-					type: data.success
-				});
-			},
-			err => {
-				this.observer.next({
-					message: 'Error connecting to server',
-					type: false
-				})
-			},
-			() => {
-				// console.log('bearer token', this.getAuthHeader())
-			}
-		);
+			this.observer.next({
+				message: "auth successfull",
+				type: true
+			});
+		}
+
+		// this.http.post(`${this.baseUri}/authenticate/`, packet, {
+		// 	headers: headers
+		// })
+		// .map(res => res.json())
+		// .subscribe(
+		// 	data => {
+		// 		if (data.success && ("token" in data)) {
+		// 			this.saveJwt(data.token);
+		// 		} else {
+		// 			this.deleteJwt();
+		// 		}
+
+		// 		this.observer.next({
+		// 			message: data.message,
+		// 			type: data.success
+		// 		});
+		// 	},
+		// 	err => {
+		// 		this.observer.next({
+		// 			message: 'Error connecting to server',
+		// 			type: false
+		// 		})
+		// 	},
+		// 	() => {
+		// 		// console.log('bearer token', this.getAuthHeader())
+		// 	}
+		// );
 	}
 }

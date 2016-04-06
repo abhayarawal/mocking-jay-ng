@@ -8,8 +8,9 @@ import {HTTP_PROVIDERS, HTTP_BINDINGS} from 'angular2/http';
 import {SegmentViewService} from './profile/segment.service';
 import {TemplateService} from './templates/template.service';
 import {SegmentService} from './segments/segment.service';
+import {NotificationService} from './notification.service';
 
 bootstrap(MountNode, [
 	ROUTER_PROVIDERS, HTTP_PROVIDERS, HTTP_BINDINGS, 
-	SegmentViewService, TemplateService, SegmentService
+	SegmentViewService, TemplateService, SegmentService, NotificationService
 ]);

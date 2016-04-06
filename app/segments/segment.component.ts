@@ -136,7 +136,7 @@ export class MjTime implements OnInit {
 		let _date = new Date();
 		this._time = {
 			day: _date.getDate(),
-			month: _date.getMonth(),
+			month: _date.getMonth()+1,
 			year: _date.getFullYear(),
 			hour: 1,
 			minute: 0
@@ -274,17 +274,17 @@ class SegmentCreate implements OnInit {
 					[hr, min] = time.split(":");
 
 			this.segment.start = {
-				day: d, 
-				month: (m-1),
-				year: y,
-				hour: hr,
-				minute: min
+				day: parseInt(d), 
+				month: parseInt(m)-1,
+				year: parseInt(y),
+				hour: parseInt(hr),
+				minute: parseInt(min)
 			}
 
 			this.segment.end = {
-				day: d,
-				month: (m - 1),
-				year: y,
+				day: parseInt(d),
+				month: parseInt(m) - 1,
+				year: parseInt(y),
 				hour: this.segment.end.hour,
 				minute: this.segment.end.minute
 			}
@@ -300,9 +300,9 @@ class SegmentCreate implements OnInit {
 				day: this.segment.start.day,
 				month: this.segment.start.month,
 				year: this.segment.start.year,
-				hour: hr,
-				minute: min
-			}
+				hour: parseInt(hr),
+				minute: parseInt(min)
+			};
 		}
 	}
 
@@ -342,7 +342,7 @@ class SegmentCreate implements OnInit {
 				{{segment.start.month}}/{{segment.start.day}}/{{segment.start.year}}
 				<div>
 					<strong>From</strong> {{segment.start.hour}}:{{segment.start.minute}} 
-					<strong>To:</strong> {{segment.start.hour}}:{{segment.start.minute}}
+					<strong>To:</strong> {{segment.end.hour}}:{{segment.end.minute}}
 				</div>
 				<a class="button type__2" (click)="remove(segment.id)">Remove</a>
 			</li>

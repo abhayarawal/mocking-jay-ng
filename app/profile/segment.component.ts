@@ -11,6 +11,8 @@ import {CalendarService, MonthPipe, WeekPipe, WeekFullPipe} from './calendar.ser
 import {Time, Template, Segment, Status, Fragment, User} from '../interfaces/interface';
 
 import {SegmentService} from '../segments/segment.service';
+import {Notification, NotificationService} from '../notification.service';
+
 
 var range = (x, y): number[] => {
 	let temp = [];
@@ -21,70 +23,6 @@ var range = (x, y): number[] => {
 var genId = () => {
 	return Math.random().toString(36).substr(2, 9);
 };
-
-
-var template: Template = {
-	id: genId(),
-	name: "advising",
-	interval: 15,
-	allow_multiple: true,
-	require_accept: true
-};
-
-var template2: Template = {
-	id: genId(),
-	name: "Office hour",
-	interval: 30,
-	allow_multiple: true,
-	require_accept: true
-};
-
-var segment: Segment = {
-	id: genId(),
-	template: template,
-	start: {
-		day: 2,
-		month: 3,
-		year: 2016,
-		hour: 10,
-		minute: 30
-	},
-	end: {
-		day: 2,
-		month: 3,
-		year: 2016,
-		hour: 14,
-		minute: 15
-	},
-	repeat: false,
-	location: "Empire State Rm205"
-};
-
-var segment2: Segment = {
-	id: genId(),
-	template: template2,
-	start: {
-		day: 2,
-		month: 3,
-		year: 2016,
-		hour: 17,
-		minute: 0
-	},
-	end: {
-		day: 2,
-		month: 3,
-		year: 2016,
-		hour: 20,
-		minute: 30
-	},
-	repeat: false,
-	location: "Empire State Rm205"
-};
-
-var _segments = [
-	segment,
-	segment2
-]
 
 
 var genFragments = (segment: Segment): Fragment[] => {
@@ -130,8 +68,8 @@ var genFragments = (segment: Segment): Fragment[] => {
 		});
 	}
 
-	ret[3].status = Status.approved;
-	ret[6].status = Status.in_progress;
+	// ret[3].status = Status.approved;
+	// ret[6].status = Status.in_progress;
 	// ret[6].status = Status.denied;
 
 	return ret;
@@ -194,9 +132,9 @@ class SegmentUnavailable implements OnInit {
 		<li *ngIf="fragment" (click)="send()" [ngClass]="{selected: selected}" class="segment status__{{fragment.status}}">
 			<span class="time">{{fragment | timePipe:false}}</span>
 			<span class="event__title" [ngSwitch]="fragment.status" *ngIf="fragment.status">
-				<span *ngSwitchWhen="1" [innerHTML]="'In progress'"></span>
+				<span *ngSwitchWhen="1" [innerHTML]="'Waiting for approval'"></span>
 				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
-				<span *ngSwitchWhen="3" [innerHTML]="'Denied bitch'"></span>
+				<span *ngSwitchWhen="3" [innerHTML]="'Denied'"></span>
 			</span>
 			<span class="lnr lnr-pencil" *ngIf="selected"></span>
 		</li>
@@ -247,7 +185,7 @@ class FragmentComponent implements OnInit {
 		<segment-unavailable [count]="5"></segment-unavailable>
 	`,
 	directives: [FragmentComponent, SegmentUnavailable],
-	pipes: [TimePipe]
+	pipes: [TimePipe],
 })
 class SegmentComponent implements OnInit {
 	@Input() segment: Segment;
@@ -265,14 +203,34 @@ class SegmentComponent implements OnInit {
 		<div class="segment__wrap">
 			<div class="segments">
 				<segment-unavailable [count]="2"></segment-unavailable>
+				<div class="segment" *ngIf="segments.length == 0">
+					<h3 class="segment__title">
+						<span>No events available</span>
+					</h3>
+				</div>
 				<segment-component *ngFor="#segment of segments" [segment]="segment"></segment-component>
 			</div>
 		</div>
 	`,
+	providers: [CalendarService],
 	directives: [SegmentUnavailable, SegmentComponent]
 })
 class SegmentWrap {
-	segments = _segments;
+	segments: Segment[] = [];
+
+	constructor(private calendarService: CalendarService,
+		private segmentService: SegmentService) {
+	}
+
+	ngOnInit() {
+		let [id, date] = this.calendarService.getRouteParams();
+
+		let day = date.getDate(),
+				month = date.getMonth(),
+				year = date.getFullYear();
+
+		this.segmentService.getSegmentsByDay(month, day, year).then(segments => { this.segments = segments });
+	}
 }
 
 
@@ -326,26 +284,31 @@ class DayComponent implements OnInit {
 			<div *ngIf="!fragment">
 				<h2>Nothing selected</h2>
 			</div>
-			<div *ngIf="fragment">
+			<div *ngIf="fragment" class="fragment__ctx">
 				<h3>
 					{{fragment.segment.template.name}}
+					<span>Taylor Swift</span>
 				</h3>
-				<div>
-					From: {{fragment | timePipe:false}} To: {{fragment | timePipe:true}}
+				<div class="date__time">
+					From: <span>{{fragment | timePipe:false}}</span> To: <span>{{fragment | timePipe:true}}</span>
 				</div>
-				<div [ngSwitch]="fragment.status">
+				<div>
+					Location: N/A
+				</div>
+				<div [ngSwitch]="fragment.status" class="ctx__controls">
 					<template [ngSwitchWhen]="1">
 						<strong>Appointment not approved yet</strong>
-						<button class="button type__2">Cancel appointment</button>
+						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
 					</template>
 					<template [ngSwitchWhen]="2">
 						<strong>Appointment approved</strong>
+						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
 					</template>
 					<template [ngSwitchWhen]="3">
 						<strong>Appointment denied</strong>
 					</template>
 					<template ngSwitchDefault>
-						<button class="button type__1">Create appointment</button>
+						<button class="button type__2" (click)="create()">Create appointment</button>
 					</template>
 				</div>
 			</div>
@@ -361,7 +324,8 @@ class FragmentContext implements OnInit {
 	user: User;
 
 	constructor(private segmentViewService:SegmentViewService,
-							private routeParams: RouteParams) {
+							private routeParams: RouteParams,
+							private notificationService: NotificationService) {
 	}
 
 	ngOnInit() { 
@@ -373,6 +337,21 @@ class FragmentContext implements OnInit {
 			err => {},
 			() => {}
 		)
+	}
+
+	cancel() {
+		this.fragment.status = Status.default;
+		this.notificationService.notify("Appointment canceled", true);
+	}
+
+	create() {
+		if (this.fragment.segment.template.require_accept) {
+			this.fragment.status = Status.in_progress;
+		} else {
+			this.fragment.status = Status.approved;
+		}
+		this.notificationService.notify(`Appointment created for ${this.fragment.segment.template.name}`, true);
+
 	}
 }
 

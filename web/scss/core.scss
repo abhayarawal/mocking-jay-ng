@@ -870,6 +870,9 @@ $top__height: 40px;
 					@include border-radius(100%);
 					font-weight: 500;
 					font-size: 14px;
+					@include transition(transform 0.2s ease);
+					@include transform(scale(1));
+
 
 					&.router-link-active
 					{
@@ -1095,6 +1098,44 @@ textarea
 		height: calc(100% - 16px);
 		overflow-x: hidden;
 		overflow-y: auto;
+
+		.fragment__ctx
+		{
+			h3
+			{
+				span
+				{
+					display: block;
+					font-size: 0.6em;
+				}
+
+				margin-bottom: 15px;
+			}
+
+			.date__time
+			{
+				span
+				{
+					display: inline-block;
+					vertical-align: middle;
+					font-size: 22px;
+					font-weight: 300;
+					margin-right: 15px;
+				}
+			}
+
+			.ctx__controls
+			{
+				display: block;
+				margin-top: 15px;
+
+				strong
+				{
+					display: block;
+					margin-bottom: 10px;
+				}
+			}
+		}
 	}
 }
 
@@ -1812,3 +1853,54 @@ textarea
 		}
 	}
 }
+
+.table
+{
+	li
+	{
+		@include row();
+		background: #fbfcff;
+		border: 1px solid #e8e8e8;
+		margin-top: 15px;
+		@include border-radius(7px);
+		padding: 7px 0;
+
+		section
+		{
+			@include col(1/3);
+
+			&:first-child
+			{
+				text-transform: capitalize;
+			}
+		}
+	}
+}
+
+
+.notification__component
+{
+	position: fixed;
+	bottom: 20px;
+	border: 1px solid #ccc;
+	border-top: 4px solid #0099ff;
+	@include border-radius(5px);
+	display: block;
+	background: rgba(255, 255, 255, 0.8);
+	padding: 10px 20px;
+	visibility: hidden;
+	opacity: 0;
+	left: 0px;
+	margin-left: -100px;
+	@include transition(all 0.4s ease);
+
+	&.show
+	{
+		visibility: visible;
+		opacity: 1;
+		margin-left: 20px;
+	}
+}
+
+
+

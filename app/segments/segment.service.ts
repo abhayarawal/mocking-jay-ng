@@ -59,6 +59,14 @@ export class SegmentService implements OnInit {
 		}
 	}
 
+	getSegmentsByDay(mm, dd, yyyy) {
+		return Promise.resolve(
+			this.segments.filter((segment) => {
+				return (segment.start.month == mm && segment.start.day == dd && segment.start.year == yyyy);
+			}
+		));
+	}
+
 	getNewSegment() {
 		let date = new Date();
 		let time = {
