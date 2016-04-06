@@ -16,7 +16,7 @@ var genId = () => {
 var TEMPLATES = [
 	{
 		id: genId(),
-		name: "advising",
+		name: "Advising",
 		interval: 15,
 		allow_multiple: true,
 		require_accept: true

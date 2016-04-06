@@ -214,10 +214,11 @@ class TemplateCreate implements OnInit {
 
 @Component({
 	template: `
-		<h2>Template Show</h2>
+		<h2>Templates</h2>
 		<ul *ngIf="templates">
 			<li *ngFor="#template of templates">
-				{{template.name}}
+				<strong>{{template.id}}</strong>
+				<h3>{{template.name}}</h3>
 				<div>Interval {{template.interval}}</div>
 			</li>
 		</ul>
