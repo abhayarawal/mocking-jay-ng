@@ -5,10 +5,11 @@ import {bootstrap} from 'angular2/platform/browser';
 import {ROUTER_PROVIDERS} from 'angular2/router';
 import {HTTP_PROVIDERS, HTTP_BINDINGS} from 'angular2/http';
 
-import {SegmentService} from './profile/segment.service';
+import {SegmentViewService} from './profile/segment.service';
 import {TemplateService} from './templates/template.service';
+import {SegmentService} from './segments/segment.service';
 
 bootstrap(MountNode, [
 	ROUTER_PROVIDERS, HTTP_PROVIDERS, HTTP_BINDINGS, 
-	SegmentService, TemplateService
+	SegmentViewService, TemplateService, SegmentService
 ]);

@@ -68,6 +68,15 @@ export class TemplateService implements OnInit {
 		}
 	}
 
+	removeTemplate(id: string) {
+		let index = this.templates.map(template => template.id).indexOf(id);
+		if (index > 0 && index < this.templates.length) {
+			this.templates.splice(index, 1);
+			localStorage.setItem('templates', JSON.stringify(this.templates));
+			this.triggerObserve();
+		}
+	}
+
 	getNewTemplate() {
 		let template: Template = {
 			id: genId(),

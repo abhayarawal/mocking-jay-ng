@@ -10,7 +10,7 @@ import 'rxjs/Rx';
 import {Fragment} from '../interfaces/interface';
 
 @Injectable()
-export class SegmentService {
+export class SegmentViewService {
 	contextObservable$: Observable<Fragment>;
 	private contextObserver: Observer<Fragment>;
 

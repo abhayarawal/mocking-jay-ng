@@ -64,7 +64,7 @@ export class RadiusRadioComponent {
 		</div>
 	`
 })
-export class RadiusSelectComponent {
+export class RadiusSelectComponent implements OnInit {
 	@Input() items: SelectObject[];
 	@Input() selected: number = 0;
 	@Output() update = new EventEmitter<number>();
@@ -81,6 +81,10 @@ export class RadiusSelectComponent {
 	hide() {
 		clearTimeout(this.timeout);
 		this.timeout = setTimeout(() => { this.show = false; }, 250);
+	}
+
+	ngOnInit() {
+		this.select(this.selected);
 	}
 }
 

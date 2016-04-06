@@ -201,7 +201,6 @@ class TemplateCreate implements OnInit {
 	submit() {
 		if (this.templateForm.valid) {
 			this.templateService.addTemplate(this.template);
-			this.router.navigate(['/TemplateViewport']);
 		}
 	}
 
@@ -219,11 +218,13 @@ class TemplateCreate implements OnInit {
 @Component({
 	template: `
 		<h2>Templates</h2>
+		<a class="button type__1" (click)="flush()">Flush storage</a>
 		<ul *ngIf="templates">
 			<li *ngFor="#template of templates">
 				<strong>{{template.id}}</strong>
 				<h3>{{template.name}}</h3>
 				<div>Interval {{template.interval}}</div>
+				<a class="button type__2" (click)="remove(template.id)">Remove</a>
 			</li>
 		</ul>
 	`
@@ -243,6 +244,14 @@ class Templates implements OnInit {
 			}
 		);
 		this.templateService.triggerObserve();
+	}
+
+	remove(id: string) {
+		this.templateService.removeTemplate(id);
+	}
+
+	flush() {
+		localStorage.removeItem('templates');
 	}
 }
 

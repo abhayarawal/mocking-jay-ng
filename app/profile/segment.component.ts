@@ -6,9 +6,11 @@ import {Http, Response, Headers} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/Rx';
 
-import {SegmentService} from './segment.service';
+import {SegmentViewService} from './segment.service';
 import {CalendarService, MonthPipe, WeekPipe, WeekFullPipe} from './calendar.service';
 import {Time, Template, Segment, Status, Fragment, User} from '../interfaces/interface';
+
+import {SegmentService} from '../segments/segment.service';
 
 var range = (x, y): number[] => {
 	let temp = [];
@@ -206,16 +208,16 @@ class FragmentComponent implements OnInit {
 	observable: Observable<Fragment>;
 	selected: boolean = false;
 
-	constructor(private segmentService: SegmentService) {}
+	constructor(private segmentViewService: SegmentViewService) {}
 
 	send() {
 		if (this.fragment) {
-			this.segmentService.triggerContext(this.fragment);
+			this.segmentViewService.triggerContext(this.fragment);
 		}
 	}
 
 	ngOnInit() {
-		this.observable = this.segmentService.contextObservable$;
+		this.observable = this.segmentViewService.contextObservable$;
 		this.observable.subscribe(
 			data => {
 				this.selected = false;
@@ -358,12 +360,12 @@ class FragmentContext implements OnInit {
 	fragment: Fragment;
 	user: User;
 
-	constructor(private segmentService:SegmentService,
+	constructor(private segmentViewService:SegmentViewService,
 							private routeParams: RouteParams) {
 	}
 
 	ngOnInit() { 
-		this.observable = this.segmentService.contextObservable$;
+		this.observable = this.segmentViewService.contextObservable$;
 		this.observable.subscribe(
 			data => {
 				this.fragment = data;

@@ -2,11 +2,19 @@ import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector} fr
 import {RouteConfig, RouterOutlet, RouterLink, Router, RouteParams, Redirect} from 'angular2/router';
 import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGroup, NgControl, FormBuilder, NgFormModel, ControlGroup, Validators} from 'angular2/common';
 
-import {LayoutHeader} from '../layouts/header.layout';
-import {Segment, Time} from '../interfaces/interface';
+import {Http, Response, Headers} from 'angular2/http';
+import {Observable} from 'rxjs/Rx';
+import 'rxjs/Rx';
 
+import {LayoutHeader} from '../layouts/header.layout';
+import {Segment, Time, Template} from '../interfaces/interface';
 import {RadiusInputComponent, RadiusSelectComponent, RadiusRadioComponent, SelectObject} from '../form/form.component';
 
+import {TemplateService} from '../templates/template.service';
+import {SegmentService} from '../segments/segment.service';
+
+
+// TOO MUCH MONKEY PATCHING ..... FIX IT!!!!!
 
 @Component({
 	selector: 'mj-radio',
@@ -27,44 +35,6 @@ export class MjRadio {
 	toggle() {
 		this.on = !!!this.on;
 		this.update.next(this.on);
-	}
-}
-
-@Component({
-	selector: 'mj-number',
-	template: `
-		<div class="mj__number">
-			<input type="text" [(ngModel)]="val" (ngModelChange)="emitValue()" />
-			<div class="button__wrap">
-				<button (click)="down()">
-					<span class="lnr lnr-chevron-down"></span>
-				</button>
-				<button (click)="up()">
-					<span class="lnr lnr-chevron-up"></span>
-				</button>
-			</div>
-		</div>
-	`
-})
-export class MjNumber {
-	@Input() val: number;
-	@Input() min: number;
-	@Input() max: number;
-	@Output() update = new EventEmitter<string>();
-
-	emitValue() {
-	}
-
-	down() {
-		if (!(this.val == this.min)) {
-			this.val -= 1;
-		}
-	}
-
-	up() {
-		if (!(this.val == this.max)) {
-			this.val += 1;
-		}
 	}
 }
 
@@ -125,12 +95,11 @@ class DateTimeValidator {
 		<div class="mj__time">
 			<form [ngFormModel]="dateTimeForm">
 				<div class="row">
-					<div>{{ formatted }}</div>
 					<section>
-						<input type="text" [disabled]="disabled" ngControl="dateControl" (ngModelChange)="emitEvent()" />
+						<input type="text" [disabled]="disabled" ngControl="date" (ngModelChange)="emitEvent()" />
 					</section>
 					<section>
-						<input type="text" ngControl="timeControl" (ngModelChange)="emitEvent()" />
+						<input type="text" ngControl="time" (ngModelChange)="emitEvent()" />
 					</section>
 					<section>
 						<radius-select [items]="timeOfDay" [selected]="0"></radius-select>
@@ -142,10 +111,12 @@ class DateTimeValidator {
 	directives: [RadiusSelectComponent]
 })
 export class MjTime implements OnInit {
-	@Input() time: Time;
+	@Input() _time: Time;
 	@Input() disabled: boolean = false;
-	timeControl: Control;
-	dateControl: Control;
+	@Output() update = new EventEmitter<{}>();
+
+	time: Control;
+	date: Control;
 	dateTimeForm: ControlGroup;
 
 	timeOfDay: SelectObject[] = [
@@ -154,29 +125,34 @@ export class MjTime implements OnInit {
 	]
 
 	emitEvent() {
+		if (this.dateTimeForm.valid) {
+			this.update.next(this.dateTimeForm.value);
+		} else {
+			this.update.next({ valid: false });
+		}
 	}
 
 	constructor(private fb: FormBuilder) {
-		let date = new Date();
-		this.time = {
-			day: date.getDate(),
-			month: date.getMonth(),
-			year: date.getFullYear(),
+		let _date = new Date();
+		this._time = {
+			day: _date.getDate(),
+			month: _date.getMonth(),
+			year: _date.getFullYear(),
 			hour: 1,
 			minute: 0
 		}
 
-		this.timeControl = new Control(
-			`${this.time.hour}:${this.time.minute}`,
+		this.time = new Control(
+			`${this._time.hour}:${this._time.minute}`,
 			Validators.compose([Validators.required, DateTimeValidator.shouldBeTime]));
 
-		this.dateControl = new Control(
-			`${this.time.month}/${this.time.day}/${this.time.year}`,
+		this.date = new Control(
+			`${this._time.month}/${this._time.day}/${this._time.year}`,
 			Validators.compose([Validators.required, DateTimeValidator.shouldBeDate]));
 
 		this.dateTimeForm = fb.group({
-			'timeControl': this.timeControl,
-			'dateControl': this.dateControl
+			'time': this.time,
+			'date': this.date
 		});
 	}
 
@@ -184,7 +160,8 @@ export class MjTime implements OnInit {
 	}
 
 	get formatted() {
-		return `${JSON.stringify(this.dateTimeForm.value)} -- Valid: ${this.dateTimeForm.valid}`;
+		return ``;
+		// return `${JSON.stringify(this.dateTimeForm.value)} -- Valid: ${this.dateTimeForm.valid}`;
 	}
 }
 
@@ -197,10 +174,10 @@ export class MjTime implements OnInit {
 				Create a new event
 			</h4>
 			<div class="form__wrap">
+				{{formatted}}
 				<form>
 					<div class="form__group">
 						<label for="">Template</label>
-						<input type="hidden" [(ngModel)]="templateId" ngControl="template" />
 						<radius-select (update)="updateTemplate($event)" [items]="templates" [selected]="0"></radius-select>
 						<div class="form__desc">
 							Select the template you want this event to use
@@ -208,11 +185,11 @@ export class MjTime implements OnInit {
 					</div>
 					<div class="form__group">
 						<label for="">From</label>
-						<mj-time></mj-time>
+						<mj-time (update)="updateStart($event)"></mj-time>
 					</div>
 					<div class="form__group">
 						<label for="">To</label>
-						<mj-time [disabled]="true"></mj-time>
+						<mj-time [disabled]="true" (update)="updateEnd($event)"></mj-time>
 					</div>
 					<div class="form__group">
 						<label for="">Repeat?</label>
@@ -258,59 +235,141 @@ export class MjTime implements OnInit {
 						</div>
 					</div>
 					<div class="form__group">
-						<button class="button type__3">Create Segment</button>
+						<button (click)="submit()" class="button type__3">Create Segment</button>
 						<button class="button type__4">Cancel</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	`,
-	directives: [MjRadio, MjNumber, MjTime, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent]
+	directives: [MjRadio, MjTime, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent]
 })
 class SegmentCreate implements OnInit {
 	segment: Segment;
 	repeatView: boolean = false;
 
-	templateId: string;
-	template: Control;
-	start: Control;
-	end: Control;
-	repeat: Control;
-	repeatStart: Control;
-	repeatEnd: Control;
-	instanceOf: Control;
-	location: Control;
+	template: string;
 
 	segmentForm: ControlGroup;
 
 	templates: SelectObject[];
+	templates$: Observable<Template[]>;
 
-	constructor(private builder: FormBuilder) {
-		this.template = new Control('', Validators.required);
+	constructor(private builder: FormBuilder,
+							private templateService: TemplateService,
+							private segmentService: SegmentService) {
+	}
 
-		this.segmentForm = builder.group({
-			'template': this.template,
-		})
+	updateTemplate(event: string) {
+		this.template = event;
+		this.templateService.getTemplate(this.template).then(template => this.segment.template = template);
+	};
+
+	updateRepeat(event: boolean) { this.repeatView = event };
+
+	updateStart(event: any) {
+		if (!('valid' in event)) {
+			let {date, time} = event,
+					[m, d, y] = date.split("/"),
+					[hr, min] = time.split(":");
+
+			this.segment.start = {
+				day: d, 
+				month: (m-1),
+				year: y,
+				hour: hr,
+				minute: min
+			}
+
+			this.segment.end = {
+				day: d,
+				month: (m - 1),
+				year: y,
+				hour: this.segment.end.hour,
+				minute: this.segment.end.minute
+			}
+		}
+	}
+
+	updateEnd(event: any) {
+		if (!('valid' in event)) {
+			let {_, time} = event,
+					[hr, min] = time.split(":");
+
+			this.segment.end = {
+				day: this.segment.start.day,
+				month: this.segment.start.month,
+				year: this.segment.start.year,
+				hour: hr,
+				minute: min
+			}
+		}
+	}
+
+	submit() {
+		this.segmentService.addSegment(this.segment);
 	}
 
 	ngOnInit() {
-		this.templates = [
-			{ value: '9asj1924', text: 'Advising' },
-			{ value: '935aj1924', text: 'Office hour' },
-			{ value: '9asjkc1924', text: 'Open appointment' },
-		];
+		this.templates$ = this.templateService.templates$;
+		this.templates$.subscribe(
+			(templates) => {
+				this.templates = templates.map((template) => {
+					return { value: template.id, text: template.name }
+				});
+			}
+		);
+		this.templateService.triggerObserve();
+
+		this.segmentService.getNewSegment().then(segment => this.segment = segment);
 	}
 
-	updateTemplate(event: string) { this.templateId = event };
-	updateRepeat(event: boolean) { this.repeatView = event };
+	get formatted() {
+		return ``;
+		// return JSON.stringify(this.segment);
+	}
 }
+
+
+
+
 @Component({
 	template: `
 		<h2>Segment Show</h2>
+		<ul *ngIf="segments">
+			<li *ngFor="#segment of segments">
+				<h4>{{segment.template.name}}</h4>
+				{{segment.start.month}}/{{segment.start.day}}/{{segment.start.year}}
+				<div>
+					<strong>From</strong> {{segment.start.hour}}:{{segment.start.minute}} 
+					<strong>To:</strong> {{segment.start.hour}}:{{segment.start.minute}}
+				</div>
+				<a class="button type__2" (click)="remove(segment.id)">Remove</a>
+			</li>
+		</ul>
 	`
 })
-class Segments {
+class Segments implements OnInit {
 
+	segments: Segment[];
+	segments$: Observable<Segment[]>;
+
+	constructor(private segmentService: SegmentService) {
+	}
+
+	ngOnInit() {
+		this.segments$ = this.segmentService.segments$;
+		this.segments$.subscribe(
+			(data) => {
+				this.segments = data;
+			}
+		);
+		this.segmentService.triggerObserve();
+	}
+
+	remove(id: string) {
+		this.segmentService.removeSegment(id);
+	}
 }
 
 @Component({
