@@ -68,12 +68,16 @@ export class MjNumber {
 				this.val -= 1;
 			}
 		}
+
+		this.emitValue();
 	}
 
 	up() {
 		if (!(this.val == this.max)) {
 			this.val += 1;
 		}
+
+		this.emitValue();
 	}
 }
 
@@ -196,7 +200,7 @@ class TemplateCreate implements OnInit {
 
 	submit() {
 		if (this.templateForm.valid) {
-			this.templateService.addTemplate(this.templateForm.value);
+			this.templateService.addTemplate(this.template);
 			this.router.navigate(['/TemplateViewport']);
 		}
 	}
