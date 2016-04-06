@@ -36,7 +36,7 @@ export interface Segment {
 	repeat: boolean,
 	repeat_start?: Time,
 	repeat_end?: Time,
-	instance_id?: string,
+	instance_of?: string,
 	location?: string
 }
 

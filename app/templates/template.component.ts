@@ -2,9 +2,13 @@ import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector} fr
 import {RouteConfig, RouterOutlet, RouterLink, Router, RouteParams, Redirect} from 'angular2/router';
 import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGroup, NgControl, FormBuilder, NgFormModel, ControlGroup, Validators} from 'angular2/common';
 
+import {Http, Response, Headers} from 'angular2/http';
+import {Observable} from 'rxjs/Rx';
+import 'rxjs/Rx';
+
 import {LayoutHeader} from '../layouts/header.layout';
 import {Template} from '../interfaces/interface';
-
+import {TemplateService} from './template.service';
 import {RadiusInputComponent, RadiusSelectComponent, RadiusRadioComponent} from '../form/form.component';
 
 var genId = () => {
@@ -109,7 +113,7 @@ class TemplateValidator {
 				Create a new template
 			</h4>
 			<div class="form__wrap" *ngIf="template">
-				<form [ngFormModel]="templateForm" (submit)="submit()">
+				<form [ngFormModel]="templateForm">
 					<div class="form__group">
 						<label for="">Name</label>
 						<input type="hidden" [(ngModel)]="template.name" ngControl="name" />
@@ -144,7 +148,7 @@ class TemplateValidator {
 						</div>
 					</div>
 					<div class="form__group">
-						<button type="submit" class="button type__3">Create Template</button>
+						<button (click)="submit()" class="button type__3">Create Template</button>
 						<button class="button type__4">Cancel</button>
 					</div>
 				</form>
@@ -169,7 +173,10 @@ class TemplateCreate implements OnInit {
 
 	defaultNames: string[] = ['advising', 'office hour', 'open appointments'];
 
-	constructor(private fb: FormBuilder) {
+	constructor(private fb: FormBuilder,
+							private templateService: TemplateService,
+							private router: Router) 
+	{
 		this.name = new Control('', Validators.compose([Validators.required, TemplateValidator.shouldBeName]));
 		this.interval = new Control(10, Validators.compose([Validators.required, TemplateValidator.shouldBeInterval]));
 		this.allowMultiple = new Control(false, Validators.required);
@@ -184,16 +191,14 @@ class TemplateCreate implements OnInit {
 	}
 
 	ngOnInit() {
-		this.template = {
-			id: "992jsdaf",
-			name: "",
-			interval: 15,
-			allow_multiple: false,
-			require_accept: true
-		}
+		this.templateService.getNewTemplate().then(template => this.template = template);
 	}
 
 	submit() {
+		if (this.templateForm.valid) {
+			this.templateService.addTemplate(this.templateForm.value);
+			this.router.navigate(['/TemplateViewport']);
+		}
 	}
 
 	nameUpdate(event: string) { this.nameDirty = true; this.template.name = event; }
@@ -205,13 +210,35 @@ class TemplateCreate implements OnInit {
 		return JSON.stringify(this.template);
 	}
 }
+
+
 @Component({
 	template: `
 		<h2>Template Show</h2>
+		<ul *ngIf="templates">
+			<li *ngFor="#template of templates">
+				{{template.name}}
+				<div>Interval {{template.interval}}</div>
+			</li>
+		</ul>
 	`
 })
-class Templates {
+class Templates implements OnInit {
+	templates: Template[];
+	templates$: Observable<Template[]>;
 
+	constructor(private templateService: TemplateService) {
+	}
+
+	ngOnInit() {
+		this.templates$ = this.templateService.templates$;
+		this.templates$.subscribe(
+			(data) => {
+				this.templates = data;
+			}
+		);
+		this.templateService.triggerObserve();
+	}
 }
 
 @Component({
