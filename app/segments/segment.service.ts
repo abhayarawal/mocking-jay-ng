@@ -52,7 +52,7 @@ export class SegmentService implements OnInit {
 
 	removeSegment(id: string) {
 		let index = this.segments.map(segment => segment.id).indexOf(id);
-		if (index > 0 && index < this.segments.length) {
+		if (index >= 0 && index < this.segments.length) {
 			this.segments.splice(index, 1);
 			localStorage.setItem('segments', JSON.stringify(this.segments));
 			this.triggerObserve();

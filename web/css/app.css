@@ -851,9 +851,9 @@ textarea {
         .segment__wrap .segments .segment .fragments ul li.selected {
           background: #fcfcfc;
           z-index: 2;
-          -webkit-box-shadow: 0px 0px 4px 0 rgba(97, 97, 97, 0.25);
-          -moz-box-shadow: 0px 0px 4px 0 rgba(97, 97, 97, 0.25);
-          box-shadow: 0px 0px 4px 0 rgba(97, 97, 97, 0.25);
+          -webkit-box-shadow: 0px 0px 2px 0 rgba(97, 97, 97, 0.34);
+          -moz-box-shadow: 0px 0px 2px 0 rgba(97, 97, 97, 0.34);
+          box-shadow: 0px 0px 2px 0 rgba(97, 97, 97, 0.34);
           -webkit-transform: scale(1.02);
           -moz-transform: scale(1.02);
           -o-transform: scale(1.02);

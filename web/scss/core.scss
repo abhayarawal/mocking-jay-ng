@@ -1306,7 +1306,7 @@ textarea
 						{
 							background: #fcfcfc;
 							z-index: 2;
-							@include box-shadow(0px, 0px, 4px, 0, rgba(97, 97, 97, 0.25));
+							@include box-shadow(0px, 0px, 2px, 0, rgba(97, 97, 97, 0.34));
 							@include transform(scale(1.02));
 						}
 					}

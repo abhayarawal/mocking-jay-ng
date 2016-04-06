@@ -13,6 +13,8 @@ import {RadiusInputComponent, RadiusSelectComponent, RadiusRadioComponent, Selec
 import {TemplateService} from '../templates/template.service';
 import {SegmentService} from '../segments/segment.service';
 
+import {NotificationService} from '../notification.service';
+
 
 // TOO MUCH MONKEY PATCHING ..... FIX IT!!!!!
 
@@ -257,7 +259,8 @@ class SegmentCreate implements OnInit {
 
 	constructor(private builder: FormBuilder,
 							private templateService: TemplateService,
-							private segmentService: SegmentService) {
+							private segmentService: SegmentService,
+							private notificationService: NotificationService) {
 	}
 
 	updateTemplate(event: string) {
@@ -308,6 +311,10 @@ class SegmentCreate implements OnInit {
 
 	submit() {
 		this.segmentService.addSegment(this.segment);
+		this.segmentService.getNewSegment().then(segment => { 
+			this.segment.id = segment.id;
+		});
+		this.notificationService.notify(`Added new segment ${this.segment.id}`, true, false);
 	}
 
 	ngOnInit() {
@@ -360,7 +367,8 @@ class Segments implements OnInit {
 	segments: Segment[];
 	segments$: Observable<Segment[]>;
 
-	constructor(private segmentService: SegmentService) {
+	constructor(private segmentService: SegmentService,
+							private notificationService: NotificationService) {
 	}
 
 	ngOnInit() {
@@ -375,6 +383,7 @@ class Segments implements OnInit {
 
 	remove(id: string) {
 		this.segmentService.removeSegment(id);
+		this.notificationService.notify("Removed segment", true, true);
 	}
 }
 
