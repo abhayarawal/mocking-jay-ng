@@ -84,7 +84,7 @@ class DateTimeValidator {
 		} else {
 			let [m, d, _] = control.value.trim().split("/");
 			m = parseInt(m); d = parseInt(d);
-			if (m < 1 || m > 12) { return error; }
+			if (m < 1 || m > 24) { return error; }
 			if (d < 1 || d > 31) { return error; }
 		}
 		return null;

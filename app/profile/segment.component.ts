@@ -136,7 +136,7 @@ class SegmentUnavailable implements OnInit {
 				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
 				<span *ngSwitchWhen="3" [innerHTML]="'Denied'"></span>
 			</span>
-			<span class="lnr lnr-pencil" *ngIf="selected"></span>
+			<!-- <span class="lnr lnr-pencil" *ngIf="selected"></span> -->
 		</li>
 	`,
 	pipes: [TimePipe]

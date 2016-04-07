@@ -30,6 +30,8 @@ export class SegmentService implements OnInit {
 		} else {
 			localStorage.setItem('segments', "[]");
 		}
+
+		console.log(this.segments);
 	}
 
 	triggerObserve() {
