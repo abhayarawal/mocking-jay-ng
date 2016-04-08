@@ -71,18 +71,16 @@ export class SegmentService implements OnInit {
 	}
 
 	getSegmentsByDay(m, d, y) {
-		// return Promise.resolve(() => {
-		// 	let segment = (this.segments.filter((segment) => {
-		// 		return (segment.start.month == m && segment.start.day == d && segment.start.year == y);
-		// 	}))[0];
+		let segments = this.segments.filter((segment) => {
+			return (segment.start.month == m && segment.start.day == d && segment.start.year == y);
+		});
 
-		// 	if (segment) {
-		// 		this.templateService.getTemplate(segment.template_id).then(t => segment.template = t);
-		// 		return segment;
-		// 	}
-
-		// 	return null;
-		// });
+		return Promise.resolve(this.segments.map((segment) => {
+			this.templateService.getTemplate(segment.template_id).then(template => {
+				segment.template = template;
+			});
+			return segment;
+		}));
 	}
 
 	getNewSegment() {
