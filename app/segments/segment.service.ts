@@ -1,4 +1,4 @@
-import {Injectable, Injector, OnInit, NgZone} from "angular2/core";
+import {Injectable, Inject, Injector, OnInit, NgZone} from "angular2/core";
 import {Http, Response, Headers} from 'angular2/http';
 
 import {Observable} from 'rxjs/Observable';
@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
 
 import {Segment} from '../interfaces/interface';
+import {TemplateService} from '../templates/template.service';
 
 var genId = () => {
 	return Math.random().toString(36).substr(2, 9);
@@ -21,7 +22,11 @@ export class SegmentService implements OnInit {
 	segments$: Observable<Segment[]>;
 	private segmentsObserver: Observer<Segment[]>;
 
-	constructor() {
+	templateService: TemplateService;
+
+	constructor(@Inject(TemplateService) TemplateService) {
+		this.templateService = TemplateService;
+
 		this.segments$ = new Observable<Segment[]>(observer => this.segmentsObserver = observer).share();
 
 		let segments = localStorage.getItem('segments');
@@ -30,15 +35,19 @@ export class SegmentService implements OnInit {
 		} else {
 			localStorage.setItem('segments', "[]");
 		}
-
-		console.log(this.segments);
 	}
 
 	triggerObserve() {
+		this.segments = this.segments.map((segment) => {
+			this.templateService.getTemplate(segment.template_id).then(template => {
+				segment.template = template;
+			});
+			return segment;
+		});
 		this.segmentsObserver.next(this.segments);
 	}
 
-	getTemplate(id: string) {
+	getSegment(id: string) {
 		return Promise.resolve(
 			(this.segments.filter(segment => segment.id === id))[0]
 		);
@@ -61,12 +70,19 @@ export class SegmentService implements OnInit {
 		}
 	}
 
-	getSegmentsByDay(mm, dd, yyyy) {
-		return Promise.resolve(
-			this.segments.filter((segment) => {
-				return (segment.start.month == mm && segment.start.day == dd && segment.start.year == yyyy);
-			}
-		));
+	getSegmentsByDay(m, d, y) {
+		// return Promise.resolve(() => {
+		// 	let segment = (this.segments.filter((segment) => {
+		// 		return (segment.start.month == m && segment.start.day == d && segment.start.year == y);
+		// 	}))[0];
+
+		// 	if (segment) {
+		// 		this.templateService.getTemplate(segment.template_id).then(t => segment.template = t);
+		// 		return segment;
+		// 	}
+
+		// 	return null;
+		// });
 	}
 
 	getNewSegment() {
@@ -84,7 +100,8 @@ export class SegmentService implements OnInit {
 			start: time,
 			end: time,
 			repeat: false,
-			location: ""
+			location: "",
+			template_id: ""
 		};
 
 		return Promise.resolve(segment);

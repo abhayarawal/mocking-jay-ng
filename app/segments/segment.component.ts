@@ -250,8 +250,6 @@ class SegmentCreate implements OnInit {
 	segment: Segment;
 	repeatView: boolean = false;
 
-	template: string;
-
 	segmentForm: ControlGroup;
 
 	templates: SelectObject[];
@@ -264,8 +262,7 @@ class SegmentCreate implements OnInit {
 	}
 
 	updateTemplate(event: string) {
-		this.template = event;
-		this.templateService.getTemplate(this.template).then(template => this.segment.template = template);
+		this.segment.template_id = event;
 	};
 
 	updateRepeat(event: boolean) { this.repeatView = event };
@@ -346,7 +343,7 @@ class SegmentCreate implements OnInit {
 		<ul *ngIf="segments" class="table">
 			<li *ngFor="#segment of segments">
 				<section>
-				<h4>{{segment.template.name}}</h4>
+				<h4>{{segment.template?.name}}</h4>
 				</section>
 				<section>
 					<h5>{{segment.start.month}}/{{segment.start.day}}/{{segment.start.year}}</h5>

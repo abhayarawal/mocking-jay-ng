@@ -8,6 +8,7 @@ import {TemplateViewport} from './templates/template.component';
 import {SegmentViewport} from './segments/segment.component';
 import {NotificationService, Notification} from './notification.service';
 
+import {AuthService} from './auth/auth.service';
 
 import {Http, Response, Headers} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
@@ -61,6 +62,17 @@ class NotificationComponent  implements OnInit {
 	{ path: '/segments/...', name: 'SegmentViewport', component: SegmentViewport }
 ])
 export class MountNode {
+	// constructor(
+	// 	private router: Router,
+	// 	private authService: AuthService
+	// ){}
+
+	// ngOnInit() {
+	// 	let [tokenExists, _] = this.authService.tokenExists();
+	// 	if (!tokenExists) {
+	// 		this.router.navigateByUrl('/');
+	// 	}
+	// }
 }
 
 

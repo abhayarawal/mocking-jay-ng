@@ -27,7 +27,7 @@ export class NotificationService {
 		this.notification$ = new Observable<Notification>(observer => this.observer = observer).share();
 	}
 
-	notify(message, type, error): void {
+	notify(message, type, error = false): void {
 		this.notification = {
 			message: message,
 			type: type,

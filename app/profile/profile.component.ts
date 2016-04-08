@@ -131,8 +131,7 @@ class DaySegment implements OnInit {
 			<calendar [id]="user.id" ></calendar>
 		</div>
 	`,
-	directives: [Calendar, RouterLink],
-	providers: [AuthService]
+	directives: [Calendar, RouterLink]
 })
 class ProfileNav implements OnInit {
 	@Input() user: User;

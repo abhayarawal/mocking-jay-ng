@@ -25,8 +25,7 @@ class AuthValidator {
 }
 
 @Component({
-	template: ``,
-	providers: [AuthService]
+	template: ``
 })
 export class LogoutComponent implements OnInit {
 	constructor(private authService: AuthService,
@@ -34,6 +33,7 @@ export class LogoutComponent implements OnInit {
 
 	ngOnInit() {
 		this.authService.deleteJwt();
+		this.authService.deleteSession();
 		this.router.navigateByUrl('/');
 	}
 }
@@ -59,8 +59,7 @@ export class LogoutComponent implements OnInit {
 				{{ notification.message }} --- {{ notification.type }}
 			</div>-->
 		</div>
-	`,
-	providers: [AuthService]
+	`
 })
 export class AuthComponent implements OnInit {
 	username: Control;
@@ -70,10 +69,12 @@ export class AuthComponent implements OnInit {
 	notification: Notification;
 	observable: Observable<Notification>;
 
-	constructor(private router: Router,
+	constructor(
+		private router: Router,
 		private authService: AuthService,
 		private builder: FormBuilder,
-		private notificationService: NotificationService) {
+		private notificationService: NotificationService
+	){
 		this.username = new Control('', Validators.compose([
 			Validators.required, Validators.minLength(3), AuthValidator.isUsername
 		]));
@@ -89,11 +90,11 @@ export class AuthComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		// let [tokenExists, _] = this.authService.tokenExists();
-		// if (tokenExists) {
-		// 	this.router.navigateByUrl('/calendar');
-		// 	return;
-		// }
+		let [tokenExists, _] = this.authService.tokenExists();
+		if (tokenExists) {
+			this.router.navigateByUrl('/calendar');
+			return;
+		}
 
 		this.observable = this.authService.notification$;
 		this.observable.subscribe(
@@ -111,6 +112,7 @@ export class AuthComponent implements OnInit {
 	auth(): void {
 		if (this.authForm.valid) {
 			this.authService.authenticate(this.authForm.value);
+			this.notificationService.notify('Authentication successful', true);
 		} else {
 			this.notification = {
 				message: `Username or password not valid`,

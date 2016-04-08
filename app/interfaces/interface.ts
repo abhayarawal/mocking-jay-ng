@@ -30,6 +30,7 @@ export interface Template {
 
 export interface Segment {
 	id: string,
+	template_id: string,
 	template?: Template,
 	start: Time,
 	end: Time,
@@ -54,6 +55,7 @@ export interface Fragment {
 	id: string,
 	start: Time,
 	end: Time,
+	segment_id: string,
 	segment: Segment,
 	message?: string,
 	status?: Status,

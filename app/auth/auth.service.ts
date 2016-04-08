@@ -57,6 +57,23 @@ export class AuthService {
 		}
   }
 
+  saveSession(session: {}): void {
+		localStorage.setItem('session', JSON.stringify(session));
+  }
+
+  deleteSession(): void {
+		localStorage.removeItem('session');
+  }
+
+  getSession(): [boolean, {}] {
+		let session = localStorage.getItem('session');
+		if (typeof session !== 'undefined' && session !== null) {
+			return [true, session];
+		} else {
+			return [false, undefined];
+		}
+  }
+
 	authenticate({username, password}): void {
 		let packet = JSON.stringify({
 			username: username,
@@ -66,45 +83,34 @@ export class AuthService {
 		let headers = new Headers();
 		headers.append('Content-Type', 'application/json');
 
-		if (password !== 'dummy') {
-			this.observer.next({
-				message: "invalid authentication",
-				type: false
-			});
-		} else {
+		this.http.post(`${this.baseUri}/authenticate/`, packet, {
+			headers: headers
+		})
+		.map(res => res.json())
+		.subscribe(
+			data => {
+				if (data.success && ("token" in data) && ("session" in data)) {
+					this.saveJwt(data.token);
+					this.saveSession(data.session);
+				} else {
+					this.deleteJwt();
+					this.deleteSession();
+				}
 
-			this.observer.next({
-				message: "auth successfull",
-				type: true
-			});
-		}
-
-		// this.http.post(`${this.baseUri}/authenticate/`, packet, {
-		// 	headers: headers
-		// })
-		// .map(res => res.json())
-		// .subscribe(
-		// 	data => {
-		// 		if (data.success && ("token" in data)) {
-		// 			this.saveJwt(data.token);
-		// 		} else {
-		// 			this.deleteJwt();
-		// 		}
-
-		// 		this.observer.next({
-		// 			message: data.message,
-		// 			type: data.success
-		// 		});
-		// 	},
-		// 	err => {
-		// 		this.observer.next({
-		// 			message: 'Error connecting to server',
-		// 			type: false
-		// 		})
-		// 	},
-		// 	() => {
-		// 		// console.log('bearer token', this.getAuthHeader())
-		// 	}
-		// );
+				this.observer.next({
+					message: data.message,
+					type: data.success
+				});
+			},
+			err => {
+				this.observer.next({
+					message: 'Error connecting to server',
+					type: false
+				})
+			},
+			() => {
+				// console.log('bearer token', this.getAuthHeader())
+			}
+		);
 	}
 }
