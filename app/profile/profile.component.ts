@@ -7,6 +7,7 @@ import {Calendar} from './calendar.component';
 import {User, UserType} from '../interfaces/interface';
 
 import {AuthService} from '../auth/auth.service';
+import {UserService} from '../services/user.service';
 import {SegmentViewport} from './segment.component';
 
 
@@ -72,55 +73,12 @@ class ProfileContext implements OnInit {
 	}
 }
 
-
-@Component({
-	template: `
-		<profile-context></profile-context>
-	`,
-	directives: [ProfileContext]
-})
-class Cal {
-}
-
-@Component({
-	template: `
-		<h2>Upcoming events</h2>
-	`
-})
-class None {}
-
-
-@Component({
-	selector: 'day-segment',
-	template: `
-		<profile-context [id]="id" [month]="month" [year]="year" [day]="day"></profile-context>
-		<segment-viewport [id]="id" [month]="month" [year]="year" [day]="day"></segment-viewport>
-	`,
-	directives: [ProfileContext, SegmentViewport]
-})
-class DaySegment implements OnInit {
-	@Input() day: String = "";
-	@Input() month: String = "";
-	@Input() year: String = "";
-	id: string = "";
-
-	constructor(private _router: Router,
-							private _routerParams: RouteParams) { }
-
-	ngOnInit() {
-		this.day = this._routerParams.get('day');
-		this.month = this._routerParams.get('month');
-		this.year = this._routerParams.get('year');
-		this.id = this._routerParams.get('id');
-	}
-}
-
 @Component({
 	selector: 'profile-nav',
 	template: `
 		<div class="profile__nav">
 			<div class="profile__card" *ngIf="user">
-				<img src="{{user.avatar}}" />
+				<img src="{{user.meta?.avatar}}" />
 				<h3>{{user.fname}} {{user.lname}}</h3>
 				<ul>
 					<li><a href="">{{user.fname}}'s contact card</a></li>
@@ -128,7 +86,7 @@ class DaySegment implements OnInit {
 					<li><a href="">My events with {{user.fname}}</a></li>
 				</ul>
 			</div>
-			<calendar [id]="user.id" ></calendar>
+			<calendar [id]="user.id" *ngIf="user"></calendar>
 		</div>
 	`,
 	directives: [Calendar, RouterLink]
@@ -140,19 +98,93 @@ class ProfileNav implements OnInit {
 	year: String = '';
 
 	constructor(private authService: AuthService,
-							private router: Router) {}
+		private router: Router) { }
 
 	ngOnInit() {
-		// let [tokenExists, _] = this.authService.tokenExists();
-		// if (!(tokenExists)) {
-		// 	this.router.navigateByUrl('/');
-		// 	return;
-		// }
-
 		let day = new Date();
 		this.day = `${day.getDate()}`;
 		this.month = `${day.getMonth()}`;
 		this.year = `${day.getFullYear()}`;
+	}
+}
+
+@Component({
+	template: `
+		<profile-nav [user]="user"></profile-nav>
+		<div class="profile__outlet">
+			<h2>Viewing</h2>
+		</div>
+	`,
+	directives: [ProfileNav]
+})
+class Cal implements OnInit {
+	user: User;
+
+	constructor(
+		private userService: UserService,
+		private routeParams: RouteParams
+	) { }
+
+	ngOnInit() {
+		let id = this.routeParams.get('id');
+		this.userService.getUser(id).then(user => this.user = user);
+	}
+}
+
+@Component({
+	template: `
+		<profile-nav [user]="user"></profile-nav>
+		<div class="profile__outlet">
+			<h2>Upcoming events</h2>
+		</div>
+	`,
+	directives: [ProfileNav]
+})
+class None implements OnInit{
+	user: User;
+
+	constructor(
+		private userService: UserService,
+		private routeParams: RouteParams
+	) { }
+
+	ngOnInit() {
+		this.userService.getUser().then(user => this.user = user);
+	}
+}
+
+
+@Component({
+	selector: 'day-segment',
+	template: `
+		<profile-nav [user]="user"></profile-nav>
+		<div class="profile__outlet">
+			<profile-context [id]="id" [month]="month" [year]="year" [day]="day"></profile-context>
+			<segment-viewport [id]="id" [month]="month" [year]="year" [day]="day"></segment-viewport>
+		</div>
+	`,
+	directives: [ProfileContext, SegmentViewport, ProfileNav]
+})
+class DaySegment implements OnInit {
+	@Input() day: String = "";
+	@Input() month: String = "";
+	@Input() year: String = "";
+	id: string = "";
+	user: User;
+
+	constructor(
+		private router: Router,
+		private routerParams: RouteParams,
+		private userService: UserService
+	){}
+
+	ngOnInit() {
+		this.day = this.routerParams.get('day');
+		this.month = this.routerParams.get('month');
+		this.year = this.routerParams.get('year');
+		this.id = this.routerParams.get('id');
+
+		this.userService.getUser(this.id).then(user => this.user = user);
 	}
 }
 
@@ -161,31 +193,17 @@ class ProfileNav implements OnInit {
 	template: `
 		<layout-header></layout-header>
 		<div class="profile__viewport">
-			<profile-nav [user]="user"></profile-nav>
-			<div class="profile__outlet">
-				<router-outlet></router-outlet>
-			</div>
+			<router-outlet></router-outlet>
 		</div>
 	`,
-	directives: [RouterLink, RouterOutlet, ProfileNav, LayoutHeader]
+	directives: [RouterLink, RouterOutlet, LayoutHeader]
 })
 @RouteConfig([
 	{ path: '/', name: 'None', component: None, useAsDefault: true },
 	{ path: '/:id', name: 'Calendar', component: Cal },
 	{ path: '/:id/day/:month/:day/:year', name: 'DaySegment', component: DaySegment }
 ])
-export class ProfileViewport implements OnInit {
-	user: User;
-
-	ngOnInit() {
-		this.user = {
-			id: '9486130',
-			type: UserType.Faculty,
-			fname: 'Taylor',
-			lname: 'Swift',
-			avatar: 'https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-03-20_at_4.35.11_PM.png?3896038397320089616'
-		}
-	}
+export class ProfileViewport {
 }
 
 

@@ -10,8 +10,10 @@ import {TemplateService} from './templates/template.service';
 import {SegmentService} from './segments/segment.service';
 import {NotificationService} from './notification.service';
 import {AuthService} from './auth/auth.service';
+import {UserService} from './services/user.service';
 
 bootstrap(MountNode, [
 	ROUTER_PROVIDERS, HTTP_PROVIDERS, HTTP_BINDINGS, 
-	AuthService, SegmentViewService, TemplateService, SegmentService, NotificationService
+	AuthService, UserService,
+	SegmentViewService, TemplateService, SegmentService, NotificationService
 ]);

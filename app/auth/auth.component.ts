@@ -32,7 +32,7 @@ export class LogoutComponent implements OnInit {
 		private authService: AuthService,
 		private router: Router,
 		private notificationService: NotificationService
-	) { }
+	) {}
 
 	ngOnInit() {
 		this.authService.deleteJwt();

@@ -5,10 +5,10 @@ export enum UserType {
 
 export interface User {
 	id: string,
-	fname?: string,
-	lname?: string,
-	email: "",
-	meta: {},
+	fname: string,
+	lname: string,
+	email: string,
+	meta?: {},
 	type: UserType
 }
 
