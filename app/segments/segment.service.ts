@@ -76,15 +76,17 @@ export class SegmentService implements OnInit {
 		}
 	}
 
-	getSegmentsByDay(m, d, y) {
-		let segments = this.segments.filter(segment => segment.start.month == m && segment.start.day == d && segment.start.year == y);
+	getSegmentsByRoute(id, month, day, year) {
+		let segments = this.segments.filter(
+			segment => segment.start.month == month && segment.start.day == day && segment.start.year == year
+		);
 
-		return Promise.resolve(segments.map((segment) => {
-			this.templateService.getTemplate(segment.template_id).then(template => {
-				segment.template = template;
-			});
+		segments = (segments.map((segment) => {
+			segment.template = this.templateService.getTemplateSync(segment.template_id);
 			return segment;
-		}));
+		})).filter((segment) => segment.template.user_id == id);
+
+		return Promise.resolve(segments);
 	}
 
 	getNewSegment() {

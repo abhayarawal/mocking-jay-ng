@@ -50,6 +50,10 @@ export class TemplateService implements OnInit {
 		);
 	}
 
+	getTemplateSync(id: string) {
+		return (this.templates.filter(template => template.id === id))[0];
+	}
+
 	addTemplate(template: Template) {
 		let [sessionExist, session] = this.authService.getSession();
 		if (sessionExist) {

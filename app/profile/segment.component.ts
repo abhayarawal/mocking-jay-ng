@@ -64,13 +64,10 @@ var genFragments = (segment: Segment): Fragment[] => {
 				hour: now[0],
 				minute: now[1]
 			},
-			segment: segment
+			segment: segment,
+			segment_id: segment.id
 		});
 	}
-
-	// ret[3].status = Status.approved;
-	// ret[6].status = Status.in_progress;
-	// ret[6].status = Status.denied;
 
 	return ret;
 }
@@ -229,7 +226,7 @@ class SegmentWrap {
 				month = date.getMonth(),
 				year = date.getFullYear();
 
-		this.segmentService.getSegmentsByDay(month, day, year).then(segments => { this.segments = segments });
+		this.segmentService.getSegmentsByRoute(id, month, day, year).then(segments => { this.segments = segments });
 	}
 }
 
