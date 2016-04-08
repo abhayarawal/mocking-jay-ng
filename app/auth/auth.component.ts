@@ -28,13 +28,17 @@ class AuthValidator {
 	template: ``
 })
 export class LogoutComponent implements OnInit {
-	constructor(private authService: AuthService,
-		private router: Router) { }
+	constructor(
+		private authService: AuthService,
+		private router: Router,
+		private notificationService: NotificationService
+	) { }
 
 	ngOnInit() {
 		this.authService.deleteJwt();
 		this.authService.deleteSession();
 		this.router.navigateByUrl('/');
+		this.notificationService.notify('Session Expired', true, true);
 	}
 }
 
@@ -42,7 +46,7 @@ export class LogoutComponent implements OnInit {
 	template: `
 		<div class="auth">
 			<h2>Log in</h2>
-			<form [ngFormModel]="authForm" (ngSubmit)="auth()">
+			<form [ngFormModel]="authForm">
 				<div class="form__group">
 					<label>Username:</label>
 					<input type="text" ngControl="username" placeholder="tovelo" />
@@ -52,7 +56,9 @@ export class LogoutComponent implements OnInit {
 					<input type="password" ngControl="password" placeholder="dummy" />
 				</div>
 				<div class="form__group">
-					<button type="submit" class="button type__1">Login</button>
+					<button (click)="auth()" class="button type__1">Login</button>
+					<button (click)="faculty()" class="button type__4">Faculty</button>
+					<button (click)="taylor()" class="button type__4">Taylor</button>
 				</div>
 			</form>
 			<!--<div *ngIf="notification">
@@ -122,5 +128,15 @@ export class AuthComponent implements OnInit {
 			this.notificationService.notify(this.notification.message, true, true);
 
 		}
+	}
+
+	faculty() {
+		this.authService.authenticate({username: 'faculty', password: 'dummy'});
+		this.notificationService.notify('Authenticated as faculty', true);
+	}
+
+	taylor() {
+		this.authService.authenticate({ username: 'tovelo', password: 'dummy' });
+		this.notificationService.notify('Authenticated as Taylor', true);
 	}
 }

@@ -79,7 +79,7 @@ export class SegmentService implements OnInit {
 	getSegmentsByDay(m, d, y) {
 		let segments = this.segments.filter(segment => segment.start.month == m && segment.start.day == d && segment.start.year == y);
 
-		return Promise.resolve(this.segments.map((segment) => {
+		return Promise.resolve(segments.map((segment) => {
 			this.templateService.getTemplate(segment.template_id).then(template => {
 				segment.template = template;
 			});

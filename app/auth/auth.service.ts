@@ -9,6 +9,7 @@ import 'rxjs/Rx';
 
 import {User, UserType} from '../interfaces/interface';
 
+
 export interface Notification {
 	message: string,
 	type: boolean
