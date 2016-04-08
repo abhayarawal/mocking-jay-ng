@@ -85,6 +85,10 @@ export class LayoutHeader implements OnInit {
 		let [sessionExists, session] = this.authService.getSession();
 		if (sessionExists) {
 			this.user = session;
+
+			if (session.type == UserType.Student) {
+				this.navs.splice(1, 2);
+			}
 		}
 	}
 }
