@@ -7,7 +7,8 @@ export interface User {
 	id: string,
 	fname?: string,
 	lname?: string,
-	avatar?: string,
+	email: "",
+	meta: {},
 	type: UserType
 }
 
@@ -25,7 +26,9 @@ export interface Template {
 	name: string,
 	interval: any,
 	allow_multiple: boolean,
-	require_accept: boolean
+	require_accept: boolean,
+	user_id: string,
+	user?: {} 
 }
 
 export interface Segment {

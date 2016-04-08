@@ -1,4 +1,4 @@
-import {Injectable, Injector, OnInit, NgZone} from "angular2/core";
+import {Injectable, Injector, Inject, OnInit, NgZone} from "angular2/core";
 import {Http, Response, Headers} from 'angular2/http';
 
 import {Observable} from 'rxjs/Observable';
@@ -7,28 +7,13 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
 
-import {Template} from '../interfaces/interface';
+import {Template, UserType} from '../interfaces/interface';
+
+import {AuthService} from '../auth/auth.service';
 
 var genId = () => {
 	return Math.random().toString(36).substr(2, 9);
 };
-
-var TEMPLATES = [
-	{
-		id: genId(),
-		name: "Advising",
-		interval: 15,
-		allow_multiple: true,
-		require_accept: true
-	},
-	{
-		id: genId(),
-		name: "Office hour",
-		interval: 30,
-		allow_multiple: true,
-		require_accept: true
-	}
-];
 
 
 @Injectable()
@@ -38,15 +23,20 @@ export class TemplateService implements OnInit {
 	templates$: Observable<Template[]>;
 	private templatesObserver: Observer<Template[]>;
 
-	constructor() {
+	authService: AuthService;
+
+	constructor(
+		@Inject(AuthService) AuthService
+	){
+		this.authService = AuthService;
+
 		this.templates$ = new Observable<Template[]>(observer => this.templatesObserver = observer).share();
 
 		let templates = localStorage.getItem('templates');
 		if (typeof templates !== 'undefined' && templates !== null) {
 			this.templates = JSON.parse(templates);
 		} else {
-			this.templates = TEMPLATES;
-			localStorage.setItem('templates', JSON.stringify(this.templates));
+			localStorage.setItem('templates', JSON.stringify([]));
 		}
 	}
 
@@ -61,10 +51,16 @@ export class TemplateService implements OnInit {
 	}
 
 	addTemplate(template: Template) {
-		let templates = localStorage.getItem('templates');
-		if (typeof templates !== 'undefined' && templates !== null) {
-			this.templates.push(template);
-			localStorage.setItem('templates', JSON.stringify(this.templates));
+		let [sessionExist, session] = this.authService.getSession();
+		if (sessionExist) {
+			if (session.type == UserType.Faculty && session.id) {
+				let templates = localStorage.getItem('templates');
+				if (typeof templates !== 'undefined' && templates !== null) {
+					template.user_id = session.id;
+					this.templates.push(template);
+					localStorage.setItem('templates', JSON.stringify(this.templates));
+				}
+			}
 		}
 	}
 
@@ -83,7 +79,8 @@ export class TemplateService implements OnInit {
 			name: "",
 			interval: 15,
 			allow_multiple: false,
-			require_accept: true
+			require_accept: true,
+			user_id: ""
 		};
 
 		return Promise.resolve(template);

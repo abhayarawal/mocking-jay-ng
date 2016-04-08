@@ -9,9 +9,12 @@ import 'rxjs/Rx';
 import {NotificationService, Notification} from '../notification.service';
 
 import {LayoutHeader} from '../layouts/header.layout';
-import {Template} from '../interfaces/interface';
+import {Template, UserType, User} from '../interfaces/interface';
 import {TemplateService} from './template.service';
 import {RadiusInputComponent, RadiusSelectComponent, RadiusRadioComponent} from '../form/form.component';
+
+import {AuthService} from '../auth/auth.service';
+
 
 var genId = () => {
 	return Math.random().toString(36).substr(2, 9);
@@ -301,6 +304,18 @@ class ContextualMenu {
 		{ path: '/', name: 'Templates', component: Templates, useAsDefault: true },
 		{ path: '/new', name: 'TemplateCreate', component: TemplateCreate },
 ])
-export class TemplateViewport {
+export class TemplateViewport implements OnInit {
+	constructor(
+		private authService: AuthService,
+		private router: Router
+	){}
 
+	ngOnInit() {
+		let [sessionExist, session] = this.authService.getSession();
+		if (sessionExist) {
+			if (session.type !== UserType.Faculty) {
+				this.router.navigateByUrl('/calendar');
+			}
+		}
+	}
 }

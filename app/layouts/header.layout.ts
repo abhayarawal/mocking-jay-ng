@@ -3,6 +3,7 @@ import {RouteConfig, RouterOutlet, RouterLink, Router, Location, RouteParams} fr
 import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGroup, NgControl, FormBuilder, NgFormModel, ControlGroup, Validators} from 'angular2/common';
 
 import {User, UserType} from '../interfaces/interface';
+import {AuthService} from '../auth/auth.service';
 
 @Component({
 	selector: 'main-nav',
@@ -16,7 +17,7 @@ import {User, UserType} from '../interfaces/interface';
 			</li>
 			<li *ngIf="user">
 				{{user.fname}} {{user.lname}}
-				<a [routerLink]="['/LogoutComponent']"><img src="{{user.avatar}}" /></a>
+				<a [routerLink]="['/LogoutComponent']"><img src="{{user.meta.avatar}}" /></a>
 				<span class="lnr lnr-chevron-down"></span>
 			</li>
 		</ul>
@@ -65,14 +66,12 @@ class SearchBox {
 	`,
 	directives: [SearchBox, MainNav]
 })
-export class LayoutHeader {
-	user: User = {
-		id: "1803710",
-		type: UserType.Student,
-		fname: "John",
-		lname: "Doe",
-		avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-02-18_at_3.11.09_PM.png?5003393221482762451"
-	}
+export class LayoutHeader implements OnInit {
+	user: User;
+
+	constructor(
+		private authService: AuthService
+	) {}
 
 	navs: Object[] = [
 		{ location: ['/ProfileViewport'], lnr: 'calendar-full', text: 'Calendar' },
@@ -81,4 +80,11 @@ export class LayoutHeader {
 		{ location: ['/ProfileViewport'], lnr: 'flag', text: 'Notifications' },
 		{ location: ['/ProfileViewport'], lnr: 'cog', text: 'Preferences' },
 	]
+
+	ngOnInit() {
+		let [sessionExists, session] = this.authService.getSession();
+		if (sessionExists) {
+			this.user = session;
+		}
+	}
 }

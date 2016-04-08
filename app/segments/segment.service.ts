@@ -9,6 +9,7 @@ import 'rxjs/Rx';
 
 import {Segment} from '../interfaces/interface';
 import {TemplateService} from '../templates/template.service';
+import {AuthService} from '../auth/auth.service';
 
 var genId = () => {
 	return Math.random().toString(36).substr(2, 9);
@@ -23,9 +24,14 @@ export class SegmentService implements OnInit {
 	private segmentsObserver: Observer<Segment[]>;
 
 	templateService: TemplateService;
+	authService: AuthService;
 
-	constructor(@Inject(TemplateService) TemplateService) {
+	constructor(
+		@Inject(TemplateService) TemplateService,
+		@Inject(AuthService) AuthService
+	){
 		this.templateService = TemplateService;
+		this.authService = AuthService;
 
 		this.segments$ = new Observable<Segment[]>(observer => this.segmentsObserver = observer).share();
 
@@ -71,9 +77,7 @@ export class SegmentService implements OnInit {
 	}
 
 	getSegmentsByDay(m, d, y) {
-		let segments = this.segments.filter((segment) => {
-			return (segment.start.month == m && segment.start.day == d && segment.start.year == y);
-		});
+		let segments = this.segments.filter(segment => segment.start.month == m && segment.start.day == d && segment.start.year == y);
 
 		return Promise.resolve(this.segments.map((segment) => {
 			this.templateService.getTemplate(segment.template_id).then(template => {

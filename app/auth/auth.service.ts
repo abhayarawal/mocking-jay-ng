@@ -7,6 +7,8 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
 
+import {User, UserType} from '../interfaces/interface';
+
 export interface Notification {
 	message: string,
 	type: boolean
@@ -65,10 +67,10 @@ export class AuthService {
 		localStorage.removeItem('session');
   }
 
-  getSession(): [boolean, {}] {
+  getSession(): [boolean, User] {
 		let session = localStorage.getItem('session');
 		if (typeof session !== 'undefined' && session !== null) {
-			return [true, session];
+			return [true, JSON.parse(session)];
 		} else {
 			return [false, undefined];
 		}
