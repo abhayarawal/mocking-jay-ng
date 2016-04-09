@@ -486,7 +486,7 @@ $top__height: 40px;
 				max-width: 400px;
 			}
 			
-			span
+			& > span
 			{
 				width: 24px;
 				line-height: 24px;
@@ -498,7 +498,6 @@ $top__height: 40px;
 				left: 2px;
 				@include border-radius(100%);
 				color: rgb(148, 148, 148);
-				// background: #ccc;
 			}
 			
 			input
@@ -514,6 +513,68 @@ $top__height: 40px;
 				&:focus
 				{
 					box-shadow: none;
+				}
+			}
+
+			.search__results
+			{
+				position: absolute;
+				width: 100%;
+				left: 0px;
+				top: calc(100% + 4px);
+				background: #fff;
+				@include box-shadow(0, 1px, 4px, 0, rgba(0, 0, 0, .06));
+				border: 1px solid rgba(0, 0, 0, .09);
+				border-radius: 3px;
+				padding: 10px 0;
+				visibility: hidden;
+				opacity: 0;
+				z-index: 5;
+
+				&.show
+				{
+					visibility: visible;
+					opacity: 1;
+				}
+
+				li
+				{
+					padding: 5px 15px;
+					
+					&:hover
+					{
+						background: rgba(224, 253, 255, 0.77);
+					}
+
+					.search__user
+					{
+						display: block;
+
+						img, h3, h4
+						{
+							display: inline-block;
+							vertical-align: middle;
+						}
+
+						img
+						{
+							width: 50px;
+							@include border-radius(100%);
+						}
+
+						h3, h4
+						{
+							font-size: 17px;
+							margin-left: 10px;
+							font-weight: 400;
+
+							span
+							{
+								display: block;
+								font-size: 0.75em;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -654,6 +715,7 @@ $top__height: 40px;
 				a
 				{
 					font-size: 12px;
+					font-weight: 400;
 				}
 			}
 			
@@ -1376,6 +1438,7 @@ textarea
 							z-index: 2;
 							@include box-shadow(0px, 0px, 2px, 0, rgba(97, 97, 97, 0.34));
 							@include transform(scale(1.02));
+							top: -1px;
 						}
 					}
 				}

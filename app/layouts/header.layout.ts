@@ -31,16 +31,15 @@ class MainNav {
 
 
 enum SearchType {
-	Professor,
+	User,
 	Date,
-	ProfessorDate,
+	UserDate,
 	Help
 }
 
 interface SearchResult {
 	type: SearchType,
-	text: string,
-	link: string
+	obj: {}
 }
 
 @Component({
@@ -49,20 +48,53 @@ interface SearchResult {
 		<form>
 			<div class="search__box">
 				<span class='lnr lnr-magnifier'></span>
-        <input placeholder='Search for anything' type='text'>
+        <input placeholder='Search for anything' type='text' (focus)="show=true" (blur)="hide()">
 
-        <ul>
-        	<li></li>
+        <ul class="search__results" [ngClass]="{show: show}">
+        	<li *ngFor="#s of searchResults">
+        		<a [routerLink]="['/ProfileViewport', 'Calendar', {id: s.obj.id}]" class="search__user">
+							<img src="{{s.obj.meta?.avatar}}" alt="" />
+							<h3>
+								{{s.obj.fname}} {{s.obj.lname}}
+								<span>{{s.obj.email}}</span>
+							</h3>
+        		</a>
+        	</li>
         </ul>
 			</div>
 		</form>
-	`
+	`,
+	directives: [RouterLink]
 })
 class SearchBox implements OnInit {
 	searchResults: SearchResult[];
+	show: boolean = false;
+	timeout: any;
+
+	hide() {
+		clearTimeout(this.timeout);
+		this.timeout = setTimeout(() => { this.show = false; }, 250);
+	}
 
 	ngOnInit() {
-		
+		this.searchResults = [
+			{
+				type: SearchType.User, obj: {
+					id: 'ekny5h2qd', fname: "John", lname: "Doe", email: "john.doe@google.com",
+					meta: {
+						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-03-20_at_4.35.11_PM.png?3896038397320089616"
+					}
+				}
+			},
+			{
+				type: SearchType.User, obj: {
+					id: "czrvbw1fz", fname: "Taylor", lname: "Swift", email: "taylor.swift@google.com",
+					meta: {
+						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-02-18_at_3.11.09_PM.png?5003393221482762451"
+					}
+				}
+			}
+		]
 	}
 }
 

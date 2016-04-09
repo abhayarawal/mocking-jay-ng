@@ -300,7 +300,7 @@ html, body {
     @media only screen and (min-width: 992px) {
       .app__top .top__search .search__box {
         max-width: 400px; } }
-    .app__top .top__search .search__box span {
+    .app__top .top__search .search__box > span {
       width: 24px;
       line-height: 24px;
       display: block;
@@ -325,6 +325,47 @@ html, body {
       width: 100%; }
       .app__top .top__search .search__box input:focus {
         box-shadow: none; }
+    .app__top .top__search .search__box .search__results {
+      position: absolute;
+      width: 100%;
+      left: 0px;
+      top: calc(100% + 4px);
+      background: #fff;
+      -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
+      -moz-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.09);
+      border-radius: 3px;
+      padding: 10px 0;
+      visibility: hidden;
+      opacity: 0;
+      z-index: 5; }
+      .app__top .top__search .search__box .search__results.show {
+        visibility: visible;
+        opacity: 1; }
+      .app__top .top__search .search__box .search__results li {
+        padding: 5px 15px; }
+        .app__top .top__search .search__box .search__results li:hover {
+          background: rgba(224, 253, 255, 0.77); }
+        .app__top .top__search .search__box .search__results li .search__user {
+          display: block; }
+          .app__top .top__search .search__box .search__results li .search__user img, .app__top .top__search .search__box .search__results li .search__user h3, .app__top .top__search .search__box .search__results li .search__user h4 {
+            display: inline-block;
+            vertical-align: middle; }
+          .app__top .top__search .search__box .search__results li .search__user img {
+            width: 50px;
+            -webkit-border-radius: 100%;
+            -moz-border-radius: 100%;
+            -o-border-radius: 100%;
+            -ms-border-radius: 100%;
+            border-radius: 100%; }
+          .app__top .top__search .search__box .search__results li .search__user h3, .app__top .top__search .search__box .search__results li .search__user h4 {
+            font-size: 17px;
+            margin-left: 10px;
+            font-weight: 400; }
+            .app__top .top__search .search__box .search__results li .search__user h3 span, .app__top .top__search .search__box .search__results li .search__user h4 span {
+              display: block;
+              font-size: 0.75em; }
   .app__top .top__right .main__nav {
     text-align: right; }
     .app__top .top__right .main__nav > li {
@@ -415,7 +456,8 @@ html, body {
     .profile__viewport .profile__nav .profile__card .profile__mail {
       text-align: center; }
       .profile__viewport .profile__nav .profile__card .profile__mail a {
-        font-size: 12px; }
+        font-size: 12px;
+        font-weight: 400; }
     .profile__viewport .profile__nav .profile__card ul {
       display: block;
       margin-top: 15px;
@@ -902,7 +944,8 @@ textarea {
             -moz-transform: scale(1.02);
             -o-transform: scale(1.02);
             -ms-transform: scale(1.02);
-            transform: scale(1.02); }
+            transform: scale(1.02);
+            top: -1px; }
 
 .wrapping__viewport .contextual__menu {
   position: absolute;

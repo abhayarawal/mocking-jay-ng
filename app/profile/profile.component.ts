@@ -19,7 +19,7 @@ import {SegmentViewport} from './segment.component';
 				<section>
 					<ul>
 						<a href="">
-							Professors <span class="lnr lnr-menu"></span>
+							Professors <span class="lnr lnr-chevron-down"></span>
 						</a>
 						<a href="">Today's Events</a>
 						<a [routerLink]="['/ProfileViewport', 'DaySegment', {id: id, month: month, day: day, year: year}]">Calendar</a>
