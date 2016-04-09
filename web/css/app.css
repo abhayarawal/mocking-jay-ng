@@ -973,7 +973,7 @@ textarea {
     -o-border-radius: 7px;
     -ms-border-radius: 7px;
     border-radius: 7px;
-    border: 1px solid #ccc;
+    border: 1px solid #DBDDE3;
     position: relative;
     vertical-align: middle;
     cursor: pointer;
@@ -1468,7 +1468,7 @@ textarea {
     -o-transition: all 0.2s ease;
     -ms-transition: all 0.2s ease;
     transition: all 0.2s ease;
-    top: -25px;
+    top: -75px;
     left: 50%;
     margin-left: -125px;
     border: 1px solid #d6d7db;
@@ -1529,13 +1529,13 @@ textarea {
           -o-border-radius: 100%;
           -ms-border-radius: 100%;
           border-radius: 100%;
-          font-weight: 400;
+          font-weight: 500;
           font-size: 13px;
-          -webkit-transition: transform 0.2s ease;
-          -moz-transition: transform 0.2s ease;
-          -o-transition: transform 0.2s ease;
-          -ms-transition: transform 0.2s ease;
-          transition: transform 0.2s ease;
+          -webkit-transition: all 0.1s ease;
+          -moz-transition: all 0.1s ease;
+          -o-transition: all 0.1s ease;
+          -ms-transition: all 0.1s ease;
+          transition: all 0.1s ease;
           -webkit-transform: scale(1);
           -moz-transform: scale(1);
           -o-transform: scale(1);
@@ -1544,4 +1544,7 @@ textarea {
           cursor: pointer; }
           .calendar__select__elm .calendar__select__wrap .calendar__select .month__days ul li a:hover {
             background: #898c94;
-            color: #fff; }
+            color: #fff;
+            -webkit-box-shadow: 0 0 0 2px rgba(137, 140, 148, 0.53);
+            -moz-box-shadow: 0 0 0 2px rgba(137, 140, 148, 0.53);
+            box-shadow: 0 0 0 2px rgba(137, 140, 148, 0.53); }

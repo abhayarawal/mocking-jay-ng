@@ -98,7 +98,7 @@ class DateTimeValidator {
 		<div class="contextual__form">
 			<h4 class="form__lnr">
 				<span class="lnr lnr-pencil"></span>
-				Create a new event
+				Create a new segment
 			</h4>
 			<div class="form__wrap">
 				{{formatted}}
@@ -147,7 +147,7 @@ class DateTimeValidator {
 					</div>
 					<div class="form__group">
 						<label for="">Repeat?</label>
-						<radius-radio (update)="updateRepeat($event)" [on]="false" [intext]="true"></radius-radio>
+						<radius-radio (update)="updateRepeat($event)" [on]="true" [intext]="true"></radius-radio>
 						<div class="form__desc">
 							Do you want to repeat the event
 						</div>
@@ -161,22 +161,22 @@ class DateTimeValidator {
 							</div>
 						</div>
 						<div class="form__group">
-							<label for="">Select repeat days</label>
+							<label for="">Repeat days</label>
 							<div class="weekdays">
 								<section>
-									<mj-radio [on]="false" [text]="'Mon'"></mj-radio>
+									<mj-radio [on]="true" [text]="'Mon'"></mj-radio>
 								</section>
 								<section>
 									<mj-radio [on]="false" [text]="'Tue'"></mj-radio>
 								</section>
 								<section>
-									<mj-radio [on]="false" [text]="'Wed'"></mj-radio>
+									<mj-radio [on]="true" [text]="'Wed'"></mj-radio>
 								</section>
 								<section>
 									<mj-radio [on]="false" [text]="'Thu'"></mj-radio>
 								</section>
 								<section>
-									<mj-radio [on]="false" [text]="'Fri'"></mj-radio>
+									<mj-radio [on]="true" [text]="'Fri'"></mj-radio>
 								</section>
 								<section>
 									<mj-radio [on]="false" [text]="'Sat'"></mj-radio>
@@ -184,6 +184,9 @@ class DateTimeValidator {
 								<section>
 									<mj-radio [on]="false" [text]="'Sun'"></mj-radio>
 								</section>
+							</div>
+							<div class="form__desc">
+								Select the weekdays you want to repeat on
 							</div>
 						</div>
 					</div>
@@ -199,7 +202,7 @@ class DateTimeValidator {
 })
 class SegmentCreate implements OnInit {
 	segment: Segment;
-	repeatView: boolean = false;
+	repeatView: boolean = true;
 
 	templates: SelectObject[];
 	templates$: Observable<Template[]>;

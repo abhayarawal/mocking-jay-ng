@@ -10,6 +10,7 @@ import {SegmentViewService} from './segment.service';
 import {CalendarService, MonthPipe, WeekPipe, WeekFullPipe} from './calendar.service';
 import {Time, Template, Segment, Status, Fragment, User} from '../interfaces/interface';
 
+import {UserService} from '../services/user.service';
 import {SegmentService} from '../segments/segment.service';
 import {Notification, NotificationService} from '../notification.service';
 
@@ -78,23 +79,17 @@ var genFragments = (segment: Segment): Fragment[] => {
 export class TimePipe implements PipeTransform {
 	transform(obj: Fragment, args: string[]): any {
 		let h = obj.start.hour,
-			m: any = obj.start.minute;
+				m: any = obj.start.minute;
 
 		if (args[0]) {
 			h = obj.end.hour;
 			m = obj.end.minute;
 		}
 
-		if (m < 10) {
-			m = `0${m}`;
-		}
+		if (m < 10) { m = `0${m}`; }
 
-		if (h == 12) {
-			return `${h}:${m} Pm`;
-		}
-		else if (h > 12) {
-			return `${h - 12}:${m} Pm`;
-		}
+		if (h == 12) { return `${h}:${m} Pm`; }
+		else if (h > 12) { return `${h - 12}:${m} Pm`; }
 		return `${h}:${m} Am`;
 	}
 }
@@ -285,64 +280,51 @@ class DayComponent implements OnInit {
 	}
 }
 
-
 @Component({
-	selector: 'fragment-context',
+	selector: 'fragment-context-student',
 	template: `
-		<div class="fragment__context" *ngIf="fragment">
-			<div class="fragment__ctx">
-				<h3>
-					{{fragment.segment.template.name}}
-					<span>{{fragment.segment.template.user_id}}</span>
-				</h3>
-				<div class="date__time">
-					From: <span>{{fragment | timePipe:false}}</span> To: <span>{{fragment | timePipe:true}}</span>
-				</div>
-				<div>
-					Location: N/A
-				</div>
-				<div [ngSwitch]="fragment.status" class="ctx__controls">
-					<template [ngSwitchWhen]="1">
-						<strong>Appointment not approved yet</strong>
-						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
-					</template>
-					<template [ngSwitchWhen]="2">
-						<strong>Appointment approved</strong>
-						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
-					</template>
-					<template [ngSwitchWhen]="3">
-						<strong>Appointment denied</strong>
-					</template>
-					<template ngSwitchDefault>
-						<button class="button type__2" (click)="create()">Create appointment</button>
-					</template>
-				</div>
+		<div class="fragment__ctx">
+			<h3>
+				{{fragment.segment.template.name}}
+				<span>{{fragment.segment.template.user_id}}</span>
+			</h3>
+			<div class="date__time">
+				From: <span>{{fragment | timePipe:false}}</span> To: <span>{{fragment | timePipe:true}}</span>
 			</div>
-
-
+			<div>
+				Location: N/A
+			</div>
+			<div [ngSwitch]="fragment.status" class="ctx__controls">
+				<template [ngSwitchWhen]="1">
+					<strong>Appointment not approved yet</strong>
+					<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+				</template>
+				<template [ngSwitchWhen]="2">
+					<strong>Appointment approved</strong>
+					<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+				</template>
+				<template [ngSwitchWhen]="3">
+					<strong>Appointment denied</strong>
+				</template>
+				<template ngSwitchDefault>
+					<button class="button type__2" (click)="create()">Create appointment</button>
+				</template>
+			</div>
 		</div>
 	`,
 	pipes: [TimePipe]
 })
-class FragmentContext implements OnInit {
-	observable: Observable<Fragment>;
-	fragment: Fragment;
-	user: User;
+class FragmentContextStudent implements OnInit {
+	@Input() fragment: Fragment;
+	@Input() user: User;
 
-	constructor(private segmentViewService:SegmentViewService,
-							private routeParams: RouteParams,
-							private notificationService: NotificationService) {
+	constructor(
+		private segmentViewService: SegmentViewService,
+		private notificationService: NotificationService
+	) {
 	}
 
-	ngOnInit() { 
-		this.observable = this.segmentViewService.contextObservable$;
-		this.observable.subscribe(
-			data => {
-				this.fragment = data;
-			},
-			err => {},
-			() => {}
-		)
+	ngOnInit() {
 	}
 
 	cancel() {
@@ -360,6 +342,43 @@ class FragmentContext implements OnInit {
 			Appointment created for ${this.fragment.segment.template.name} at ${this.fragment.start.hour}:${this.fragment.start.minute}
 		`, true, false);
 
+	}
+}
+
+
+@Component({
+	selector: 'fragment-context',
+	template: `
+		<div class="fragment__context" *ngIf="fragment && user">
+			<fragment-context-student [user]="user" [fragment]="fragment" *ngIf="user.type==0"></fragment-context-student>
+		</div>
+	`,
+	directives: [FragmentContextStudent],
+	pipes: [TimePipe]
+})
+class FragmentContext implements OnInit {
+	observable: Observable<Fragment>;
+	fragment: Fragment;
+	user: User;
+
+	constructor(
+		private userService: UserService,
+		private segmentViewService:SegmentViewService,
+		private routeParams: RouteParams,
+		private notificationService: NotificationService) {
+	}
+
+	ngOnInit() { 
+		this.observable = this.segmentViewService.contextObservable$;
+		this.observable.subscribe(
+			data => {
+				this.fragment = data;
+			},
+			err => { },
+			() => { }
+		);
+
+		this.userService.getUser().then(user => this.user = user);
 	}
 }
 

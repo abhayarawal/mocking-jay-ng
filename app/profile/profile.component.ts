@@ -18,8 +18,10 @@ import {SegmentViewport} from './segment.component';
 			<div class="row">
 				<section>
 					<ul>
-						<a href="">Day</a>
-						<a href="">Week</a>
+						<a href="">
+							Professors <span class="lnr lnr-chevron-down"></span>
+						</a>
+						<a href="">Today's Events</a>
 						<a href="">Month</a>
 					</ul>
 				</section>
@@ -79,7 +81,9 @@ class ProfileContext implements OnInit {
 		<div class="profile__nav">
 			<div class="profile__card" *ngIf="user">
 				<img src="{{user.meta?.avatar}}" />
-				<h3>{{user.fname}} {{user.lname}}</h3>
+				<h3>
+					{{user.fname}} {{user.lname}}
+				</h3>
 				<ul>
 					<li><a href="">{{user.fname}}'s contact card</a></li>
 					<li><a [routerLink]="['/ProfileViewport', 'Calendar', {id: user.id}]">{{user.fname}}'s calendar</a></li>

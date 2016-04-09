@@ -1462,7 +1462,7 @@ textarea
 		height: 25px;
 		width: 25px;
 		@include border-radius(7px);
-		border: 1px solid #ccc;
+		border: 1px solid #DBDDE3;
 		position: relative;
 		vertical-align: middle;
 		cursor: pointer;
@@ -1983,7 +1983,7 @@ textarea
 		visibility: hidden;
 		@include opacity(0);
 		@include transition(all 0.2s ease);
-		top: -25px;
+		top: -75px;
 		left: 50%;
 		margin-left: -125px;
 		border: 1px solid #d6d7db;
@@ -2082,16 +2082,17 @@ textarea
 						{
 							display: block;
 							@include border-radius(100%);
-							font-weight: 400;
+							font-weight: 500;
 							font-size: 13px;
-							@include transition(transform 0.2s ease);
+							@include transition(all 0.1s ease);
 							@include transform(scale(1));
 							cursor: pointer;
 
 							&:hover
 							{
-								background: #898c94;
+								background: lighten(#898c94, 0%);
 								color: #fff;
+								@include box-shadow(0, 0, 0, 2px, rgba(137, 140, 148, 0.53));
 							}
 						}
 					}
