@@ -8,7 +8,7 @@
     "lite": "lite-server",
     "build-scss": "node-sass --include-path scss web/scss/core.scss web/css/app.css",
     "watch-css": "nodemon -e scss -x \"npm run build-scss\"",
-    "start": "concurrent \"npm run tsc:w\" \"npm run lite\" \"npm run watch-css\""
+    "start": "concurrently \"npm run tsc:w\" \"npm run lite\" \"npm run watch-css\""
   },
   "license": "ISC",
   "dependencies": {

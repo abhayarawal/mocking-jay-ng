@@ -14,9 +14,10 @@ import {TemplateService} from '../templates/template.service';
 import {SegmentService} from '../segments/segment.service';
 
 import {NotificationService} from '../notification.service';
-
+import {CalendarSelectElm} from '../form/calendar.form.component';
 
 // TOO MUCH MONKEY PATCHING ..... FIX IT!!!!!
+// CHECK IF TEMPLATES ARE EMPTY!!
 
 @Component({
 	selector: 'mj-radio',
@@ -168,6 +169,7 @@ export class MjTime implements OnInit {
 }
 
 
+
 @Component({
 	template: `
 		<div class="contextual__form">
@@ -187,6 +189,10 @@ export class MjTime implements OnInit {
 					</div>
 					<div class="form__group">
 						<label for="">From</label>
+						<calendar-select-elm></calendar-select-elm>
+					</div>
+					<div class="form__group">
+						<label for="">From</label>
 						<mj-time (update)="updateStart($event)"></mj-time>
 					</div>
 					<div class="form__group">
@@ -203,11 +209,11 @@ export class MjTime implements OnInit {
 					<div *ngIf="repeatView">
 						<div class="form__group">
 							<label for="">Repeat from</label>
-							<mj-time></mj-time>
+							<calendar-select-elm></calendar-select-elm>
 						</div>
 						<div class="form__group">
 							<label for="">Repeat to</label>
-							<mj-time></mj-time>
+							<calendar-select-elm></calendar-select-elm>
 						</div>
 						<div class="form__group">
 							<label for="">Select repeat days</label>
@@ -244,7 +250,7 @@ export class MjTime implements OnInit {
 			</div>
 		</div>
 	`,
-	directives: [MjRadio, MjTime, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent]
+	directives: [MjRadio, MjTime, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent, CalendarSelectElm]
 })
 class SegmentCreate implements OnInit {
 	segment: Segment;
