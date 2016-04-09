@@ -78,14 +78,15 @@ export class FragmentService {
 	}
 
 	addFragment(fragment: Fragment) {
-		let {id, date, start, end, segment_id, status} = fragment;
+		let {id, date, start, end, segment_id, status, template_id} = fragment;
 		this.fragments.push({
 			id: id,
 			date: date,
 			start: start,
 			end: end,
 			segment_id: segment_id,
-			status: status
+			status: status,
+			template_id: template_id
 		});
 		localStorage.setItem('fragments', JSON.stringify(this.fragments));
 	}

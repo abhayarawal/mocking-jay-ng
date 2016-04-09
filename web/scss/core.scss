@@ -510,6 +510,11 @@ $top__height: 40px;
 				padding: 0 35px 0 35px;
 				display: block;
 				width: 100%;
+
+				&:focus
+				{
+					box-shadow: none;
+				}
 			}
 		}
 	}

@@ -323,6 +323,8 @@ html, body {
       padding: 0 35px 0 35px;
       display: block;
       width: 100%; }
+      .app__top .top__search .search__box input:focus {
+        box-shadow: none; }
   .app__top .top__right .main__nav {
     text-align: right; }
     .app__top .top__right .main__nav > li {

@@ -313,6 +313,7 @@ class FragmentContextStudent implements OnInit {
 			this.fragment.status = Status.approved;
 		}
 
+		this.fragment.template_id = this.user.id;
 		this.fragmentService.addFragment(this.fragment);
 
 		this.notificationService.notify(`

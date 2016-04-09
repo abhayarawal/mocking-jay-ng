@@ -64,6 +64,7 @@ export interface Fragment {
 	start: Time,
 	end: Time,
 	segment_id: string,
+	template_id?: string,
 	segment?: Segment,
 	message?: string,
 	status?: Status,

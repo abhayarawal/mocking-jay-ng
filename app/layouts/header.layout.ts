@@ -30,6 +30,19 @@ class MainNav {
 }
 
 
+enum SearchType {
+	Professor,
+	Date,
+	ProfessorDate,
+	Help
+}
+
+interface SearchResult {
+	type: SearchType,
+	text: string,
+	link: string
+}
+
 @Component({
 	selector: 'search-box',
 	template: `
@@ -37,11 +50,20 @@ class MainNav {
 			<div class="search__box">
 				<span class='lnr lnr-magnifier'></span>
         <input placeholder='Search for anything' type='text'>
+
+        <ul>
+        	<li></li>
+        </ul>
 			</div>
 		</form>
 	`
 })
-class SearchBox {
+class SearchBox implements OnInit {
+	searchResults: SearchResult[];
+
+	ngOnInit() {
+		
+	}
 }
 
 
