@@ -59,6 +59,10 @@ export class SegmentService implements OnInit {
 		);
 	}
 
+	getSegmentSync(id: string) {
+		return (this.segments.filter(segment => segment.id === id))[0];
+	}
+
 	addSegment(segment: any) {
 		let segments = localStorage.getItem('segments');
 		if (typeof segments !== 'undefined' && segments !== null) {

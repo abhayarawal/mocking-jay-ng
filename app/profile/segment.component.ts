@@ -183,8 +183,22 @@ class SegmentComponent implements OnInit {
 	@Input() segment: Segment;
 	fragments: Fragment[];
 
+	constructor(
+		private fragmentService: FragmentService,
+		private routeParams: RouteParams,
+		private calendarService: CalendarService,
+	) {}
+
 	ngOnInit() {
 		this.fragments = genFragments(this.segment);
+
+		let [_, date] = this.calendarService.getRouteParams();
+
+		let day = date.getDate(),
+				month = date.getMonth(),
+				year = date.getFullYear();
+
+		this.fragmentService.getFragments(this.segment, month, day, year);
 	}
 }
 
@@ -210,8 +224,10 @@ class SegmentComponent implements OnInit {
 class SegmentWrap {
 	segments: Segment[] = [];
 
-	constructor(private calendarService: CalendarService,
-		private segmentService: SegmentService) {
+	constructor(
+		private calendarService: CalendarService,
+		private segmentService: SegmentService
+	) {
 	}
 
 	ngOnInit() {
@@ -321,7 +337,8 @@ class FragmentContextStudent implements OnInit {
 
 	constructor(
 		private segmentViewService: SegmentViewService,
-		private notificationService: NotificationService
+		private notificationService: NotificationService,
+		private fragmentService: FragmentService
 	) {
 	}
 
@@ -339,6 +356,9 @@ class FragmentContextStudent implements OnInit {
 		} else {
 			this.fragment.status = Status.approved;
 		}
+
+		this.fragmentService.addFragment(this.fragment);
+
 		this.notificationService.notify(`
 			Appointment created for ${this.fragment.segment.template.name} at ${this.fragment.start.hour}:${this.fragment.start.minute}
 		`, true, false);
