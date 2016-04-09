@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
 
 import {Segment} from '../interfaces/interface';
-import {TemplateService} from '../templates/template.service';
+import {TemplateService} from './template.service';
 import {AuthService} from '../auth/auth.service';
 
 var genId = () => {
@@ -29,7 +29,7 @@ export class SegmentService implements OnInit {
 	constructor(
 		@Inject(TemplateService) TemplateService,
 		@Inject(AuthService) AuthService
-	){
+	) {
 		this.templateService = TemplateService;
 		this.authService = AuthService;
 

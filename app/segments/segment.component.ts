@@ -10,8 +10,8 @@ import {LayoutHeader} from '../layouts/header.layout';
 import {Segment, Time, Template} from '../interfaces/interface';
 import {RadiusInputComponent, RadiusSelectComponent, RadiusRadioComponent, SelectObject} from '../form/form.component';
 
-import {TemplateService} from '../templates/template.service';
-import {SegmentService} from '../segments/segment.service';
+import {TemplateService} from '../services/template.service';
+import {SegmentService} from '../services/segment.service';
 
 import {NotificationService} from '../notification.service';
 import {CalendarSelectElm} from '../form/calendar.form.component';

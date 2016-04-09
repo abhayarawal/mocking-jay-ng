@@ -10,7 +10,7 @@ import {NotificationService, Notification} from '../notification.service';
 
 import {LayoutHeader} from '../layouts/header.layout';
 import {Template, UserType, User} from '../interfaces/interface';
-import {TemplateService} from './template.service';
+import {TemplateService} from '../services/template.service';
 import {RadiusInputComponent, RadiusSelectComponent, RadiusRadioComponent} from '../form/form.component';
 
 import {AuthService} from '../auth/auth.service';

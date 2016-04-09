@@ -27,7 +27,7 @@ export class TemplateService implements OnInit {
 
 	constructor(
 		@Inject(AuthService) AuthService
-	){
+	) {
 		this.authService = AuthService;
 
 		this.templates$ = new Observable<Template[]>(observer => this.templatesObserver = observer).share();
