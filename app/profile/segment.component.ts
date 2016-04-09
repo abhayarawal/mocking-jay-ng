@@ -27,53 +27,6 @@ var genId = () => {
 };
 
 
-var genFragments = (segment: Segment): Fragment[] => {
-	let [t1, m1] = [segment.start.hour, segment.start.minute],
-			[t2, m2] = [segment.end.hour, segment.end.minute];
-
-	let d1: any = new Date(segment.date.year, segment.date.month, segment.date.day, t1, m1),
-			d2: any = new Date(segment.date.year, segment.date.month, segment.date.day, t2, m2);
-
-	let diff = (d2 - d1)/1000/60;	
-	let fragments = diff / segment.template.interval;
-
-	let increment = ([h, m], inc): [number, number] => {
-		if ((m+inc) === 60) {
-			return [h + 1, 0];
-		} else {
-			return [h, m + inc];
-		}
-	}
-
-	let ret: Fragment[] = [];
-	let now: [number, number] = [t1, m1];
-	for (let i = 0, l = fragments; i < l; i++) {
-		let tmp = now;
-		now = increment(now, 15);
-		ret.push({
-			id: genId(),
-			date: {
-				year: segment.date.year,
-				month: segment.date.month,
-				day: segment.date.day
-			},
-			start: {
-				hour: tmp[0],
-				minute: tmp[1]
-			},
-			end: {
-				hour: now[0],
-				minute: now[1]
-			},
-			segment: segment,
-			segment_id: segment.id
-		});
-	}
-
-	return ret;
-}
-
-
 @Pipe({
 	name: 'timePipe'
 })
@@ -190,15 +143,13 @@ class SegmentComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		this.fragments = genFragments(this.segment);
+		this.fragments = this.fragmentService.genFragments(this.segment);
 
 		let [_, date] = this.calendarService.getRouteParams();
 
 		let day = date.getDate(),
 				month = date.getMonth(),
 				year = date.getFullYear();
-
-		this.fragmentService.getFragments(this.segment, month, day, year);
 	}
 }
 
