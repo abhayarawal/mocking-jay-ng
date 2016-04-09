@@ -19,10 +19,10 @@ import {SegmentViewport} from './segment.component';
 				<section>
 					<ul>
 						<a href="">
-							Professors <span class="lnr lnr-chevron-down"></span>
+							Professors <span class="lnr lnr-menu"></span>
 						</a>
 						<a href="">Today's Events</a>
-						<a href="">Month</a>
+						<a [routerLink]="['/ProfileViewport', 'DaySegment', {id: id, month: month, day: day, year: year}]">Calendar</a>
 					</ul>
 				</section>
 				<section class="context__header">
@@ -84,10 +84,14 @@ class ProfileContext implements OnInit {
 				<h3>
 					{{user.fname}} {{user.lname}}
 				</h3>
+				<div class="profile__mail"><a href="mailto:{{user.email}}">{{user.email}}</a></div>
 				<ul>
-					<li><a href="">{{user.fname}}'s contact card</a></li>
-					<li><a [routerLink]="['/ProfileViewport', 'Calendar', {id: user.id}]">{{user.fname}}'s calendar</a></li>
-					<li><a href="">My events with {{user.fname}}</a></li>
+					<li *ngIf="type==0 && user.type!=0">
+						<a href="" class="lnr lnr-pushpin"></a>
+					</li>
+					<li><a class="lnr lnr-license"></a></li>
+					<li><a [routerLink]="['/ProfileViewport', 'Calendar', {id: user.id}]" class="lnr lnr-calendar-full"></a></li>
+					<li><a href="" class="lnr lnr-download"></a></li>
 				</ul>
 			</div>
 			<calendar [id]="user.id" *ngIf="user"></calendar>
@@ -101,14 +105,21 @@ class ProfileNav implements OnInit {
 	month: String = '';
 	year: String = '';
 
-	constructor(private authService: AuthService,
-		private router: Router) { }
+	type: UserType;
+
+	constructor(
+		private authService: AuthService,
+		private router: Router
+	) { }
 
 	ngOnInit() {
 		let day = new Date();
 		this.day = `${day.getDate()}`;
 		this.month = `${day.getMonth()}`;
 		this.year = `${day.getFullYear()}`;
+
+		let [_, session] = this.authService.getSession();
+		this.type = session.type;
 	}
 }
 

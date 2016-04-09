@@ -631,7 +631,7 @@ $top__height: 40px;
 		.profile__card
 		{
 			text-align: center;
-			padding: 0 17px;
+			padding: 0 0px;
 		
 			img
 			{
@@ -646,24 +646,69 @@ $top__height: 40px;
 				font-weight: 300;
 				margin-top: 15px;
 			}
+
+			.profile__mail
+			{
+				text-align: center;
+
+				a
+				{
+					font-size: 12px;
+				}
+			}
 			
 			ul
 			{
 				display: block;
 				margin-top: 15px;
+				text-align: center;
+				background: #252a37;
+				padding: 10px 0;
 				
 				li
 				{
-					&:not(:first-child) {
-						margin-top: 5px;
+					&:not(:last-child) {
+						margin-right: 5px;
+					}
+
+					display: inline-block;
+					vertical-align: middle;
+
+					&:first-child
+					{
+						a
+						{
+							background: #f0397b;
+							// background: #3ea9f0;
+							// background: #8b6cf0;
+							color: #fff;
+							border: none;
+						}
 					}
 					
 					a
 					{
 						display: block;
-						line-height: 27px;
-						border: 1px solid darken(#A2B4BC, 15%);
+						line-height: 35px;
+						width: 35px;
+						text-align: center;
 						@include border-radius(40px);
+						position: relative;
+						font-size: 16px;
+
+						&:hover
+						{
+							// @include box-shadow(0px, 0px, 0px, 2px, lighten(#A2B4BC, 15%));
+						}
+
+						span
+						{
+							position: absolute;
+							right: 2px;
+							top: 2px;
+							font-size: 19px;
+							color: rgba(162, 180, 188, 0.71);
+						}
 					}
 				}
 			}
@@ -779,7 +824,7 @@ $top__height: 40px;
 	.month__select
 	{
 		text-align: center;
-		margin-top: 50px;
+		margin-top: 40px;
 		position: relative;
 		
 		h3, h4, button
@@ -985,6 +1030,11 @@ textarea
   text-align: center;
   vertical-align: middle;
 
+  &.thin
+  {
+  	border: 1px solid;
+  }
+
   &:active
   {
     @include transform(scale(0.95));
@@ -1004,7 +1054,8 @@ textarea
 
     &.#{$type}
     {
-      border: 2px solid $bg;
+      border: 2px solid;
+      border-color: $bg;
       color: darken($bg, 10%);
 
       &:hover
@@ -1168,6 +1219,8 @@ textarea
 
 .segment__wrap
 {		
+	position: relative;
+
 	.segments
 	{
 		margin-top: 20px;
