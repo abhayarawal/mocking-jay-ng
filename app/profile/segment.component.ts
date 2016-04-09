@@ -150,6 +150,11 @@ class SegmentComponent implements OnInit {
 		let day = date.getDate(),
 				month = date.getMonth(),
 				year = date.getFullYear();
+
+		this.fragmentService.getFragments(this.segment, month, day, year).then(
+			(fragments) => {
+				this.fragments = this.fragmentService.merge(this.fragments, fragments);
+			});
 	}
 }
 
@@ -313,7 +318,6 @@ class FragmentContextStudent implements OnInit {
 		this.notificationService.notify(`
 			Appointment created for ${this.fragment.segment.template.name} at ${this.fragment.start.hour}:${this.fragment.start.minute}
 		`, true, false);
-
 	}
 }
 

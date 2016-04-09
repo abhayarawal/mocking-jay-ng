@@ -61,11 +61,20 @@ export class FragmentService {
 		return Promise.resolve(fragments);
 	}
 
-	merge(frags1: Fragment[], frags2: Fragment[]) {
+	merge(frags1: Fragment[], frags2: Fragment[]): Fragment[] {
 		let fragments = frags1.map((fragment) => {
-			
+			let fg: Fragment = fragment;
+			for (var i = frags2.length - 1; i >= 0; i--) {
+				let tmp = frags2[i];
+				if (tmp.start.hour == fragment.start.hour && fragment.start.minute == tmp.start.minute && fragment.segment_id == tmp.segment_id) {
+					fg = tmp;
+					break;
+				}
+			}
+			return fg;
 		});
-		console.log(fragments);
+
+		return fragments;
 	}
 
 	addFragment(fragment: Fragment) {
