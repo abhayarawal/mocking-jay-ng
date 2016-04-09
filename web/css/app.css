@@ -457,6 +457,8 @@ html, body {
     padding: 8px 10px; }
     .profile__viewport .profile__outlet .profile__context .row section:last-child ul li {
       display: inline-block; }
+      .profile__viewport .profile__outlet .profile__context .row section:last-child ul li:not(:last-child) {
+        margin-right: 5px; }
       .profile__viewport .profile__outlet .profile__context .row section:last-child ul li a, .profile__viewport .profile__outlet .profile__context .row section:last-child ul li button {
         border: 1px solid rgba(0, 0, 0, 0.15);
         line-height: 25px;
@@ -467,7 +469,16 @@ html, body {
         -ms-border-radius: 40px;
         border-radius: 40px;
         padding: 0 15px;
-        cursor: pointer; }
+        cursor: pointer;
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        transition: all 0.2s ease; }
+        .profile__viewport .profile__outlet .profile__context .row section:last-child ul li a:hover, .profile__viewport .profile__outlet .profile__context .row section:last-child ul li button:hover {
+          -webkit-box-shadow: 0px 0px 0px 2px rgba(193, 193, 193, 0.32);
+          -moz-box-shadow: 0px 0px 0px 2px rgba(193, 193, 193, 0.32);
+          box-shadow: 0px 0px 0px 2px rgba(193, 193, 193, 0.32); }
         .profile__viewport .profile__outlet .profile__context .row section:last-child ul li a.lnr, .profile__viewport .profile__outlet .profile__context .row section:last-child ul li button.lnr {
           font-size: 12px;
           width: 27px;
