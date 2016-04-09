@@ -1285,7 +1285,7 @@ textarea
 							@include status(
 								rgba(59, 185, 100, 0.73), 
 								darken(rgba(59, 185, 100, 0.73), 10%), 
-								rgba(71, 223, 120, 0.12)
+								rgba(71, 223, 120, 0.1)
 							);
 						}
 						
@@ -1419,6 +1419,16 @@ textarea
 				}
 			}
 
+			.divide
+			{
+				@include row(true);
+
+				section
+				{
+					@include col(1/2);
+				}
+			}
+
 			.weekdays
 			{
 				@include row();
@@ -1547,30 +1557,6 @@ textarea
 			}
 		}
   }
-}
-
-.mj__time
-{
-	.row
-	{
-		@include row();
-
-		& > section
-		{
-			@include col(1, false);
-			@include mq($brk__md) {
-				&:first-child
-				{
-					@include col(2/4, false);	
-				}
-
-				&:not(:first-child) {
-					@include col(1/4, false);
-					padding-left: 15px;
-				}
-			}
-		}
-	}
 }
 
 .radius-radio

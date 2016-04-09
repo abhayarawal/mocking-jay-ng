@@ -29,8 +29,8 @@ var genFragments = (segment: Segment): Fragment[] => {
 	let [t1, m1] = [segment.start.hour, segment.start.minute],
 			[t2, m2] = [segment.end.hour, segment.end.minute];
 
-	let d1: any = new Date(segment.start.year, segment.start.month, segment.start.day, t1, m1),
-			d2: any = new Date(segment.start.year, segment.start.month, segment.start.day, t2, m2);
+	let d1: any = new Date(segment.date.year, segment.date.month, segment.date.day, t1, m1),
+			d2: any = new Date(segment.date.year, segment.date.month, segment.date.day, t2, m2);
 
 	let diff = (d2 - d1)/1000/60;	
 	let fragments = diff / segment.template.interval;
@@ -50,17 +50,16 @@ var genFragments = (segment: Segment): Fragment[] => {
 		now = increment(now, 15);
 		ret.push({
 			id: genId(),
+			date: {
+				year: segment.date.year,
+				month: segment.date.month,
+				day: segment.date.day
+			},
 			start: {
-				year: segment.start.year,
-				month: segment.start.month,
-				day: segment.start.day,
 				hour: tmp[0],
 				minute: tmp[1]
 			},
 			end: {
-				year: segment.start.year,
-				month: segment.start.month,
-				day: segment.start.day,
 				hour: now[0],
 				minute: now[1]
 			},
@@ -294,7 +293,7 @@ class DayComponent implements OnInit {
 			<div class="fragment__ctx">
 				<h3>
 					{{fragment.segment.template.name}}
-					<span>Taylor Swift</span>
+					<span>{{fragment.segment.template.user_id}}</span>
 				</h3>
 				<div class="date__time">
 					From: <span>{{fragment | timePipe:false}}</span> To: <span>{{fragment | timePipe:true}}</span>

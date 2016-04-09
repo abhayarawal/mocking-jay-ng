@@ -78,7 +78,7 @@ export class SegmentService implements OnInit {
 
 	getSegmentsByRoute(id, month, day, year) {
 		let segments = this.segments.filter(
-			segment => segment.start.month == month && segment.start.day == day && segment.start.year == year
+			segment => segment.date.month == month && segment.date.day == day && segment.date.year == year
 		);
 
 		segments = (segments.map((segment) => {
@@ -90,17 +90,22 @@ export class SegmentService implements OnInit {
 	}
 
 	getNewSegment() {
-		let date = new Date();
+		let d = new Date();
+
+		let date = {
+			day: d.getDate(),
+			month: d.getMonth(),
+			year: d.getFullYear()
+		}
+
 		let time = {
-			day: date.getDate(),
-			month: date.getMonth(),
-			year: date.getFullYear(),
 			hour: 1,
 			minute: 0
 		};
 
 		let segment: Segment = {
 			id: genId(),
+			date: date,
 			start: time,
 			end: time,
 			repeat: false,

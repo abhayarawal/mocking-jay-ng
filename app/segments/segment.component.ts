@@ -92,83 +92,6 @@ class DateTimeValidator {
 	}
 }
 
-@Component({
-	selector: 'mj-time',
-	template: `
-		<div class="mj__time">
-			<form [ngFormModel]="dateTimeForm">
-				<div class="row">
-					<section>
-						<input type="text" [disabled]="disabled" ngControl="date" (ngModelChange)="emitEvent()" />
-					</section>
-					<section>
-						<input type="text" ngControl="time" (ngModelChange)="emitEvent()" />
-					</section>
-					<section>
-						<radius-select [items]="timeOfDay" [selected]="0"></radius-select>
-					</section>
-				</div>
-			</form>
-		</div>
-	`,
-	directives: [RadiusSelectComponent]
-})
-export class MjTime implements OnInit {
-	@Input() _time: Time;
-	@Input() disabled: boolean = false;
-	@Output() update = new EventEmitter<{}>();
-
-	time: Control;
-	date: Control;
-	dateTimeForm: ControlGroup;
-
-	timeOfDay: SelectObject[] = [
-		{ value: TimeOfDay.AM, text: 'AM' },
-		{ value: TimeOfDay.PM, text: 'PM' }
-	]
-
-	emitEvent() {
-		if (this.dateTimeForm.valid) {
-			this.update.next(this.dateTimeForm.value);
-		} else {
-			this.update.next({ valid: false });
-		}
-	}
-
-	constructor(private fb: FormBuilder) {
-		let _date = new Date();
-		this._time = {
-			day: _date.getDate(),
-			month: _date.getMonth()+1,
-			year: _date.getFullYear(),
-			hour: 1,
-			minute: 0
-		}
-
-		this.time = new Control(
-			`${this._time.hour}:${this._time.minute}`,
-			Validators.compose([Validators.required, DateTimeValidator.shouldBeTime]));
-
-		this.date = new Control(
-			`${this._time.month}/${this._time.day}/${this._time.year}`,
-			Validators.compose([Validators.required, DateTimeValidator.shouldBeDate]));
-
-		this.dateTimeForm = fb.group({
-			'time': this.time,
-			'date': this.date
-		});
-	}
-
-	ngOnInit() {
-	}
-
-	get formatted() {
-		return ``;
-		// return `${JSON.stringify(this.dateTimeForm.value)} -- Valid: ${this.dateTimeForm.valid}`;
-	}
-}
-
-
 
 @Component({
 	template: `
@@ -179,7 +102,7 @@ export class MjTime implements OnInit {
 			</h4>
 			<div class="form__wrap">
 				{{formatted}}
-				<form>
+				<form [ngFormModel]="segmentForm">
 					<div class="form__group">
 						<label for="">Template</label>
 						<radius-select (update)="updateTemplate($event)" [items]="templates" [selected]="0"></radius-select>
@@ -188,16 +111,39 @@ export class MjTime implements OnInit {
 						</div>
 					</div>
 					<div class="form__group">
-						<label for="">From</label>
-						<calendar-select-elm></calendar-select-elm>
+						<label for="">Date</label>
+						<calendar-select-elm (update)="updateDate($event)"></calendar-select-elm>
+						<div class="form__desc">
+							Select the date for segment start
+						</div>
 					</div>
 					<div class="form__group">
-						<label for="">From</label>
-						<mj-time (update)="updateStart($event)"></mj-time>
+						<label for="">Start time</label>
+						<div class="divide">
+							<section>
+								<input type="text" ngControl="start" />
+							</section>
+							<section>
+								<radius-select [items]="timeOfDay" [selected]="0"></radius-select>
+							</section>
+						</div>
+						<div class="form__desc">
+							Select the time for segment start
+						</div>
 					</div>
 					<div class="form__group">
-						<label for="">To</label>
-						<mj-time [disabled]="true" (update)="updateEnd($event)"></mj-time>
+						<label for="">End time</label>
+						<div class="divide">
+							<section>
+								<input type="text" ngControl="end" />
+							</section>
+							<section>
+								<radius-select [items]="timeOfDay" [selected]="0"></radius-select>
+							</section>
+						</div>
+						<div class="form__desc">
+							Select the time for segment end
+						</div>
 					</div>
 					<div class="form__group">
 						<label for="">Repeat?</label>
@@ -208,12 +154,11 @@ export class MjTime implements OnInit {
 					</div>
 					<div *ngIf="repeatView">
 						<div class="form__group">
-							<label for="">Repeat from</label>
+							<label for="">Repeat until</label>
 							<calendar-select-elm></calendar-select-elm>
-						</div>
-						<div class="form__group">
-							<label for="">Repeat to</label>
-							<calendar-select-elm></calendar-select-elm>
+							<div class="form__desc">
+								Select the segment repeat until date
+							</div>
 						</div>
 						<div class="form__group">
 							<label for="">Select repeat days</label>
@@ -250,74 +195,83 @@ export class MjTime implements OnInit {
 			</div>
 		</div>
 	`,
-	directives: [MjRadio, MjTime, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent, CalendarSelectElm]
+	directives: [MjRadio, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent, CalendarSelectElm]
 })
 class SegmentCreate implements OnInit {
 	segment: Segment;
 	repeatView: boolean = false;
 
-	segmentForm: ControlGroup;
-
 	templates: SelectObject[];
 	templates$: Observable<Template[]>;
 
-	constructor(private builder: FormBuilder,
-							private templateService: TemplateService,
-							private segmentService: SegmentService,
-							private notificationService: NotificationService) {
+	timeOfDay: SelectObject[] = [
+		{ value: TimeOfDay.AM, text: 'AM' },
+		{ value: TimeOfDay.PM, text: 'PM' }
+	]
+
+	start: Control;
+	end: Control;
+	segmentForm: ControlGroup;
+
+	constructor(
+		private templateService: TemplateService,
+		private segmentService: SegmentService,
+		private notificationService: NotificationService,
+		private fb: FormBuilder
+	){
+		let date = new Date();
+		this.start = new Control(
+			`10:00`,
+			Validators.compose([Validators.required, DateTimeValidator.shouldBeTime]));
+
+		this.end = new Control(
+			`12:00`,
+			Validators.compose([Validators.required, DateTimeValidator.shouldBeTime]));
+
+		this.segmentForm = fb.group({
+			'start': this.start,
+			'end': this.end
+		});
 	}
 
 	updateTemplate(event: string) {
 		this.segment.template_id = event;
 	};
 
+	updateDate([month, day, year]: [number, number, number]) {
+		this.segment.date = {
+			month: month,
+			day: day,
+			year: year
+		};
+	}
+
 	updateRepeat(event: boolean) { this.repeatView = event };
 
-	updateStart(event: any) {
-		if (!('valid' in event)) {
-			let {date, time} = event,
-					[m, d, y] = date.split("/"),
-					[hr, min] = time.split(":");
-
-			this.segment.start = {
-				day: parseInt(d), 
-				month: parseInt(m)-1,
-				year: parseInt(y),
-				hour: parseInt(hr),
-				minute: parseInt(min)
-			}
-
-			this.segment.end = {
-				day: parseInt(d),
-				month: parseInt(m) - 1,
-				year: parseInt(y),
-				hour: this.segment.end.hour,
-				minute: this.segment.end.minute
-			}
-		}
-	}
-
-	updateEnd(event: any) {
-		if (!('valid' in event)) {
-			let {_, time} = event,
-					[hr, min] = time.split(":");
-
-			this.segment.end = {
-				day: this.segment.start.day,
-				month: this.segment.start.month,
-				year: this.segment.start.year,
-				hour: parseInt(hr),
-				minute: parseInt(min)
-			};
-		}
-	}
-
 	submit() {
-		this.segmentService.addSegment(this.segment);
-		this.segmentService.getNewSegment().then(segment => { 
-			this.segment.id = segment.id;
-		});
-		this.notificationService.notify(`Added new segment ${this.segment.id}`, true, false);
+		if (this.segmentForm.valid) {
+			let {start, end} = this.segmentForm.value;
+
+			let [hr, min] = start.split(":");
+			this.segment.start = {
+				hour: parseInt(hr),
+				minute: parseInt(min)
+			}
+
+			let [hr2, min2] = end.split(":");
+			this.segment.end = {
+				hour: parseInt(hr2),
+				minute: parseInt(min2)
+			}
+
+			this.segmentService.addSegment(this.segment);
+			this.segmentService.getNewSegment().then(segment => { 
+				this.segment.id = segment.id;
+			});
+			this.notificationService.notify(`Added new segment ${this.segment.id}`, true);
+		} else {
+			this.notificationService.notify(`Cannot add segment`, true, true);
+		}
 	}
 
 	ngOnInit() {
@@ -352,7 +306,7 @@ class SegmentCreate implements OnInit {
 				<h4>{{segment.template?.name}}</h4>
 				</section>
 				<section>
-					<h5>{{segment.start.month}}/{{segment.start.day}}/{{segment.start.year}}</h5>
+					<h5>{{segment.date.month}}/{{segment.date.day}}/{{segment.date.year}}</h5>
 					<div>
 						<strong>From</strong> {{segment.start.hour}}:{{segment.start.minute}} 
 						<strong>To:</strong> {{segment.end.hour}}:{{segment.end.minute}}

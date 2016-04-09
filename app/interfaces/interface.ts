@@ -12,14 +12,17 @@ export interface User {
 	type: UserType
 }
 
+export interface Date {
+	year: number,
+	month: number,
+	day: number
+}
 
 export interface Time {
-	day: number,
-	month: number,
-	year: number,
 	hour: number,
 	minute: number
 }
+
 
 export interface Template {
 	id: string,
@@ -35,11 +38,12 @@ export interface Segment {
 	id: string,
 	template_id: string,
 	template?: Template,
+	date: Date,
 	start: Time,
 	end: Time,
 	repeat: boolean,
-	repeat_start?: Time,
-	repeat_end?: Time,
+	repeat_until?: Date,
+	repeat_days?: [number],
 	instance_of?: string,
 	location?: string
 }
@@ -56,10 +60,11 @@ export enum Status {
 
 export interface Fragment {
 	id: string,
+	date: Date,
 	start: Time,
 	end: Time,
 	segment_id: string,
-	segment: Segment,
+	segment?: Segment,
 	message?: string,
 	status?: Status,
 	response?: string,

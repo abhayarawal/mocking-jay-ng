@@ -109,7 +109,7 @@ export class CalendarSelect implements OnInit {
 	template: `
 		<div class="calendar__select__elm" tabindex="120" (blur)="hide()">
 			<div class="selected__date" (click)="show=true" [ngClass]="{focused: show}">
-				{{month}}/{{day}}/{{year}}
+				{{month+1}}/{{day}}/{{year}}
 				<span class="lnr lnr-calendar-full"></span>
 			</div>
 			<div class="calendar__select__wrap" [ngClass]="{show: show}">
