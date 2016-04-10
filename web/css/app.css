@@ -869,12 +869,33 @@ textarea {
       margin-top: 15px; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls strong {
         display: block;
-        margin-bottom: 10px; }
+        margin-bottom: 10px;
+        font-size: 17px; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels {
         margin-top: 15px;
         font-size: 13px; }
         .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a {
           margin-right: 15px; }
+      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .state {
+        display: block;
+        margin-top: 10px; }
+      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message__wrap label {
+        display: block;
+        margin-top: 10px; }
+      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .response {
+        background: #fbfbfb;
+        padding: 7px 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        -o-border-radius: 10px;
+        -ms-border-radius: 10px;
+        border-radius: 10px;
+        border: 2px dotted #ccc;
+        margin-top: 7px; }
+      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group {
+        margin-top: 10px; }
+        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group textarea {
+          height: 70px; }
 
 .segment__wrap {
   position: relative; }

@@ -1324,6 +1324,7 @@ textarea
 				{
 					display: block;
 					margin-bottom: 10px;
+					font-size: 17px;
 				}
 
 				.cancels
@@ -1335,6 +1336,40 @@ textarea
 					a
 					{
 						margin-right: 15px;
+					}
+				}
+
+				.state
+				{
+					display: block;
+					margin-top: 10px;
+				}
+				
+				.message__wrap
+				{
+					label
+					{
+						display: block;
+						margin-top: 10px;
+					}
+				}
+
+				.message, .response
+				{
+					background: #fbfbfb;
+					padding: 7px 10px;
+					@include border-radius(10px);
+					border: 2px dotted #ccc;
+					margin-top: 7px;
+				}
+
+				.form__group
+				{
+					margin-top: 10px;
+
+					textarea
+					{
+						height: 70px;
 					}
 				}
 			}

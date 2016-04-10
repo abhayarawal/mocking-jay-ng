@@ -58,6 +58,10 @@ export class FragmentService {
 				return fragment;
 		});
 
+		this.fragments.forEach((f, i) => {
+			console.log(f.segment_id == segment.id, f.segment_id, segment.id);
+		});
+
 		return Promise.resolve(fragments);
 	}
 
@@ -78,7 +82,7 @@ export class FragmentService {
 	}
 
 	addFragment(fragment: Fragment) {
-		let {id, date, start, end, segment_id, status, user_id} = fragment;
+		let {id, date, start, end, segment_id, status, user_id, message} = fragment;
 		this.fragments.push({
 			id: id,
 			date: date,
@@ -86,7 +90,8 @@ export class FragmentService {
 			end: end,
 			segment_id: segment_id,
 			status: status,
-			user_id: user_id
+			user_id: user_id,
+			message: message
 		});
 		localStorage.setItem('fragments', JSON.stringify(this.fragments));
 	}

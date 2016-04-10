@@ -78,7 +78,7 @@ export interface Fragment {
 	segment?: Segment,
 	message?: string,
 	status?: Status,
-	response?: string,
+	response?: string[],
 	instance_id?: string
 }
 

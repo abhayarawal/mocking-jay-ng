@@ -256,6 +256,28 @@ class DayComponent implements OnInit {
 }
 
 @Component({
+	selector: 'fragment-message',
+	template: `
+		<div *ngIf="fragment" class="message__wrap">
+			<div *ngIf="fragment.message">
+				<label>Message:</label>
+				<div class="message">{{fragment.message}}</div>
+			</div>
+			<div *ngIf="fragment.response">
+				<label>Response:</label>
+				<div *ngFor="#res of fragment.response">
+					<div class="response">{{res}}</div>
+				</div>
+			</div>
+		</div>
+	`
+})
+class FragmentMessage {
+	@Input() fragment: Fragment;
+}
+
+
+@Component({
 	selector: 'fragment-context-student',
 	template: `
 		<div class="fragment__ctx">
@@ -272,32 +294,50 @@ class DayComponent implements OnInit {
 			<div [ngSwitch]="fragment.status" class="ctx__controls">
 				<template [ngSwitchWhen]="1">
 					<strong>Appointment not approved yet</strong>
-					<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+					<fragment-message [fragment]="fragment"></fragment-message>
+					<div class="form__group">
+						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+					</div>
 				</template>
 				<template [ngSwitchWhen]="2">
 					<strong>Appointment approved</strong>
-					<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+					<fragment-message [fragment]="fragment"></fragment-message>
+					<div class="form__group">
+						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+					</div>
 				</template>
 				<template [ngSwitchWhen]="3">
 					<strong>Appointment denied</strong>
+					<fragment-message [fragment]="fragment"></fragment-message>
 				</template>
 				<template [ngSwitchWhen]="4">
 					<strong>Appointment cancelled</strong>
+					<fragment-message [fragment]="fragment"></fragment-message>
 				</template>
 				<template [ngSwitchWhen]="6">
 					<strong>Appointment time blocked by advisor</strong>
+					<fragment-message [fragment]="fragment"></fragment-message>
 				</template>
 				<template ngSwitchDefault>
-					<button class="button type__2" (click)="create()">Create appointment</button>
+					<div class="form__group">
+						<label for="">Message: </label>
+						<textarea [(ngModel)]="message"></textarea>
+					</div>
+					<div class="form__group">
+						<button class="button type__2" (click)="create()">Create appointment</button>
+					</div>
 				</template>
 			</div>
 		</div>
 	`,
+	directives: [FragmentMessage],
 	pipes: [TimePipe]
 })
 class FragmentContextStudent implements OnInit {
 	@Input() fragment: Fragment;
 	@Input() user: User;
+
+	message: string;
 
 	constructor(
 		private segmentViewService: SegmentViewService,
@@ -321,12 +361,15 @@ class FragmentContextStudent implements OnInit {
 			this.fragment.status = Status.approved;
 		}
 
+		this.fragment.message = this.message;
 		this.fragment.user_id = this.user.id;
 		this.fragmentService.addFragment(this.fragment);
 
 		this.notificationService.notify(`
 			Appointment created for ${this.fragment.segment.template.name} at ${this.fragment.start.hour}:${this.fragment.start.minute}
 		`, true, false);
+
+		this.message = '';
 	}
 }
 
@@ -346,34 +389,55 @@ class FragmentContextStudent implements OnInit {
 			</div>
 			<div [ngSwitch]="fragment.status" class="ctx__controls">
 				<template [ngSwitchWhen]="1">
-					<strong>Appointment not approved yet</strong>
-					<button class="button type__3" (click)="approve()">Approve appointment</button>
+					<strong class="state">Appointment not approved yet</strong>
+					<fragment-message [fragment]="fragment"></fragment-message>
+					<div class="form__group">
+						<label for="">Response:</label>
+						<textarea [(ngModel)]="response"></textarea>
+					</div>
+					<div class="form__group">
+						<button class="button type__3" (click)="approve()">Approve appointment</button>
+					</div>
 					<div class="cancels">
 						<a (click)="deny()">Deny appointment</a>
 						<a href="">Deny and make unavailable</a>
 					</div>
 				</template>
+
 				<template [ngSwitchWhen]="2">
 					<strong>Appointment approved</strong>
+					<fragment-message [fragment]="fragment"></fragment-message>
+					<div class="form__group">
+						<label for="">Response:</label>
+						<textarea [(ngModel)]="response"></textarea>
+					</div>
+					<div class="form__group">
+						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+					</div>
 					<div class="cancels">
-						<a (click)="cancel()">Cancel appointment</a>
-						<a href="">Cancel and make unavailable</a>
+						<a href="">Cancel and make unavailable for everyone</a>
 					</div>
 				</template>
+
 				<template [ngSwitchWhen]="3">
 					<strong>Appointment denied</strong>
+					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="cancels">
 						<a (click)="block()">Block interval for everyone</a>
 					</div>
 				</template>
+
 				<template [ngSwitchWhen]="4">
 					<strong>Appointment cancelled</strong>
+					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="cancels">
 						<a (click)="block()">Block interval for everyone</a>
 					</div>
 				</template>
+
 				<template [ngSwitchWhen]="6">
 					<strong>Appointment blocked for everyone</strong>
+					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="cancels">
 						<a (click)="open()">Unblock interval</a>
 					</div>
@@ -384,11 +448,14 @@ class FragmentContextStudent implements OnInit {
 			</div>
 		</div>
 	`,
+	directives: [FragmentMessage],
 	pipes: [TimePipe]
 })
 class FragmentContextFaculty implements OnInit {
 	@Input() fragment: Fragment;
 	@Input() user: User;
+
+	response: string = '';
 
 	constructor(
 		private segmentViewService: SegmentViewService,
@@ -401,12 +468,22 @@ class FragmentContextFaculty implements OnInit {
 	}
 
 	update(status: Status, message: string) {
+		if (!('response' in this.fragment)) {
+			this.fragment.response = [];
+		}
+
+		if (this.response.trim().length > 0) {
+			this.fragment.response.push(this.response.trim());
+		}
+
 		this.fragment.status = status;
 		let [done, fragment] = this.fragmentService.updateFragment(this.fragment);
 		this.fragment = fragment;
 		if (done) {
 			this.notificationService.notify(`Appointment ${message}`, true);
 		}
+
+		this.response = '';
 	}
 
 	deny() {
@@ -422,7 +499,7 @@ class FragmentContextFaculty implements OnInit {
 	}
 
 	open() {
-		this.update(Status.denied, 'opened for everyone');
+		this.update(Status.default, 'opened for everyone');
 	}
 
 	block() {

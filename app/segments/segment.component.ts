@@ -307,6 +307,7 @@ class SegmentCreate implements OnInit {
 			<li *ngFor="#segment of segments">
 				<section>
 				<h4>{{segment.template?.name}}</h4>
+				{{segment.id}}
 				</section>
 				<section>
 					<h5>{{segment.date.month}}/{{segment.date.day}}/{{segment.date.year}}</h5>
