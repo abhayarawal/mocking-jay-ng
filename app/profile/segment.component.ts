@@ -261,12 +261,18 @@ class DayComponent implements OnInit {
 		<div *ngIf="fragment" class="message__wrap">
 			<div *ngIf="fragment.message">
 				<label>Message:</label>
-				<div class="message">{{fragment.message}}</div>
+				<div class="message">
+					<span class="icon-message"></span>
+					{{fragment.message}}
+				</div>
 			</div>
 			<div *ngIf="fragment.response">
 				<label>Response:</label>
 				<div *ngFor="#res of fragment.response">
-					<div class="response">{{res}}</div>
+					<div class="response">
+						<span class="icon-messages"></span>
+						{{res}}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -449,6 +455,7 @@ class FragmentProfile {
 				</template>
 
 				<template [ngSwitchWhen]="4">
+					<fragment-profile [user]="template_user"></fragment-profile>
 					<strong>Appointment cancelled</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="cancels">

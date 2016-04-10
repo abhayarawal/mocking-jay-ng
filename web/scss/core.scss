@@ -1352,16 +1352,29 @@ textarea
 					{
 						display: block;
 						margin-top: 10px;
+						font-weight: 500;
 					}
 				}
 
 				.message, .response
 				{
-					background: #fbfbfb;
-					padding: 7px 10px;
-					@include border-radius(7px);
-					border: 1px dashed #ccc;
+					// background: #fbfbfb;
+					// padding: 7px 10px;
+					// @include border-radius(5px);
+					// border: 1px dashed #ccc;
 					margin-top: 7px;
+					color: #828282;
+					position: relative;
+					padding-left: 22px;
+
+					span
+					{
+						position: absolute;
+						left: 0px;
+						top: 1px;
+						font-size: 18px;
+						color: #92969d;
+					}
 				}
 
 				.form__group
@@ -1377,10 +1390,10 @@ textarea
 				.ctx__profile
 				{
 					font-size: 0;
-					background: rgba(249, 245, 240, 0.68);
-					padding: 7px 10px;
-					border: 1px dashed #dbdbdb;
-					@include border-radius(7px);
+					background: #fbfbfb;
+					padding: 7px 7px;
+					@include border-radius(40px);
+					border: 1px solid #e8e8e8;
 
 					section
 					{

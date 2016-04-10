@@ -882,31 +882,33 @@ textarea {
         margin-top: 10px; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message__wrap label {
         display: block;
-        margin-top: 10px; }
+        margin-top: 10px;
+        font-weight: 500; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .response {
-        background: #fbfbfb;
-        padding: 7px 10px;
-        -webkit-border-radius: 7px;
-        -moz-border-radius: 7px;
-        -o-border-radius: 7px;
-        -ms-border-radius: 7px;
-        border-radius: 7px;
-        border: 1px dashed #ccc;
-        margin-top: 7px; }
+        margin-top: 7px;
+        color: #828282;
+        position: relative;
+        padding-left: 22px; }
+        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message span, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .response span {
+          position: absolute;
+          left: 0px;
+          top: 1px;
+          font-size: 18px;
+          color: #92969d; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group {
         margin-top: 10px; }
         .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group textarea {
           height: 70px; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile {
         font-size: 0;
-        background: rgba(249, 245, 240, 0.68);
-        padding: 7px 10px;
-        border: 1px dashed #dbdbdb;
-        -webkit-border-radius: 7px;
-        -moz-border-radius: 7px;
-        -o-border-radius: 7px;
-        -ms-border-radius: 7px;
-        border-radius: 7px; }
+        background: #fbfbfb;
+        padding: 7px 7px;
+        -webkit-border-radius: 40px;
+        -moz-border-radius: 40px;
+        -o-border-radius: 40px;
+        -ms-border-radius: 40px;
+        border-radius: 40px;
+        border: 1px solid #e8e8e8; }
         .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section {
           display: inline-block;
           vertical-align: middle;
