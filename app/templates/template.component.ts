@@ -247,18 +247,16 @@ class Templates implements OnInit {
 	templates: Template[];
 	templates$: Observable<Template[]>;
 
-	constructor(private templateService: TemplateService,
-		private notificationService: NotificationService) {
+	constructor(
+		private templateService: TemplateService,
+		private notificationService: NotificationService,
+		private authService: AuthService
+	) {
 	}
 
 	ngOnInit() {
-		this.templates$ = this.templateService.templates$;
-		this.templates$.subscribe(
-			(data) => {
-				this.templates = data;
-			}
-		);
-		this.templateService.triggerObserve();
+		let [_, session] = this.authService.getSession();
+		this.templateService.getTemplates(session.id).then(templates => this.templates = templates);
 	}
 
 	remove(id: string) {

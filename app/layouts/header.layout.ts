@@ -102,6 +102,14 @@ class SearchBox implements OnInit {
 						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/lady.png?8325253379137164394"
 					}
 				}
+			},
+			{
+				type: SearchType.User, obj: {
+					id: "31fqm5773", fname: "Evie", lname: "Frye", email: "evie.frye@ubi.com", type: UserType.Faculty,
+					meta: {
+						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/lady2.png?18444122143504349695"
+					}
+				}
 			}
 		]
 	}

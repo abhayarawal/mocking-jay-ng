@@ -42,6 +42,7 @@ export interface Segment {
 	start: Time,
 	end: Time,
 	repeat: boolean,
+	user_id: string,
 	repeat_until?: Date,
 	repeat_days?: [number],
 	instance_of?: string,

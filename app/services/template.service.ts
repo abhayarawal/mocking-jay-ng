@@ -44,6 +44,12 @@ export class TemplateService implements OnInit {
 		this.templatesObserver.next(this.templates);
 	}
 
+	getTemplates(id: string) {
+		return Promise.resolve(
+			this.templates.filter(template => template.user_id == id)
+		);
+	}
+
 	getTemplate(id: string) {
 		return Promise.resolve(
 			(this.templates.filter(template => template.id === id))[0]

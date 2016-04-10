@@ -12,6 +12,7 @@ import {RadiusInputComponent, RadiusSelectComponent, RadiusRadioComponent, Selec
 
 import {TemplateService} from '../services/template.service';
 import {SegmentService} from '../services/segment.service';
+import {AuthService} from '../auth/auth.service';
 
 import {NotificationService} from '../notification.service';
 import {CalendarSelectElm} from '../form/calendar.form.component';
@@ -95,7 +96,7 @@ class DateTimeValidator {
 
 @Component({
 	template: `
-		<div class="contextual__form">
+		<div class="contextual__form" *ngIf="templates.length > 0">
 			<h4 class="form__lnr">
 				<span class="lnr lnr-pencil"></span>
 				Create a new segment
@@ -197,6 +198,9 @@ class DateTimeValidator {
 				</form>
 			</div>
 		</div>
+		<div *ngIf="!(templates.length > 0)">
+			<h3>You need to create a template before you can create a segment</h3>
+		</div>
 	`,
 	directives: [MjRadio, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent, CalendarSelectElm]
 })
@@ -204,7 +208,7 @@ class SegmentCreate implements OnInit {
 	segment: Segment;
 	repeatView: boolean = true;
 
-	templates: SelectObject[];
+	templates: SelectObject[] = [];
 	templates$: Observable<Template[]>;
 
 	timeOfDay: SelectObject[] = [
@@ -219,6 +223,7 @@ class SegmentCreate implements OnInit {
 	constructor(
 		private templateService: TemplateService,
 		private segmentService: SegmentService,
+		private authService: AuthService,
 		private notificationService: NotificationService,
 		private fb: FormBuilder
 	){
@@ -278,15 +283,14 @@ class SegmentCreate implements OnInit {
 	}
 
 	ngOnInit() {
-		this.templates$ = this.templateService.templates$;
-		this.templates$.subscribe(
-			(templates) => {
-				this.templates = templates.map((template) => {
+		let [_, session] = this.authService.getSession();
+		this.templateService.getTemplates(session.id).then(
+			templates => this.templates = templates.map(
+				(template) => {
 					return { value: template.id, text: template.name }
-				});
-			}
-		);
-		this.templateService.triggerObserve();
+				}));
+
+
 
 		this.segmentService.getNewSegment().then(segment => this.segment = segment);
 	}
@@ -327,19 +331,19 @@ class Segments implements OnInit {
 
 	segments: Segment[];
 	segments$: Observable<Segment[]>;
+	templates: Template[];
 
-	constructor(private segmentService: SegmentService,
-							private notificationService: NotificationService) {
+	constructor(
+		private segmentService: SegmentService,
+		private authService: AuthService,
+		private notificationService: NotificationService,
+		private templateService: TemplateService
+	) {
 	}
 
 	ngOnInit() {
-		this.segments$ = this.segmentService.segments$;
-		this.segments$.subscribe(
-			(data) => {
-				this.segments = data;
-			}
-		);
-		this.segmentService.triggerObserve();
+		let [_, session] = this.authService.getSession();
+		this.segmentService.getSegments(session.id).then(segments => this.segments = segments);
 	}
 
 	remove(id: string) {

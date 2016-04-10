@@ -57,9 +57,10 @@ export class LogoutComponent implements OnInit {
 				</div>
 				<div class="form__group">
 					<button (click)="auth()" class="button type__1">Login</button>
-					<button (click)="faculty()" class="button type__4">Faculty</button>
-					<button (click)="taylor()" class="button type__4">Taylor</button>
-					<button (click)="student()" class="button type__4">Jane</button>
+					<button (click)="faculty()" class="button type__4">John (f)</button>
+					<button (click)="faculty2()" class="button type__4">Evie (f)</button>
+					<button (click)="taylor()" class="button type__4">Taylor (s)</button>
+					<button (click)="student()" class="button type__4">Jane (s)</button>
 				</div>
 			</form>
 			<!--<div *ngIf="notification">
@@ -133,7 +134,12 @@ export class AuthComponent implements OnInit {
 
 	faculty() {
 		this.authService.authenticate({username: 'faculty', password: 'dummy'});
-		this.notificationService.notify('Authenticated as faculty', true);
+		this.notificationService.notify('Authenticated as John', true);
+	}
+
+	faculty2() {
+		this.authService.authenticate({ username: 'faculty2', password: 'dummy' });
+		this.notificationService.notify('Authenticated as Evie', true);
 	}
 
 	taylor() {

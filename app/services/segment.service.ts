@@ -53,6 +53,19 @@ export class SegmentService implements OnInit {
 		this.segmentsObserver.next(this.segments);
 	}
 
+	getSegments(id: string) {
+		return Promise.resolve(
+			this.segments.filter(
+				segment => segment.user_id == id).map(
+					(segment) => {
+						this.templateService.getTemplate(segment.template_id).then(template => {
+							segment.template = template;
+						});
+						return segment;
+			})
+		);
+	}
+
 	getSegment(id: string) {
 		return Promise.resolve(
 			(this.segments.filter(segment => segment.id === id))[0]
@@ -107,6 +120,8 @@ export class SegmentService implements OnInit {
 			minute: 0
 		};
 
+		let [_, session] = this.authService.getSession();
+
 		let segment: Segment = {
 			id: genId(),
 			date: date,
@@ -114,7 +129,8 @@ export class SegmentService implements OnInit {
 			end: time,
 			repeat: false,
 			location: "",
-			template_id: ""
+			template_id: "",
+			user_id: session.id
 		};
 
 		return Promise.resolve(segment);
