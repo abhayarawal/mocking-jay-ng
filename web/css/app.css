@@ -853,9 +853,10 @@ textarea {
     height: calc(100% - 16px);
     overflow-x: hidden;
     overflow-y: auto; }
-    .segment__viewport .fragment__context .fragment__ctx h3 {
-      margin-bottom: 15px; }
-      .segment__viewport .fragment__context .fragment__ctx h3 span {
+    .segment__viewport .fragment__context .fragment__ctx .ctx__head {
+      text-transform: capitalize;
+      font-weight: 400; }
+      .segment__viewport .fragment__context .fragment__ctx .ctx__head span {
         display: block;
         font-size: 0.6em; }
     .segment__viewport .fragment__context .fragment__ctx .date__time span {
@@ -869,7 +870,7 @@ textarea {
       margin-top: 15px; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls strong {
         display: block;
-        margin-bottom: 10px;
+        margin: 10px 0 15px 0;
         font-size: 17px; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels {
         margin-top: 15px;
@@ -896,6 +897,34 @@ textarea {
         margin-top: 10px; }
         .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group textarea {
           height: 70px; }
+      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile {
+        font-size: 0;
+        background: rgba(249, 245, 240, 0.68);
+        padding: 7px 10px;
+        border: 1px dashed #dbdbdb;
+        -webkit-border-radius: 7px;
+        -moz-border-radius: 7px;
+        -o-border-radius: 7px;
+        -ms-border-radius: 7px;
+        border-radius: 7px; }
+        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section {
+          display: inline-block;
+          vertical-align: middle;
+          font-size: 14px; }
+          .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section:first-child {
+            width: 50px;
+            margin-right: 10px; }
+            .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section:first-child img {
+              -webkit-border-radius: 100%;
+              -moz-border-radius: 100%;
+              -o-border-radius: 100%;
+              -ms-border-radius: 100%;
+              border-radius: 100%; }
+          .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section:last-child h5 {
+            margin: 0;
+            padding: 0;
+            font-weight: 400;
+            font-size: 16px; }
 
 .segment__wrap {
   position: relative; }
@@ -973,7 +1002,7 @@ textarea {
             color: #e28b00;
             border-bottom: none;
             background: rgba(255, 185, 73, 0.17);
-            height: 70px;
+            height: 60px;
             border-left: 2px solid; }
             .segment__wrap .segments .segment .fragments ul li.status__1:hover {
               border-color: #ffb949; }
@@ -982,7 +1011,7 @@ textarea {
             color: rgba(47, 146, 79, 0.73);
             border-bottom: none;
             background: rgba(98, 223, 82, 0.1);
-            height: 70px;
+            height: 60px;
             border-left: 2px solid; }
             .segment__wrap .segments .segment .fragments ul li.status__2:hover {
               border-color: rgba(59, 185, 100, 0.73); }
@@ -991,7 +1020,7 @@ textarea {
             color: rgba(255, 19, 43, 0.79);
             border-bottom: none;
             background: rgba(255, 19, 43, 0.09);
-            height: 70px;
+            height: 60px;
             border-left: 2px solid; }
             .segment__wrap .segments .segment .fragments ul li.status__3:hover {
               border-color: rgba(255, 19, 43, 0.79); }
@@ -1000,7 +1029,7 @@ textarea {
             color: rgba(255, 19, 43, 0.79);
             border-bottom: none;
             background: rgba(255, 19, 43, 0.09);
-            height: 70px;
+            height: 60px;
             border-left: 2px solid; }
             .segment__wrap .segments .segment .fragments ul li.status__4:hover {
               border-color: rgba(255, 19, 43, 0.79); }
@@ -1009,7 +1038,7 @@ textarea {
             color: #7f7f7f;
             border-bottom: none;
             background: rgba(199, 198, 201, 0.09);
-            height: 70px;
+            height: 60px;
             border-left: 2px solid; }
             .segment__wrap .segments .segment .fragments ul li.status__6:hover {
               border-color: #8c8c8c; }

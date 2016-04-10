@@ -58,9 +58,9 @@ export class FragmentService {
 				return fragment;
 		});
 
-		this.fragments.forEach((f, i) => {
-			console.log(f.segment_id == segment.id, f.segment_id, segment.id);
-		});
+		// this.fragments.forEach((f, i) => {
+		// 	console.log(f.segment_id == segment.id, f.segment_id, segment.id);
+		// });
 
 		return Promise.resolve(fragments);
 	}

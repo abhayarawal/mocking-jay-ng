@@ -1292,15 +1292,16 @@ textarea
 
 		.fragment__ctx
 		{
-			h3
+			.ctx__head
 			{
+				text-transform: capitalize;
+				font-weight: 400;
+
 				span
 				{
 					display: block;
 					font-size: 0.6em;
 				}
-
-				margin-bottom: 15px;
 			}
 
 			.date__time
@@ -1323,7 +1324,7 @@ textarea
 				strong
 				{
 					display: block;
-					margin-bottom: 10px;
+					margin: 10px 0 15px 0;
 					font-size: 17px;
 				}
 
@@ -1370,6 +1371,44 @@ textarea
 					textarea
 					{
 						height: 70px;
+					}
+				}
+
+				.ctx__profile
+				{
+					font-size: 0;
+					background: rgba(249, 245, 240, 0.68);
+					padding: 7px 10px;
+					border: 1px dashed #dbdbdb;
+					@include border-radius(7px);
+
+					section
+					{
+						display: inline-block;
+						vertical-align: middle;
+						font-size: $font-size;
+
+						&:first-child
+						{
+							width: 50px;
+							margin-right: 10px;
+
+							img
+							{
+								@include border-radius(100%);
+							}
+						}
+
+						&:last-child
+						{
+							h5
+							{
+								margin: 0;
+								padding: 0;
+								font-weight: 400;
+								font-size: 16px;
+							}
+						}
 					}
 				}
 			}
@@ -1490,7 +1529,7 @@ textarea
 							color: $c;
 							border-bottom: none;
 							background: $bg;
-							height: 70px;
+							height: 60px;
 							border-left: 2px solid;
 
 							&:hover

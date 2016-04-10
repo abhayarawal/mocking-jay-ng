@@ -373,13 +373,32 @@ class FragmentContextStudent implements OnInit {
 	}
 }
 
+
+@Component({
+	selector: 'fragment-profile',
+	template: `
+		<div *ngIf="user" class="ctx__profile">
+			<section>
+				<img src="{{user.meta?.avatar}}" />
+			</section>
+			<section>
+				<h5>{{user.fname}} {{user.lname}}</h5>
+				{{user.email}}
+			</section>
+		</div>
+	`
+})
+class FragmentProfile {
+	@Input() user;
+}
+
+
 @Component({
 	selector: 'fragment-context-faculty',
 	template: `
 		<div class="fragment__ctx">
-			<h3>
+			<h3 class="ctx__head">
 				{{fragment.segment.template.name}}
-				<span>{{fragment.segment.template.user_id}}</span>
 			</h3>
 			<div class="date__time">
 				From: <span>{{fragment | timePipe:false}}</span> To: <span>{{fragment | timePipe:true}}</span>
@@ -389,6 +408,7 @@ class FragmentContextStudent implements OnInit {
 			</div>
 			<div [ngSwitch]="fragment.status" class="ctx__controls">
 				<template [ngSwitchWhen]="1">
+					<fragment-profile [user]="template_user"></fragment-profile>
 					<strong class="state">Appointment not approved yet</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group">
@@ -405,6 +425,7 @@ class FragmentContextStudent implements OnInit {
 				</template>
 
 				<template [ngSwitchWhen]="2">
+					<fragment-profile [user]="template_user"></fragment-profile>
 					<strong>Appointment approved</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group">
@@ -448,23 +469,33 @@ class FragmentContextStudent implements OnInit {
 			</div>
 		</div>
 	`,
-	directives: [FragmentMessage],
+	directives: [FragmentMessage, FragmentProfile],
 	pipes: [TimePipe]
 })
 class FragmentContextFaculty implements OnInit {
 	@Input() fragment: Fragment;
 	@Input() user: User;
 
+	template_user: User;
 	response: string = '';
 
 	constructor(
 		private segmentViewService: SegmentViewService,
 		private notificationService: NotificationService,
-		private fragmentService: FragmentService
+		private fragmentService: FragmentService,
+		private userService: UserService
 	) {
 	}
 
 	ngOnInit() {
+	}
+
+	ngOnChanges() {
+		if (this.fragment.user_id) {
+			this.userService.getUser(this.fragment.user_id).then(user => {
+				this.template_user = user;
+			});
+		}
 	}
 
 	update(status: Status, message: string) {

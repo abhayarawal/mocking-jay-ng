@@ -36,6 +36,16 @@ var USERS: [User] = [
 		meta: {
 			avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-02-18_at_3.11.09_PM.png?5003393221482762451"
 		}
+	},
+	{
+		id: "yxmfwkcl2",
+		fname: "Jane",
+		lname: "Douglas",
+		email: "jane.douglas@outsidexbox.com",
+		type: UserType.Student,
+		meta: {
+			avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/lady.png?8325253379137164394"
+		}
 	}
 ];
 
