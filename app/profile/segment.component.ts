@@ -81,6 +81,7 @@ class SegmentUnavailable implements OnInit {
 				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
 				<span *ngSwitchWhen="3" [innerHTML]="'Denied'"></span>
 				<span *ngSwitchWhen="4" [innerHTML]="'Cancelled'"></span>
+				<span *ngSwitchWhen="6" [innerHTML]="'Blocked'"></span>
 			</span>
 			<!-- <span class="lnr lnr-pencil" *ngIf="selected"></span> -->
 		</li>
@@ -283,6 +284,9 @@ class DayComponent implements OnInit {
 				<template [ngSwitchWhen]="4">
 					<strong>Appointment cancelled</strong>
 				</template>
+				<template [ngSwitchWhen]="6">
+					<strong>Appointment time blocked by advisor</strong>
+				</template>
 				<template ngSwitchDefault>
 					<button class="button type__2" (click)="create()">Create appointment</button>
 				</template>
@@ -317,7 +321,7 @@ class FragmentContextStudent implements OnInit {
 			this.fragment.status = Status.approved;
 		}
 
-		this.fragment.template_id = this.user.id;
+		this.fragment.user_id = this.user.id;
 		this.fragmentService.addFragment(this.fragment);
 
 		this.notificationService.notify(`
@@ -358,15 +362,24 @@ class FragmentContextStudent implements OnInit {
 				</template>
 				<template [ngSwitchWhen]="3">
 					<strong>Appointment denied</strong>
+					<div class="cancels">
+						<a (click)="block()">Block interval for everyone</a>
+					</div>
 				</template>
 				<template [ngSwitchWhen]="4">
 					<strong>Appointment cancelled</strong>
 					<div class="cancels">
-						<button class="button type__1">Block interval</button>
+						<a (click)="block()">Block interval for everyone</a>
+					</div>
+				</template>
+				<template [ngSwitchWhen]="6">
+					<strong>Appointment blocked for everyone</strong>
+					<div class="cancels">
+						<a (click)="open()">Unblock interval</a>
 					</div>
 				</template>
 				<template ngSwitchDefault>
-					<button class="button type__1">Block interval</button>
+					<button class="button type__1" (click)="block()">Block interval</button>
 				</template>
 			</div>
 		</div>
@@ -406,6 +419,22 @@ class FragmentContextFaculty implements OnInit {
 
 	approve() {
 		this.update(Status.approved, 'approved');
+	}
+
+	open() {
+		this.update(Status.denied, 'opened for everyone');
+	}
+
+	block() {
+		if ('user_id' in this.fragment) {
+			if (this.fragment.user_id.length > 0) {
+				this.update(Status.blocked, 'blocked');
+			}
+		} else {
+			this.fragment.status = Status.blocked;
+			this.fragmentService.addFragment(this.fragment);
+			this.notificationService.notify("Time interval blocked", true);
+		}
 	}
 }
 

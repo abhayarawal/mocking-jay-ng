@@ -78,7 +78,7 @@ export class FragmentService {
 	}
 
 	addFragment(fragment: Fragment) {
-		let {id, date, start, end, segment_id, status, template_id} = fragment;
+		let {id, date, start, end, segment_id, status, user_id} = fragment;
 		this.fragments.push({
 			id: id,
 			date: date,
@@ -86,7 +86,7 @@ export class FragmentService {
 			end: end,
 			segment_id: segment_id,
 			status: status,
-			template_id: template_id
+			user_id: user_id
 		});
 		localStorage.setItem('fragments', JSON.stringify(this.fragments));
 	}
@@ -94,7 +94,7 @@ export class FragmentService {
 	updateFragment(fragment: Fragment): [boolean, Fragment] {
 		let index = this.fragments.map(f => f.id).indexOf(fragment.id);
 		if (index >= 0 && index < this.fragments.length) {
-			this.fragments[0] = fragment;
+			this.fragments[index] = fragment;
 			localStorage.setItem('fragments', JSON.stringify(this.fragments));
 			return [true, fragment];
 		}

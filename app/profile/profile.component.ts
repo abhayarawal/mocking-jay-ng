@@ -18,11 +18,13 @@ import {SegmentViewport} from './segment.component';
 			<div class="row">
 				<section>
 					<ul>
-						<a href="">
-							Professors <span class="lnr lnr-chevron-down"></span>
-						</a>
-						<a href="">Today's Events</a>
-						<a [routerLink]="['/ProfileViewport', 'DaySegment', {id: id, month: month, day: day, year: year}]">Calendar</a>
+						<li>
+							<a href="">
+								Professors <span class="lnr lnr-chevron-down"></span>
+							</a>
+						</li>
+						<li><a href="">Today's Events</a></li>
+						<li><a class="selected" [routerLink]="['/ProfileViewport', 'DaySegment', {id: id, month: month, day: day, year: year}]">Calendar</a></li>
 					</ul>
 				</section>
 				<section class="context__header">

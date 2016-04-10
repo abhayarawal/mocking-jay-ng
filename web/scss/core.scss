@@ -783,10 +783,14 @@ $top__height: 40px;
 						@include border-radius(40px);
 						position: relative;
 						font-size: 16px;
+						@include transition(all 0.1s ease);
+						cursor: pointer;
 
 						&:hover
 						{
 							// @include box-shadow(0px, 0px, 0px, 2px, lighten(#A2B4BC, 15%));
+							// background: #3ea9f0;
+							color: #fff;
 						}
 
 						span
@@ -825,19 +829,41 @@ $top__height: 40px;
 				$ctx_lh: 25px;
 
 				section:first-child
-				{
-					padding: 8px 10px;
+				{	
+					padding: 0 30px;
 
 					ul
 					{
 						li
 						{
 							display: inline-block;
+							vertical-align: bottom;
+
+							&:not(:first-child) {
+								margin-left: 10px;
+							}
 
 							a
 							{
 								display: block;
-								line-height: $ctx_lh;
+								line-height: 36px;
+								border-bottom: 2px solid #fff;
+
+								span
+								{
+									font-size: 14px;
+									display: inline-block;
+									vertical-align: middle;
+									margin-left: 4px;
+									color: #333;
+								}
+
+								&.selected
+								{
+									border-color: #9f9c9f;
+									// color: #000;
+									// font-weight: 500;
+								}
 							}
 						}
 					}
@@ -846,12 +872,11 @@ $top__height: 40px;
 				.context__header
 				{
 					text-align: center;
-					padding: 8px 10px;
 
 					h4
 					{
-						line-height: $ctx_lh;
-						// font-weight: 500;
+						line-height: 36px;
+						font-weight: 500;
 						display: block;
 						font-size: 16px;
 					}
@@ -862,8 +887,8 @@ $top__height: 40px;
 				section:last-child
 				{
 					text-align: right;
-					padding: 8px 10px;
-					
+					padding: 5px 30px 0 30px;
+
 					ul
 					{
 						li
@@ -871,13 +896,13 @@ $top__height: 40px;
 							display: inline-block;
 
 							&:not(:last-child) {
-								margin-right: 5px;
+								margin-right: 4px;
 							}
 							
 							a, button
 							{
 								border: 1px solid rgba(0, 0, 0, .15);
-								line-height: $ctx_lh;
+								line-height: 25px;
 								display: block;
 								@include border-radius(40px);
 								padding: 0 15px;
@@ -1206,9 +1231,9 @@ textarea
 {
 	position: absolute;
 	width: 100%;
-	height: calc(100% - 52px);
+	height: calc(100% - 46px);
 	left: 0px;
-	top: 52px;
+	top: 46px;
 
 	.day__component
 	{
@@ -1453,7 +1478,7 @@ textarea
 							@include status(
 								rgba(59, 185, 100, 0.73), 
 								darken(rgba(59, 185, 100, 0.73), 10%), 
-								rgba(71, 223, 120, 0.1)
+								rgba(98, 223, 82, 0.1)
 							);
 						}
 						
@@ -1472,6 +1497,15 @@ textarea
 								rgba(255, 19, 43, 0.79),
 								rgba(255, 19, 43, 0.79),
 								rgba(255, 19, 43, 0.09)
+							);
+						}
+
+						&.status__6
+						{
+							@include status(
+								lighten(#7f7f7f, 5%),
+								#7f7f7f,
+								rgba(156, 155, 158, 0.09)
 							);
 						}
 
@@ -2061,7 +2095,7 @@ textarea
 {
 	position: fixed;
 	bottom: 20px;
-	@include border-radius(4px);
+	@include border-radius(3px);
 	display: block;
 	background: rgba(255, 255, 255, 0.95);
 	padding: 15px 20px 10px 20px;
@@ -2097,7 +2131,7 @@ textarea
 		left: 0%;
 		width: 100%;
 		top: 0px;
-		height: 10px;
+		height: 6px;
 		@include bg-left-right(#57f0cd, #0099cc);
 	}
 }

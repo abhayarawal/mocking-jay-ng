@@ -49,6 +49,14 @@ export interface Segment {
 }
 
 
+// default,
+// in_progress,
+// approved,
+// denied,
+// cancelled,
+// unavailable,
+// blocked
+
 export enum Status {
 	default,
 	in_progress,
@@ -66,7 +74,7 @@ export interface Fragment {
 	start: Time,
 	end: Time,
 	segment_id: string,
-	template_id?: string,
+	user_id?: string,
 	segment?: Segment,
 	message?: string,
 	status?: Status,
