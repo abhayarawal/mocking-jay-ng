@@ -51,6 +51,7 @@ interface SearchResult {
         <input placeholder='Search for anything' type='text' (focus)="show=true" (blur)="hide()">
 
         <ul class="search__results" [ngClass]="{show: show}">
+        	<h5>Search results:</h5>
         	<li *ngFor="#s of searchResults">
         		<a [routerLink]="['/ProfileViewport', 'Calendar', {id: s.obj.id}]" class="search__user">
 							<img src="{{s.obj.meta?.avatar}}" alt="" />

@@ -80,6 +80,7 @@ class SegmentUnavailable implements OnInit {
 				<span *ngSwitchWhen="1" [innerHTML]="'Waiting for approval'"></span>
 				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
 				<span *ngSwitchWhen="3" [innerHTML]="'Denied'"></span>
+				<span *ngSwitchWhen="4" [innerHTML]="'Cancelled'"></span>
 			</span>
 			<!-- <span class="lnr lnr-pencil" *ngIf="selected"></span> -->
 		</li>
@@ -279,6 +280,9 @@ class DayComponent implements OnInit {
 				<template [ngSwitchWhen]="3">
 					<strong>Appointment denied</strong>
 				</template>
+				<template [ngSwitchWhen]="4">
+					<strong>Appointment cancelled</strong>
+				</template>
 				<template ngSwitchDefault>
 					<button class="button type__2" (click)="create()">Create appointment</button>
 				</template>
@@ -339,17 +343,30 @@ class FragmentContextStudent implements OnInit {
 			<div [ngSwitch]="fragment.status" class="ctx__controls">
 				<template [ngSwitchWhen]="1">
 					<strong>Appointment not approved yet</strong>
-					<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+					<button class="button type__3" (click)="approve()">Approve appointment</button>
+					<div class="cancels">
+						<a (click)="deny()">Deny appointment</a>
+						<a href="">Deny and make unavailable</a>
+					</div>
 				</template>
 				<template [ngSwitchWhen]="2">
 					<strong>Appointment approved</strong>
-					<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+					<div class="cancels">
+						<a (click)="cancel()">Cancel appointment</a>
+						<a href="">Cancel and make unavailable</a>
+					</div>
 				</template>
 				<template [ngSwitchWhen]="3">
 					<strong>Appointment denied</strong>
 				</template>
+				<template [ngSwitchWhen]="4">
+					<strong>Appointment cancelled</strong>
+					<div class="cancels">
+						<button class="button type__1">Block interval</button>
+					</div>
+				</template>
 				<template ngSwitchDefault>
-					<button class="button type__2" (click)="create()">Create appointment</button>
+					<button class="button type__1">Block interval</button>
 				</template>
 			</div>
 		</div>
@@ -362,28 +379,33 @@ class FragmentContextFaculty implements OnInit {
 
 	constructor(
 		private segmentViewService: SegmentViewService,
-		private notificationService: NotificationService
+		private notificationService: NotificationService,
+		private fragmentService: FragmentService
 	) {
 	}
 
 	ngOnInit() {
 	}
 
-	cancel() {
-		this.fragment.status = Status.default;
-		this.notificationService.notify("Appointment canceled", true, true);
+	update(status: Status, message: string) {
+		this.fragment.status = status;
+		let [done, fragment] = this.fragmentService.updateFragment(this.fragment);
+		this.fragment = fragment;
+		if (done) {
+			this.notificationService.notify(`Appointment ${message}`, true);
+		}
 	}
 
-	create() {
-		if (this.fragment.segment.template.require_accept) {
-			this.fragment.status = Status.in_progress;
-		} else {
-			this.fragment.status = Status.approved;
-		}
-		this.notificationService.notify(`
-			Appointment created for ${this.fragment.segment.template.name} at ${this.fragment.start.hour}:${this.fragment.start.minute}
-		`, true, false);
+	deny() {
+		this.update(Status.denied, 'denied');
+	}
 
+	cancel() {
+		this.update(Status.cancelled, 'cancelled');
+	}
+
+	approve() {
+		this.update(Status.approved, 'approved');
 	}
 }
 

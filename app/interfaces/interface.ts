@@ -52,9 +52,11 @@ export interface Segment {
 export enum Status {
 	default,
 	in_progress,
-	approved, 
+	approved,
 	denied,
-	unavailable
+	cancelled,
+	unavailable,
+	blocked
 }
 
 
