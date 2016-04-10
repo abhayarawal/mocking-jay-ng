@@ -415,7 +415,7 @@ class FragmentProfile {
 			<div [ngSwitch]="fragment.status" class="ctx__controls">
 				<template [ngSwitchWhen]="1">
 					<fragment-profile [user]="template_user"></fragment-profile>
-					<strong class="state">Appointment not approved yet</strong>
+					<strong>Appointment not approved yet</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group">
 						<label for="">Response:</label>
