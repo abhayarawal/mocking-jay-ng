@@ -885,12 +885,12 @@ textarea {
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .response {
         background: #fbfbfb;
         padding: 7px 10px;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        -o-border-radius: 10px;
-        -ms-border-radius: 10px;
-        border-radius: 10px;
-        border: 2px dotted #ccc;
+        -webkit-border-radius: 7px;
+        -moz-border-radius: 7px;
+        -o-border-radius: 7px;
+        -ms-border-radius: 7px;
+        border-radius: 7px;
+        border: 1px dashed #ccc;
         margin-top: 7px; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group {
         margin-top: 10px; }
@@ -1008,7 +1008,7 @@ textarea {
             border-color: #8c8c8c;
             color: #7f7f7f;
             border-bottom: none;
-            background: rgba(156, 155, 158, 0.09);
+            background: rgba(199, 198, 201, 0.09);
             height: 70px;
             border-left: 2px solid; }
             .segment__wrap .segments .segment .fragments ul li.status__6:hover {
@@ -1023,8 +1023,7 @@ textarea {
             -moz-transform: scale(1.02);
             -o-transform: scale(1.02);
             -ms-transform: scale(1.02);
-            transform: scale(1.02);
-            top: -1px; }
+            transform: scale(1.02); }
 
 .wrapping__viewport .contextual__menu {
   position: absolute;
