@@ -8,7 +8,7 @@ import 'rxjs/Rx';
 
 import {SegmentViewService} from './segment.view.service';
 import {CalendarService, MonthPipe, WeekPipe, WeekFullPipe} from './calendar.service';
-import {Time, Template, Segment, Status, Fragment, User} from '../interfaces/interface';
+import {Time, Template, Segment, Status, Fragment, User, UserType} from '../interfaces/interface';
 
 import {UserService} from '../services/user.service';
 import {FragmentService} from '../services/fragment.service';
@@ -81,6 +81,7 @@ class SegmentUnavailable implements OnInit {
 				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
 				<span *ngSwitchWhen="3" [innerHTML]="'Denied'"></span>
 				<span *ngSwitchWhen="4" [innerHTML]="'Cancelled'"></span>
+				<span *ngSwitchWhen="5" [innerHTML]="'Unavailable'"></span>
 				<span *ngSwitchWhen="6" [innerHTML]="'Blocked'"></span>
 			</span>
 			<!-- <span class="lnr lnr-pencil" *ngIf="selected"></span> -->
@@ -155,7 +156,8 @@ class SegmentComponent implements OnInit {
 
 		this.fragmentService.getFragments(this.segment, month, day, year).then(
 			(fragments) => {
-				this.fragments = this.fragmentService.merge(this.fragments, fragments);
+				this.fragments = this.fragmentService.validateFragments(
+					this.fragmentService.merge(this.fragments, fragments), this.segment);
 			});
 	}
 }
@@ -289,7 +291,6 @@ class FragmentMessage {
 		<div class="fragment__ctx">
 			<h3>
 				{{fragment.segment.template.name}}
-				<span>{{fragment.segment.template.user_id}}</span>
 			</h3>
 			<div class="date__time">
 				From: <span>{{fragment | timePipe:false}}</span> To: <span>{{fragment | timePipe:true}}</span>
@@ -320,6 +321,12 @@ class FragmentMessage {
 					<strong>Appointment cancelled</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
 				</template>
+
+				<template [ngSwitchWhen]="5">
+					<strong>Appointment time not available</strong>
+					<fragment-message [fragment]="fragment"></fragment-message>
+				</template>
+
 				<template [ngSwitchWhen]="6">
 					<strong>Appointment time blocked by advisor</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
@@ -557,28 +564,37 @@ class FragmentContextFaculty implements OnInit {
 @Component({
 	selector: 'fragment-context',
 	template: `
-		<div class="fragment__context" *ngIf="fragment && user">
-			<fragment-context-student [user]="user" [fragment]="fragment" *ngIf="user.type==0"></fragment-context-student>
-			<fragment-context-faculty [user]="user" [fragment]="fragment" *ngIf="user.type==1"></fragment-context-faculty>
+		<div class="fragment__context" *ngIf="fragment && session && !(unauthorized)">
+			<fragment-context-student [user]="session" [fragment]="fragment" *ngIf="session.type==0"></fragment-context-student>
+			<fragment-context-faculty [user]="session" [fragment]="fragment" *ngIf="session.type==1"></fragment-context-faculty>
+		</div>
+		<div class="fragment__context" *ngIf="fragment && unauthorized">
+			<h3>Nothing to see here</h3>
 		</div>
 	`,
 	directives: [FragmentContextStudent, FragmentContextFaculty],
-	pipes: [TimePipe]
+	pipes: [TimePipe],
+	providers: [CalendarService]
 })
 class FragmentContext implements OnInit {
 	observable: Observable<Fragment>;
 	fragment: Fragment;
-	user: User;
+	session: User;
+
+	unauthorized: boolean = false;
 
 	constructor(
 		private userService: UserService,
 		private segmentViewService:SegmentViewService,
 		private routeParams: RouteParams,
-		private notificationService: NotificationService
+		private notificationService: NotificationService,
+		private calendarService: CalendarService
 	){
 	}
 
 	ngOnInit() { 
+		let [uid, _] = this.calendarService.getRouteParams();
+
 		this.observable = this.segmentViewService.contextObservable$;
 		this.observable.subscribe(
 			data => {
@@ -588,7 +604,12 @@ class FragmentContext implements OnInit {
 			() => { }
 		);
 
-		this.userService.getUser().then(user => this.user = user);
+		this.userService.getUser().then(user => {
+			if (user.type == UserType.Faculty && user.id !== uid) {
+				this.unauthorized = true;
+			}
+			this.session = user;
+		});
 	}
 }
 

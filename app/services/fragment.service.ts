@@ -153,6 +153,42 @@ export class FragmentService {
 		return frags;
 	}
 
+	validateFragments(ts: Fragment[], sg: Segment) {
+		let [_, session] = this.authService.getSession();
+		let fragments = ts.map(
+			fragment => {
+				let unavailable = {
+					id: Math.random().toString(36),
+					date: fragment.date,
+					start: fragment.start,
+					end: fragment.end,
+					segment_id: fragment.segment_id,
+					status: Status.unavailable,
+					segment: fragment.segment
+				}
+
+				if (fragment.status !== Status.default) {
+					if (session.type == UserType.Faculty) {
+						if (session.id == sg.user_id) {
+							return fragment;
+						} else {
+							return unavailable;
+						}
+					} else {
+						if (session.id == fragment.user_id) {
+							return fragment;
+						} else {
+							return unavailable;
+						}
+					}
+				} else {
+					return fragment;
+				}
+			});
+
+		return fragments;
+	}
+
 }
 
 

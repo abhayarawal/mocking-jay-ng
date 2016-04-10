@@ -1607,12 +1607,12 @@ textarea
 							);
 						}
 
-						&.status__6
+						&.status__6, &.status__5
 						{
 							@include status(
 								lighten(#7f7f7f, 5%),
-								#7f7f7f,
-								rgba(199, 198, 201, 0.09)
+								lighten(#7f7f7f, 5%),
+								rgba(199, 198, 201, 0.06)
 							);
 						}
 

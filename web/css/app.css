@@ -1056,14 +1056,14 @@ textarea {
             border-left: 2px solid; }
             .segment__wrap .segments .segment .fragments ul li.status__4:hover {
               border-color: rgba(255, 19, 43, 0.79); }
-          .segment__wrap .segments .segment .fragments ul li.status__6 {
+          .segment__wrap .segments .segment .fragments ul li.status__6, .segment__wrap .segments .segment .fragments ul li.status__5 {
             border-color: #8c8c8c;
-            color: #7f7f7f;
+            color: #8c8c8c;
             border-bottom: none;
-            background: rgba(199, 198, 201, 0.09);
+            background: rgba(199, 198, 201, 0.06);
             height: 60px;
             border-left: 2px solid; }
-            .segment__wrap .segments .segment .fragments ul li.status__6:hover {
+            .segment__wrap .segments .segment .fragments ul li.status__6:hover, .segment__wrap .segments .segment .fragments ul li.status__5:hover {
               border-color: #8c8c8c; }
           .segment__wrap .segments .segment .fragments ul li.selected {
             background: #fcfcfc;
