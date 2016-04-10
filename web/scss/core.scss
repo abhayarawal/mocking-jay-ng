@@ -1406,6 +1406,25 @@ textarea
 					}
 				}
 
+				.ctx__notification
+				{
+					margin-bottom: 15px;
+					@include row();
+					
+					& > section
+					{
+						&:first-child
+						{
+							@include col(1/3, false);
+						}
+
+						&:last-child
+						{
+							@include col(2/3, false);
+						}
+					}
+				}
+
 				.ctx__profile
 				{
 					font-size: 0;
@@ -1413,7 +1432,7 @@ textarea
 					padding: 7px 7px;
 					@include border-radius(5px);
 					border: 1px solid #e8e8e8;
-					@include box-shadow(0px, 0px, 3px, 0px, rgba(227, 227, 227, 0.38));
+					// @include box-shadow(0px, 0px, 3px, 0px, rgba(227, 227, 227, 0.38));
 
 					section
 					{
@@ -1605,13 +1624,18 @@ textarea
 								rgba(255, 19, 43, 0.79),
 								rgba(255, 19, 43, 0.09)
 							);
+
+							.event__title
+							{
+								font-weight: 400;
+							}
 						}
 
 						&.status__6, &.status__5
 						{
 							@include status(
-								lighten(#7f7f7f, 5%),
-								lighten(#7f7f7f, 5%),
+								#b2b2b2,
+								#b2b2b2,
 								rgba(199, 198, 201, 0.06)
 							);
 						}
@@ -1979,7 +2003,7 @@ textarea
 		visibility: hidden;
 		@include opacity(0);
 		@include transition(all 0.2s ease);
-		top: -10px;
+		top: -35px;
 		left: 10px;
 		border: 1px solid #d6d7db;
 		padding: 10px 0;

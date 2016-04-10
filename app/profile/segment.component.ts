@@ -15,6 +15,8 @@ import {FragmentService} from '../services/fragment.service';
 import {SegmentService} from '../services/segment.service';
 import {Notification, NotificationService} from '../notification.service';
 
+import {RadiusSelectComponent, RadiusRadioComponent, SelectObject} from '../form/form.component';
+
 
 var range = (x, y): number[] => {
 	let temp = [];
@@ -289,7 +291,7 @@ class FragmentMessage {
 	selector: 'fragment-context-student',
 	template: `
 		<div class="fragment__ctx">
-			<h3>
+			<h3 class="ctx__head">
 				{{fragment.segment.template.name}}
 			</h3>
 			<div class="date__time">
@@ -307,6 +309,16 @@ class FragmentMessage {
 					</div>
 				</template>
 				<template [ngSwitchWhen]="2">
+					<div class="ctx__notification">
+						<section>
+							<label>Notify?</label>
+							<radius-radio [on]="true" [intext]="true"></radius-radio>
+						</section>
+						<section>
+							<label>Notification time</label>
+							<radius-select [selected]="2" [items]="notify_select"></radius-select>
+						</section>
+					</div>
 					<strong>Appointment approved</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group">
@@ -343,7 +355,7 @@ class FragmentMessage {
 			</div>
 		</div>
 	`,
-	directives: [FragmentMessage],
+	directives: [FragmentMessage, RadiusSelectComponent, RadiusRadioComponent],
 	pipes: [TimePipe]
 })
 class FragmentContextStudent implements OnInit {
@@ -351,6 +363,15 @@ class FragmentContextStudent implements OnInit {
 	@Input() user: User;
 
 	message: string;
+
+	notify_select: SelectObject[] = [
+		{ value: 10, text: '10 min' },
+		{ value: 15, text: '15 min' },
+		{ value: 30, text: '30 min' },
+		{ value: 60, text: '1 hour' },
+		{ value: 120, text: '2 hour' },
+		{ value: 1440, text: '1 day' }
+	];
 
 	constructor(
 		private segmentViewService: SegmentViewService,
@@ -438,6 +459,16 @@ class FragmentProfile {
 				</template>
 
 				<template [ngSwitchWhen]="2">
+					<div class="ctx__notification">
+						<section>
+							<label>Notify?</label>
+							<radius-radio [on]="true" [intext]="true"></radius-radio>
+						</section>
+						<section>
+							<label>Notification time</label>
+							<radius-select [selected]="2" [items]="notify_select"></radius-select>
+						</section>
+					</div>
 					<fragment-profile [user]="template_user"></fragment-profile>
 					<strong>Appointment approved</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
@@ -483,7 +514,7 @@ class FragmentProfile {
 			</div>
 		</div>
 	`,
-	directives: [FragmentMessage, FragmentProfile],
+	directives: [FragmentMessage, FragmentProfile, RadiusRadioComponent, RadiusSelectComponent],
 	pipes: [TimePipe]
 })
 class FragmentContextFaculty implements OnInit {
@@ -492,6 +523,15 @@ class FragmentContextFaculty implements OnInit {
 
 	template_user: User;
 	response: string = '';
+
+	notify_select: SelectObject[] = [
+		{ value: 10, text: '10 min' },
+		{ value: 15, text: '15 min' },
+		{ value: 30, text: '30 min' },
+		{ value: 60, text: '1 hour' },
+		{ value: 120, text: '2 hour' },
+		{ value: 1440, text: '1 day' }
+	];
 
 	constructor(
 		private segmentViewService: SegmentViewService,
