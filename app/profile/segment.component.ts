@@ -336,7 +336,7 @@ class FragmentMessage {
 						</section>
 						<section>
 							<label>Notification time</label>
-							<radius-select [selected]="2" [items]="notify_select"></radius-select>
+							<radius-select [selected]="2" [items]="notify_select" [notification]="true"></radius-select>
 						</section>
 					</div>
 					<strong>Appointment approved</strong>
@@ -496,7 +496,7 @@ class FragmentProfile {
 						</section>
 						<section>
 							<label>Notification time</label>
-							<radius-select [selected]="2" [items]="notify_select"></radius-select>
+							<radius-select [selected]="2" [items]="notify_select" [notification]="true"></radius-select>
 						</section>
 					</div>
 					<fragment-profile [user]="template_user"></fragment-profile>

@@ -41,20 +41,18 @@ export class FacultyService {
 	}
 
 	triggerObservable() {
-		this.observer.next(this.faculties);
+		this.observer.next(this.getFaculties());
 	}
 
 	getFaculties() {
 		let [_, session] = this.authService.getSession();
-		Promise.resolve(
-			this.faculties.filter(
-				(faculty) => faculty.user_id == session.id));
+		return this.faculties.filter(
+			(faculty) => faculty.user_id == session.id);
 	}
 
-	addFaculty(faculty: Faculty) {
+	private addFaculty(faculty: Faculty) {
 		let [_, session] = this.authService.getSession();
 		if (session.type == UserType.Student) {
-			faculty.user_id = session.id;
 			this.faculties.push(faculty);
 			localStorage.setItem('faculties', JSON.stringify(this.faculties));
 		}
@@ -64,29 +62,40 @@ export class FacultyService {
 
 	removeFaculty(i: number) {
 		this.faculties.splice(i, 1);
-		
 		this.triggerObservable();
+		localStorage.setItem('faculties', JSON.stringify(this.faculties));
 	}
 
 	inFaculty(user: User): boolean {
-		let i = this.faculties.map(faculty => faculty.faculty_id).indexOf(user.id);
+		let [_, session] = this.authService.getSession();
+		let i = this.faculties.filter(faculty => {
+			return faculty.user_id == session.id;
+		}).map(faculty => faculty.faculty_id).indexOf(user.id);
 		if (i < 0) { return false; }
 		return true;
 	}
 
 	toggleFaculty(user: User): boolean {
-		let i = this.faculties.map(faculty => faculty.faculty_id).indexOf(user.id);
+		let [_, session] = this.authService.getSession();
+		let index: number = -1;
+
+		for (var i = this.faculties.length - 1; i >= 0; i--) {
+			let faculty = this.faculties[i];
+			if (faculty.user_id == session.id && faculty.faculty_id == user.id) {
+				index = i;
+				break;
+			}
+		}
+
 		if (i < 0) {
 			this.addFaculty({
 				id: genId(),
-				user_id: '',
+				user_id: session.id,
 				faculty_id: user.id
 			});
-			localStorage.setItem('faculties', JSON.stringify(this.faculties));
 			return true;
 		} else {
 			this.removeFaculty(i);
-			localStorage.setItem('faculties', JSON.stringify(this.faculties));
 			return false;
 		}
 	}

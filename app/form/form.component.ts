@@ -54,9 +54,10 @@ export class RadiusRadioComponent {
 	selector: 'radius-select',
 	template: `
 		<div class="radius-select" tabindex="100" (blur)="hide()">
-			<div class="selected-item" (click)="show=true" [ngClass]="{focused: show}">
+			<div class="selected-item" (click)="show=true" [ngClass]="{focused: show, notification: notification}">
 				{{ items[selected].text }}
-				<span class="lnr lnr-chevron-down"></span>
+				<span class="lnr lnr-chevron-down" *ngIf="!notification"></span>
+				<span class="lnr lnr-alarm" *ngIf="notification"></span>
 			</div>
 			<ul [ngClass]="{show: show}">
 				<li *ngFor="#item of items; #i = index" (click)="select(i)" [ngClass]="{selected: i===selected}">{{ item.text }}</li>
@@ -67,6 +68,7 @@ export class RadiusRadioComponent {
 export class RadiusSelectComponent implements OnInit {
 	@Input() items: SelectObject[];
 	@Input() selected: number = 0;
+	@Input() notification: boolean = false;
 	@Output() update = new EventEmitter<number>();
 
 	show: boolean = false;

@@ -114,9 +114,6 @@ class ProfileContext implements OnInit {
 							</section>
 						</a>
 					</li>
-					<li *ngIf="users.length < 1">
-						You haven't added anyone
-					</li>
 				</ul>
 			</div>
 		</div>
