@@ -517,11 +517,17 @@ html, body {
   .profile__viewport .profile__nav .faculty__list {
     padding: 30px 0 0 0; }
     .profile__viewport .profile__nav .faculty__list ul li {
-      margin-top: 10px;
-      padding: 0 20px;
       display: block; }
       .profile__viewport .profile__nav .faculty__list ul li a {
-        display: block; }
+        padding: 5px 20px;
+        display: block;
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        transition: all 0.2s ease; }
+        .profile__viewport .profile__nav .faculty__list ul li a:hover {
+          color: #ffffff; }
         .profile__viewport .profile__nav .faculty__list ul li a img, .profile__viewport .profile__nav .faculty__list ul li a section {
           vertical-align: middle;
           display: inline-block; }
@@ -1642,8 +1648,10 @@ textarea {
   padding: 15px 20px 10px 20px;
   visibility: hidden;
   opacity: 0;
-  left: 0px;
-  margin-left: -100px;
+  bottom: 20px;
+  margin-bottom: -50px;
+  left: 50%;
+  margin-left: -135px;
   -webkit-transition: all 0.4s ease;
   -moz-transition: all 0.4s ease;
   -o-transition: all 0.4s ease;
@@ -1654,11 +1662,12 @@ textarea {
   overflow: hidden;
   -webkit-box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4);
   -moz-box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4);
-  box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4); }
+  box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4);
+  cursor: pointer; }
   .notification__component.show {
     visibility: visible;
     opacity: 1;
-    margin-left: 20px; }
+    margin-bottom: 0px; }
   .notification__component.red .notification__bar {
     background: #ffba44;
     background-repeat: repeat-y;

@@ -17,7 +17,7 @@ import 'rxjs/Rx';
 @Component({
 	selector: 'notification-component',
 	template: `
-		<div *ngIf="notification" class="notification__component" [ngClass]="{show: notification.type, red: notification.error}">
+		<div *ngIf="notification" class="notification__component" (click)="hide()" [ngClass]="{show: notification.type, red: notification.error}">
 			<div class="notification__bar"></div>
 			<strong>Notification</strong>
 			<div>
@@ -31,6 +31,10 @@ class NotificationComponent  implements OnInit {
 	notification$: Observable<Notification>;
 
 	constructor(private notificationService: NotificationService) {
+	}
+
+	hide() {
+		this.notification.type = false;
 	}
 
 	ngOnInit() {
