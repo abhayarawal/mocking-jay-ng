@@ -484,10 +484,6 @@ html, body {
         vertical-align: middle; }
         .profile__viewport .profile__nav .profile__card ul li:not(:last-child) {
           margin-right: 5px; }
-        .profile__viewport .profile__nav .profile__card ul li:first-child a {
-          background: #f0397b;
-          color: #fff;
-          border: none; }
         .profile__viewport .profile__nav .profile__card ul li a {
           display: block;
           line-height: 35px;
@@ -506,6 +502,10 @@ html, body {
           -ms-transition: all 0.1s ease;
           transition: all 0.1s ease;
           cursor: pointer; }
+          .profile__viewport .profile__nav .profile__card ul li a.pinned {
+            background: #f0397b;
+            color: #fff;
+            border: none; }
           .profile__viewport .profile__nav .profile__card ul li a:hover {
             color: #fff; }
           .profile__viewport .profile__nav .profile__card ul li a span {
@@ -514,6 +514,29 @@ html, body {
             top: 2px;
             font-size: 19px;
             color: rgba(162, 180, 188, 0.71); }
+  .profile__viewport .profile__nav .faculty__list {
+    padding: 30px 0 0 0; }
+    .profile__viewport .profile__nav .faculty__list ul li {
+      margin-top: 10px;
+      padding: 0 20px;
+      display: block; }
+      .profile__viewport .profile__nav .faculty__list ul li a {
+        display: block; }
+        .profile__viewport .profile__nav .faculty__list ul li a img, .profile__viewport .profile__nav .faculty__list ul li a section {
+          vertical-align: middle;
+          display: inline-block; }
+        .profile__viewport .profile__nav .faculty__list ul li a img {
+          width: 30px;
+          -webkit-border-radius: 100%;
+          -moz-border-radius: 100%;
+          -o-border-radius: 100%;
+          -ms-border-radius: 100%;
+          border-radius: 100%;
+          margin-right: 7px; }
+        .profile__viewport .profile__nav .faculty__list ul li a section span {
+          display: block; }
+          .profile__viewport .profile__nav .faculty__list ul li a section span:last-child {
+            font-size: 0.7em; }
 
 .profile__viewport .profile__outlet {
   border-top: 1px solid #ededed;

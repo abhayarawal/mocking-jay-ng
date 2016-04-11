@@ -2,13 +2,19 @@ import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector, Pi
 import {RouteConfig, RouterOutlet, RouterLink, Router, Location, RouteParams} from 'angular2/router';
 import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGroup, NgControl, FormBuilder, NgFormModel, ControlGroup, Validators} from 'angular2/common';
 
+import {Http, Response, Headers} from 'angular2/http';
+import {Observable} from 'rxjs/Rx';
+import 'rxjs/Rx';
+
 import {LayoutHeader} from '../layouts/header.layout';
 import {Calendar} from './calendar.component';
-import {User, UserType} from '../interfaces/interface';
+import {User, UserType, Faculty} from '../interfaces/interface';
 
 import {AuthService} from '../auth/auth.service';
 import {UserService} from '../services/user.service';
 import {SegmentViewport} from './segment.component';
+import {FacultyService} from '../services/faculty.service';
+import {NotificationService} from '../notification.service';
 
 
 @Component({
@@ -89,7 +95,7 @@ class ProfileContext implements OnInit {
 				<div class="profile__mail"><a href="mailto:{{user.email}}">{{user.email}}</a></div>
 				<ul>
 					<li *ngIf="type==0 && user.type!=0">
-						<a href="" class="lnr lnr-pushpin"></a>
+						<a class="lnr lnr-pushpin" (click)="togglePin()" [ngClass]="{pinned: pinned}"></a>
 					</li>
 					<li><a class="lnr lnr-license"></a></li>
 					<li><a [routerLink]="['/ProfileViewport', 'Calendar', {id: user.id}]" class="lnr lnr-calendar-full"></a></li>
@@ -97,6 +103,22 @@ class ProfileContext implements OnInit {
 				</ul>
 			</div>
 			<calendar [id]="user.id" *ngIf="user"></calendar>
+			<div class="faculty__list" *ngIf="user">
+				<ul *ngIf="type==0 && users">
+					<li *ngFor="#usr of users">
+						<a [routerLink]="['/ProfileViewport', 'Calendar', {id: usr.id}]">
+							<img src="{{usr.meta?.avatar}}" alt="" />
+							<section>
+								<span>{{usr.fname}} {{usr.lname}}</span>
+								<span>{{usr.email}}</span>
+							</section>
+						</a>
+					</li>
+					<li *ngIf="users.length < 1">
+						You haven't added anyone
+					</li>
+				</ul>
+			</div>
 		</div>
 	`,
 	directives: [Calendar, RouterLink]
@@ -108,10 +130,16 @@ class ProfileNav implements OnInit {
 	year: String = '';
 
 	type: UserType;
+	pinned: boolean;
+	users: User[];
+	observable: Observable<Faculty[]>;
 
 	constructor(
 		private authService: AuthService,
-		private router: Router
+		private facultyService: FacultyService,
+		private router: Router,
+		private notificationService: NotificationService,
+		private userService: UserService
 	) { }
 
 	ngOnInit() {
@@ -120,8 +148,36 @@ class ProfileNav implements OnInit {
 		this.month = `${day.getMonth()}`;
 		this.year = `${day.getFullYear()}`;
 
+		this.observable = this.facultyService.observable$;
+		this.observable.subscribe(
+			(faculties) => {
+				this.users = [];
+				faculties.forEach(faculty => {
+					this.userService.getUser(faculty.faculty_id).then(
+						user => { this.users.push(user); });
+				});
+			}
+		);
+
 		let [_, session] = this.authService.getSession();
 		this.type = session.type;
+
+		this.facultyService.triggerObservable();
+	}
+
+	togglePin() {
+		this.pinned = this.facultyService.toggleFaculty(this.user);
+		if (this.pinned) {
+			this.notificationService.notify('Faculty added to your list', true);
+		} else {
+			this.notificationService.notify('Faculty removed from your list', true, true);
+		}
+	}
+
+	ngOnChanges() {
+		if (this.user) {
+			this.pinned = this.facultyService.inFaculty(this.user);
+		}
 	}
 }
 

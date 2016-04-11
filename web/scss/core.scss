@@ -762,18 +762,6 @@ $top__height: 40px;
 					display: inline-block;
 					vertical-align: middle;
 
-					&:first-child
-					{
-						a
-						{
-							background: #f0397b;
-							// background: #3ea9f0;
-							// background: #8b6cf0;
-							color: #fff;
-							border: none;
-						}
-					}
-					
 					a
 					{
 						display: block;
@@ -785,6 +773,15 @@ $top__height: 40px;
 						font-size: 16px;
 						@include transition(all 0.1s ease);
 						cursor: pointer;
+
+						&.pinned
+						{
+							background: #f0397b;
+							// background: #3ea9f0;
+							// background: #8b6cf0;
+							color: #fff;
+							border: none;
+						}
 
 						&:hover
 						{
@@ -800,6 +797,52 @@ $top__height: 40px;
 							top: 2px;
 							font-size: 19px;
 							color: rgba(162, 180, 188, 0.71);
+						}
+					}
+				}
+			}
+		}
+
+		.faculty__list
+		{
+			padding: 30px 0 0 0;
+
+			ul
+			{
+				li
+				{
+					margin-top: 10px;
+					padding: 0 20px;
+					display: block;
+
+					a
+					{
+						display: block;
+
+						img, section
+						{
+							vertical-align: middle;
+							display: inline-block;
+						}
+
+						img
+						{
+							width: 30px;
+							@include border-radius(100%);
+							margin-right: 7px;
+						}
+
+						section
+						{
+							span
+							{
+								display: block;
+
+								&:last-child
+								{
+									font-size: 0.7em;
+								}
+							}
 						}
 					}
 				}

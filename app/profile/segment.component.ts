@@ -635,7 +635,7 @@ class FragmentContextFaculty implements OnInit {
 
 		delete this.fragment.history;
 		fragment.history.push(this.fragment);
-		this.fragment = fragment;
+		// this.fragment = fragment;
 	}
 
 	deny() {

@@ -12,6 +12,12 @@ export interface User {
 	type: UserType
 }
 
+export interface Faculty {
+	id: string,
+	user_id: string,
+	faculty_id: string
+}
+
 export interface Date {
 	year: number,
 	month: number,
