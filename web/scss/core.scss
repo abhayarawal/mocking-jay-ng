@@ -1527,6 +1527,24 @@ textarea
 					  -ms-user-select: none;       
 					  user-select: none;   
 
+					  .fragment__history
+					  {
+					  	position: absolute;
+					  	right: 10px;
+					  	top: 10px;
+
+					  	span
+					  	{
+					  		width: 30px;
+					  		display: inline-block;
+								
+								img
+								{
+									@include border-radius(100%);
+								}
+					  	}
+					  }
+
 						&:hover
 						{
 							border-bottom: 1px solid darken(#e3e3e3, 10%);
@@ -1624,11 +1642,6 @@ textarea
 								rgba(255, 19, 43, 0.79),
 								rgba(255, 19, 43, 0.09)
 							);
-
-							.event__title
-							{
-								font-weight: 400;
-							}
 						}
 
 						&.status__6, &.status__5

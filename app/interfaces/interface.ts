@@ -80,7 +80,8 @@ export interface Fragment {
 	message?: string,
 	status?: Status,
 	response?: string[],
-	instance_id?: string
+	instance_id?: string,
+	history?: Fragment[]
 }
 
 

@@ -83,20 +83,31 @@ class SegmentUnavailable implements OnInit {
 				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
 				<span *ngSwitchWhen="3" [innerHTML]="'Denied'"></span>
 				<span *ngSwitchWhen="4" [innerHTML]="'Cancelled'"></span>
-				<span *ngSwitchWhen="5" [innerHTML]="'Unavailable'"></span>
+				<span *ngSwitchWhen="5" [innerHTML]="''"></span>
 				<span *ngSwitchWhen="6" [innerHTML]="'Blocked'"></span>
 			</span>
 			<!-- <span class="lnr lnr-pencil" *ngIf="selected"></span> -->
+
+			<div class="fragment__history" *ngIf="users">
+				<span *ngFor="#user of users">
+					<img src="{{user.meta?.avatar}}" alt="" />
+				</span>
+			</div>
 		</li>
 	`,
 	pipes: [TimePipe]
 })
 class FragmentComponent implements OnInit {
-	@Input() fragment;
+	@Input() fragment: Fragment;
 	observable: Observable<Fragment>;
 	selected: boolean = false;
 
-	constructor(private segmentViewService: SegmentViewService) {}
+	users: User[] = [];
+
+	constructor(
+		private segmentViewService: SegmentViewService,
+		private userService: UserService
+	) {}
 
 	send() {
 		if (this.fragment) {
@@ -113,7 +124,16 @@ class FragmentComponent implements OnInit {
 					this.selected = true;
 				}
 			}
-		)
+		);
+
+		if ('history' in this.fragment) {
+			// for (var i = this.fragment.history.length - 1; i >= 0; i--) {
+			// 	this.userService.getUser(this.fragment.history[i].user_id).then(
+			// 		user => {
+			// 			this.users.push(user);
+			// 		});
+			// }
+		}
 	}
 }
 
@@ -384,8 +404,18 @@ class FragmentContextStudent implements OnInit {
 	}
 
 	cancel() {
-		this.fragment.status = Status.default;
-		this.notificationService.notify("Appointment canceled", true, true);
+		// if (!('history' in this.fragment)) {
+		// 	this.fragment.history = [];
+		// }
+
+		// this.fragment.history.push(this.fragment);
+		// this.fragment.user_id = "";
+		// this.fragment.message = "";
+		// this.fragment.response = [];
+		// this.fragment.status = Status.default;
+
+		// this.fragment.status = Status.default;
+		// this.notificationService.notify("Appointment canceled", true, true);
 	}
 
 	create() {
@@ -552,13 +582,15 @@ class FragmentContextFaculty implements OnInit {
 		}
 	}
 
-	update(status: Status, message: string) {
-		if (!('response' in this.fragment)) {
-			this.fragment.response = [];
-		}
+	update(status: Status, message: string, response: boolean = false) {
+		if (!response) {
+			if (!('response' in this.fragment)) {
+				this.fragment.response = [];
+			}
 
-		if (this.response.trim().length > 0) {
-			this.fragment.response.push(this.response.trim());
+			if (this.response.trim().length > 0) {
+				this.fragment.response.push(this.response.trim());
+			}
 		}
 
 		this.fragment.status = status;
@@ -571,12 +603,49 @@ class FragmentContextFaculty implements OnInit {
 		this.response = '';
 	}
 
+	history(status: Status) {
+		if (!('response' in this.fragment)) {
+			this.fragment.response = [];
+		}
+
+		if (this.response.trim().length > 0) {
+			this.fragment.response.push(this.response.trim());
+		}
+
+		let fragment: Fragment = {
+			id: this.fragment.id,
+			date: this.fragment.date,
+			start: this.fragment.start,
+			end: this.fragment.end,
+			segment_id: this.fragment.segment_id,
+			user_id: "",
+			segment: this.fragment.segment,
+			message: "",
+			status: Status.default,
+			response: []
+		}
+
+		this.fragment.status = status;
+
+		if (!('history' in this.fragment)) {
+			fragment.history = [];
+		} else {
+			fragment.history = this.fragment.history;
+		}
+
+		delete this.fragment.history;
+		fragment.history.push(this.fragment);
+		this.fragment = fragment;
+	}
+
 	deny() {
-		this.update(Status.denied, 'denied');
+		// this.history(Status.denied);
+		this.update(Status.denied, 'denied', false);
 	}
 
 	cancel() {
-		this.update(Status.cancelled, 'cancelled');
+		// this.history(Status.cancelled);
+		this.update(Status.cancelled, 'cancelled', false);
 	}
 
 	approve() {

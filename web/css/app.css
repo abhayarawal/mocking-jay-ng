@@ -1007,6 +1007,19 @@ textarea {
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none; }
+          .segment__wrap .segments .segment .fragments ul li .fragment__history {
+            position: absolute;
+            right: 10px;
+            top: 10px; }
+            .segment__wrap .segments .segment .fragments ul li .fragment__history span {
+              width: 30px;
+              display: inline-block; }
+              .segment__wrap .segments .segment .fragments ul li .fragment__history span img {
+                -webkit-border-radius: 100%;
+                -moz-border-radius: 100%;
+                -o-border-radius: 100%;
+                -ms-border-radius: 100%;
+                border-radius: 100%; }
           .segment__wrap .segments .segment .fragments ul li:hover {
             border-bottom: 1px solid #cacaca; }
           .segment__wrap .segments .segment .fragments ul li span {
@@ -1070,8 +1083,6 @@ textarea {
             border-left: 2px solid; }
             .segment__wrap .segments .segment .fragments ul li.status__4:hover {
               border-color: rgba(255, 19, 43, 0.79); }
-            .segment__wrap .segments .segment .fragments ul li.status__4 .event__title {
-              font-weight: 400; }
           .segment__wrap .segments .segment .fragments ul li.status__6, .segment__wrap .segments .segment .fragments ul li.status__5 {
             border-color: #b2b2b2;
             color: #b2b2b2;
