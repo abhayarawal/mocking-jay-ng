@@ -219,7 +219,8 @@ class SegmentWrap {
 				month = date.getMonth(),
 				year = date.getFullYear();
 
-		this.segmentService.getSegmentsByRoute(id, month, day, year).then(segments => { this.segments = segments });
+		this.segmentService.getSegmentsByRoute(id, month, day, year).then(segments => { this.segments = segments 
+			console.log(this.segments)});
 	}
 }
 

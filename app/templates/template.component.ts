@@ -180,13 +180,16 @@ class TemplateCreate implements OnInit {
 
 	templateForm: ControlGroup;
 
+	notification$: Observable<Notification>;
+
 	defaultNames: string[] = ['advising', 'office hour', 'open appointments'];
 
-	constructor(private fb: FormBuilder,
-							private templateService: TemplateService,
-							private router: Router,
-							private notificationService: NotificationService) 
-	{
+	constructor(
+		private fb: FormBuilder,
+		private templateService: TemplateService,
+		private router: Router,
+		private notificationService: NotificationService
+	) {
 		this.name = new Control('', Validators.compose([Validators.required, TemplateValidator.shouldBeName]));
 		this.interval = new Control(10, Validators.compose([Validators.required, TemplateValidator.shouldBeInterval]));
 		this.allowMultiple = new Control(false, Validators.required);
@@ -202,12 +205,18 @@ class TemplateCreate implements OnInit {
 
 	ngOnInit() {
 		this.templateService.getNewTemplate().then(template => this.template = template);
+		this.notification$ = this.templateService.notification$;
+		this.notification$.subscribe(
+			(data) => {
+				let {message, type} = data;
+				this.notificationService.notify(message, true, !type);
+			}
+		)
 	}
 
 	submit() {
 		if (this.templateForm.valid) {
 			this.templateService.addTemplate(this.template);
-			this.notificationService.notify("new template created", true, false);
 		} else {
 			this.notificationService.notify("template form invalid", true, true);
 		}
@@ -246,6 +255,7 @@ class TemplateCreate implements OnInit {
 class Templates implements OnInit {
 	templates: Template[];
 	templates$: Observable<Template[]>;
+	notification$: Observable<Notification>;
 
 	constructor(
 		private templateService: TemplateService,
@@ -256,7 +266,21 @@ class Templates implements OnInit {
 
 	ngOnInit() {
 		let [_, session] = this.authService.getSession();
-		this.templateService.getTemplates(session.id).then(templates => this.templates = templates);
+		this.notification$ = this.templateService.notification$;
+		this.notification$.subscribe(
+			(data) => {
+				let {message, type} = data;
+				this.notificationService.notify(message, true, !type);
+			}
+		);
+
+		this.templates$ = this.templateService.templates$;
+		this.templates$.subscribe(
+			(templates) => {
+				this.templates = templates;
+			});
+
+		this.templateService.getTemplates(session.id);
 	}
 
 	remove(id: string) {

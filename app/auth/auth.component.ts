@@ -133,22 +133,22 @@ export class AuthComponent implements OnInit {
 	}
 
 	faculty() {
-		this.authService.authenticate({username: 'faculty', password: 'dummy'});
+		this.authService.authenticate({username: 'johndoe', password: 'dummy'});
 		this.notificationService.notify('Authenticated as John', true);
 	}
 
 	faculty2() {
-		this.authService.authenticate({ username: 'faculty2', password: 'dummy' });
+		this.authService.authenticate({ username: 'eviefrye', password: 'dummy' });
 		this.notificationService.notify('Authenticated as Evie', true);
 	}
 
 	taylor() {
-		this.authService.authenticate({ username: 'taylor', password: 'dummy' });
+		this.authService.authenticate({ username: 'taylorswift', password: 'dummy' });
 		this.notificationService.notify('Authenticated as Taylor', true);
 	}
 
 	student() {
-		this.authService.authenticate({ username: 'tovelo', password: 'dummy' });
+		this.authService.authenticate({ username: 'janedouglas', password: 'dummy' });
 		this.notificationService.notify('Authenticated as Jane', true);
 	}
 }

@@ -32,6 +32,7 @@ export interface Time {
 
 export interface Template {
 	id: string,
+	_id?: string,
 	name: string,
 	interval: any,
 	allow_multiple: boolean,

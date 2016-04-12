@@ -60,7 +60,17 @@ export class AuthService {
 		}
   }
 
-  saveSession(session: {}): void {
+  saveSession(session: any): void {
+		switch (session.type) {
+			case "student":
+				session.type = UserType.Student
+				break;
+			case "faculty":
+				session.type = UserType.Faculty
+				break;
+		}
+		session.id = session._id;
+		delete session._id;
 		localStorage.setItem('session', JSON.stringify(session));
   }
 
