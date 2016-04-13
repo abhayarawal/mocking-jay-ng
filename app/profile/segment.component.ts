@@ -13,6 +13,7 @@ import {Time, Template, Segment, Status, Fragment, User, UserType} from '../inte
 import {UserService} from '../services/user.service';
 import {FragmentService} from '../services/fragment.service';
 import {SegmentService} from '../services/segment.service';
+import {RouterService} from '../services/router.service';
 import {Notification, NotificationService} from '../notification.service';
 
 import {RadiusSelectComponent, RadiusRadioComponent, SelectObject} from '../form/form.component';
@@ -204,23 +205,32 @@ class SegmentComponent implements OnInit {
 	directives: [SegmentUnavailable, SegmentComponent]
 })
 class SegmentWrap {
+	segments$: Observable<Segment[]>;
 	segments: Segment[] = [];
 
 	constructor(
 		private calendarService: CalendarService,
-		private segmentService: SegmentService
+		private segmentService: SegmentService,
+		private injector: Injector,
+		private routerService: RouterService
 	) {
 	}
 
 	ngOnInit() {
 		let [id, date] = this.calendarService.getRouteParams();
+		let day = date.getDate(), month = date.getMonth(), year = date.getFullYear();
 
-		let day = date.getDate(),
-				month = date.getMonth(),
-				year = date.getFullYear();
+		if(!id) {
+			id = this.routerService.UserId;
+		}
 
-		this.segmentService.getSegmentsByRoute(id, month, day, year).then(segments => { this.segments = segments 
-			console.log(this.segments)});
+		this.segments$ = this.segmentService.segments$;
+		this.segments$.subscribe(
+			(segments) => {
+				this.segments = segments;
+			});
+
+		this.segmentService.getSegmentsByRoute(id, month, day, year);
 	}
 }
 
@@ -257,8 +267,10 @@ class DayComponent implements OnInit {
 	day: number;
 	weekDay: number;
 
-	constructor(private calendarService: CalendarService,
-							private segmentViewService: SegmentViewService) {}
+	constructor(
+		private calendarService: CalendarService,
+		private segmentViewService: SegmentViewService
+	) {}
 
 	ngOnInit() {
 		let [id, date] = this.calendarService.getRouteParams();
@@ -555,6 +567,8 @@ class FragmentContextFaculty implements OnInit {
 	template_user: User;
 	response: string = '';
 
+	user$: Observable<User>;
+
 	notify_select: SelectObject[] = [
 		{ value: 10, text: '10 min' },
 		{ value: 15, text: '15 min' },
@@ -576,10 +590,13 @@ class FragmentContextFaculty implements OnInit {
 	}
 
 	ngOnChanges() {
-		if (this.fragment.user_id) {
-			this.userService.getUser(this.fragment.user_id).then(user => {
+		this.user$ = this.userService.user$;
+		this.user$.subscribe(
+			(user) => {
 				this.template_user = user;
 			});
+		if (this.fragment.user_id) {
+			this.userService.getUser(this.fragment.user_id);
 		}
 	}
 

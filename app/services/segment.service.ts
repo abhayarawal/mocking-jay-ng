@@ -34,6 +34,8 @@ export class SegmentService implements OnInit {
 	templateService: TemplateService;
 	authService: AuthService;
 
+	getSegmentsPending;
+
 	constructor(
 		private http: Http,
 		@Inject(TemplateService) TemplateService,
@@ -64,18 +66,29 @@ export class SegmentService implements OnInit {
 		// this.segmentsObserver.next(this.segments);
 	}
 
-	getSegments(id: string) {
+	getSegments(id: string, month?, day?, year?) {
 		let templates$ = this.templateService.templates$;
 
-		templates$.subscribe(
-			(templates) => {
+		if (this.getSegmentsPending) {
+			this.getSegmentsPending.unsubscribe();
+		}
 
+		this.getSegmentsPending = templates$.subscribe(
+			(templates) => {
 				let headers = this.authService.getAuthHeader();
-				this.http.get(`${this.authService.baseUri}/segments/${id}`, {
+				let uri;
+
+				if (month && day && year) {
+					uri = `${this.authService.baseUri}/segments/${id}/${month}/${day}/${year}`;
+				} else {
+					uri = `${this.authService.baseUri}/segments/${id}`;
+				}
+
+				this.http.get(uri, {
 					headers: headers,
 				})
-					.map(res => res.json())
-					.subscribe(
+				.map(response => response.json())
+				.subscribe(
 					(response) => {
 						let segments = response.map((segment) => {
 							segment.id = segment._id;
@@ -137,14 +150,12 @@ export class SegmentService implements OnInit {
 					.map(res => res.json())
 					.subscribe(
 					(data) => {
-						console.log(this.notificationObserver);
 						if (data.success) {
 							this.notificationObserver.next({
 								message: 'Template has been saved',
 								type: true
 							});
 						} else {
-							console.log(data.message);
 							this.notificationObserver.next({
 								message: 'Could not save segment',
 								type: false
@@ -201,16 +212,18 @@ export class SegmentService implements OnInit {
 	}
 
 	getSegmentsByRoute(id, month, day, year) {
-		let segments = this.segments.filter(
-			segment => segment.date.month == month && segment.date.day == day && segment.date.year == year
-		);
+		this.getSegments(id, month, day, year);
 
-		segments = (segments.map((segment) => {
-			segment.template = this.templateService.getTemplateSync(segment._template);
-			return segment;
-		})).filter((segment) => segment.template._user == id);
+		// let segments = this.segments.filter(
+		// 	segment => segment.date.month == month && segment.date.day == day && segment.date.year == year
+		// );
 
-		return Promise.resolve(segments);
+		// segments = (segments.map((segment) => {
+		// 	segment.template = this.templateService.getTemplateSync(segment._template);
+		// 	return segment;
+		// })).filter((segment) => segment.template._user == id);
+
+		// return Promise.resolve(segments);
 	}
 
 	getNewSegment() {

@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter, OnInit, Injectable, Injector, Pipe, PipeTransform} from "angular2/core";
-import {RouteConfig, RouterOutlet, RouterLink, Router, Location, RouteParams} from 'angular2/router';
+import {RouteConfig, RouterOutlet, RouterLink, Router, Location, RouteParams, OnActivate, ComponentInstruction} from 'angular2/router';
 import {NgSwitch, NgSwitchWhen, DatePipe, NgStyle, NgForm, Control, NgControlGroup, NgControl, FormBuilder, NgFormModel, ControlGroup, Validators} from 'angular2/common';
 
 import {Http, Response, Headers} from 'angular2/http';
@@ -12,9 +12,11 @@ import {User, UserType, Faculty} from '../interfaces/interface';
 
 import {AuthService} from '../auth/auth.service';
 import {UserService} from '../services/user.service';
+import {CalendarService} from './calendar.service';
 import {SegmentViewport} from './segment.component';
 import {FacultyService} from '../services/faculty.service';
 import {NotificationService} from '../notification.service';
+import {RouterService} from '../services/router.service';
 
 
 @Component({
@@ -30,7 +32,7 @@ import {NotificationService} from '../notification.service';
 							</a>
 						</li>
 						<li><a href="">Today's Events</a></li>
-						<li><a class="selected" [routerLink]="['/ProfileViewport', 'DaySegment', {id: id, month: month, day: day, year: year}]">Calendar</a></li>
+						<li><a class="selected" [routerLink]="['/ProfileViewport', 'CalendarRouter', {id: id}, 'DaySegment', {month: month, day: day, year: year}]">Calendar</a></li>
 					</ul>
 				</section>
 				<section class="context__header">
@@ -98,7 +100,7 @@ class ProfileContext implements OnInit {
 						<a class="lnr lnr-pushpin" (click)="togglePin()" [ngClass]="{pinned: pinned}"></a>
 					</li>
 					<li><a class="lnr lnr-license"></a></li>
-					<li><a [routerLink]="['/ProfileViewport', 'Calendar', {id: user.id}]" class="lnr lnr-calendar-full"></a></li>
+					<li><a [routerLink]="['/ProfileViewport', 'CalendarRouter', {id: user.id}]" class="lnr lnr-calendar-full"></a></li>
 					<li><a href="" class="lnr lnr-download"></a></li>
 				</ul>
 			</div>
@@ -122,6 +124,7 @@ class ProfileContext implements OnInit {
 })
 class ProfileNav implements OnInit {
 	@Input() user: User;
+
 	day: String = '';
 	month: String = '';
 	year: String = '';
@@ -180,7 +183,6 @@ class ProfileNav implements OnInit {
 
 @Component({
 	template: `
-		<profile-nav [user]="user"></profile-nav>
 		<div class="profile__outlet">
 			<h2>Viewing</h2>
 		</div>
@@ -188,16 +190,12 @@ class ProfileNav implements OnInit {
 	directives: [ProfileNav]
 })
 class Cal implements OnInit {
-	user: User;
-
 	constructor(
 		private userService: UserService,
 		private routeParams: RouteParams
 	) { }
 
 	ngOnInit() {
-		let id = this.routeParams.get('id');
-		this.userService.getUser(id).then(user => this.user = user);
 	}
 }
 
@@ -227,51 +225,97 @@ class None implements OnInit{
 @Component({
 	selector: 'day-segment',
 	template: `
-		<profile-nav [user]="user"></profile-nav>
 		<div class="profile__outlet">
 			<profile-context [id]="id" [month]="month" [year]="year" [day]="day"></profile-context>
 			<segment-viewport [id]="id" [month]="month" [year]="year" [day]="day"></segment-viewport>
 		</div>
 	`,
-	directives: [ProfileContext, SegmentViewport, ProfileNav]
+	directives: [ProfileContext, SegmentViewport, ProfileNav],
+	providers: [CalendarService]
 })
 class DaySegment implements OnInit {
-	@Input() day: String = "";
-	@Input() month: String = "";
-	@Input() year: String = "";
+	@Input() day;
+	@Input() month;
+	@Input() year;
+
 	id: string = "";
 	user: User;
+	user$: Observable<User>;
 
 	constructor(
 		private router: Router,
-		private routerParams: RouteParams,
-		private userService: UserService
+		private userService: UserService,
+		private calendarService: CalendarService
 	){}
 
 	ngOnInit() {
-		this.day = this.routerParams.get('day');
-		this.month = this.routerParams.get('month');
-		this.year = this.routerParams.get('year');
-		this.id = this.routerParams.get('id');
+		let [id, date] = this.calendarService.getRouteParams();
 
-		this.userService.getUser(this.id).then(user => this.user = user);
+		this.id = id;
+		this.day = date.getDate(),
+		this.month = date.getMonth(),
+		this.year = date.getFullYear();
+
+		// this.user$ = this.userService.user$;
+		// this.user$.subscribe(
+		// 	(user) => {
+		// 		this.user = user;
+		// 	});
+		// this.userService.getUser(id);
+	}
+}
+
+@Component({
+	template: `
+		<profile-nav [user]="user"></profile-nav>
+		<router-outlet></router-outlet>
+	`,
+	directives: [RouterOutlet, ProfileNav]
+})
+@RouteConfig([
+	{ path: '/', name: 'Calendar', component: Cal, useAsDefault: true },
+	{ path: '/day/:month/:day/:year', name: 'DaySegment', component: DaySegment }
+])
+class CalendarRouter implements OnInit, OnActivate {
+	user: User;
+	user$: Observable<User>;
+
+	constructor(
+		private routeParams: RouteParams,
+		private userService: UserService,
+		private routerService: RouterService
+	){}
+
+	routerOnActivate(next: ComponentInstruction, prev: ComponentInstruction) {
+    return new Promise(resolve => {
+			resolve(this.routerService.UserId = this.routeParams.get("id"));
+    });
+  }
+
+	ngOnInit() {
+		this.user$ = this.userService.user$;
+		this.user$.subscribe(
+			(user) => {
+				this.user = user;
+			});
+
+		this.userService.getUser(this.routeParams.get('id'));
 	}
 }
 
 
 @Component({
 	template: `
-		<layout-header></layout-header>
 		<div class="profile__viewport">
 			<router-outlet></router-outlet>
 		</div>
 	`,
-	directives: [RouterLink, RouterOutlet, LayoutHeader]
+	directives: [RouterLink, RouterOutlet],
+	providers: [CalendarService]
 })
 @RouteConfig([
 	{ path: '/', name: 'None', component: None, useAsDefault: true },
-	{ path: '/:id', name: 'Calendar', component: Cal },
-	{ path: '/:id/day/:month/:day/:year', name: 'DaySegment', component: DaySegment }
+	{ path: '/:id/...', name: 'CalendarRouter', component: CalendarRouter }
 ])
 export class ProfileViewport {
 }

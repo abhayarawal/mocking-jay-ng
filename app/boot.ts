@@ -13,10 +13,12 @@ import {AuthService} from './auth/auth.service';
 import {UserService} from './services/user.service';
 import {FragmentService} from './services/fragment.service';
 import {FacultyService} from './services/faculty.service';
+import {RouterService} from './services/router.service';
+// import {CalendarService} from './profile/calendar.service';
 
 bootstrap(MountNode, [
 	ROUTER_PROVIDERS, HTTP_PROVIDERS, HTTP_BINDINGS, 
-	AuthService, UserService, FacultyService,
+	AuthService, UserService, FacultyService, RouterService,
 	SegmentViewService, TemplateService, SegmentService, NotificationService,
 	FragmentService
 ]);

@@ -252,10 +252,11 @@ html, body {
 
 .app__top {
   background: #fff;
-  padding: 5px 10px 0 10px; }
+  padding: 0px 10px 0 10px; }
   .app__top .top__left {
     float: left;
-    width: 100%; }
+    width: 100%;
+    padding-top: 5px; }
     @media only screen and (min-width: 768px) {
       .app__top .top__left {
         float: left;
@@ -276,7 +277,8 @@ html, body {
         visibility: hidden; }
   .app__top .top__search {
     float: left;
-    width: 66.66667%; }
+    width: 66.66667%;
+    padding-top: 5px; }
     @media only screen and (min-width: 768px) {
       .app__top .top__search {
         float: left;
@@ -432,7 +434,19 @@ html, body {
       .app__top .top__right .main__nav > li:not(:last-child) {
         padding-right: 10px; }
         .app__top .top__right .main__nav > li:not(:last-child) a {
-          font-size: 17px; }
+          font-size: 17px;
+          line-height: 25px;
+          display: block;
+          width: 25px;
+          text-align: center;
+          -webkit-border-radius: 100%;
+          -moz-border-radius: 100%;
+          -o-border-radius: 100%;
+          -ms-border-radius: 100%;
+          border-radius: 100%; }
+          .app__top .top__right .main__nav > li:not(:last-child) a.router-link-active {
+            background: #7A6FF0;
+            color: #fff; }
       .app__top .top__right .main__nav > li:last-child {
         margin-left: 20px; }
         .app__top .top__right .main__nav > li:last-child span, .app__top .top__right .main__nav > li:last-child img {

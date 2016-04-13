@@ -17,15 +17,22 @@ export interface Notification {
 
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnInit {
 	notification$: Observable<Notification>;
 	private observer: Observer<Notification>;
+
+	session$: Observable<boolean>;
+	private sessionObserver: Observer<boolean>;
 
 	baseUri: string = 'http://localhost:5000/api';
 	tokenId: string = 'mj-token-id';
 
 	constructor(private http: Http) {
 		this.notification$ = new Observable<Notification>(observer => this.observer = observer).share();
+		this.session$ = new Observable<boolean>(observer => this.sessionObserver = observer).share();
+	}
+
+	ngOnInit() {
 	}
 
 	saveJwt(jwt: string): void {
@@ -72,10 +79,12 @@ export class AuthService {
 		session.id = session._id;
 		delete session._id;
 		localStorage.setItem('session', JSON.stringify(session));
+		this.sessionObserver.next(true);
   }
 
   deleteSession(): void {
 		localStorage.removeItem('session');
+		this.sessionObserver.next(false);
   }
 
   getSession(): [boolean, User] {

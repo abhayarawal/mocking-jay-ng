@@ -33,6 +33,7 @@ export class TemplateService implements OnInit {
 
 
 	authService: AuthService;
+	getTemplatesPending;
 
 	constructor(
 		private http: Http,
@@ -56,27 +57,32 @@ export class TemplateService implements OnInit {
 	}
 
 	getTemplates(id: string) {
+		if (this.getTemplatesPending) {
+			this.getTemplatesPending.unsubscribe();
+		}
+
 		let headers = this.authService.getAuthHeader();
-		this.http.get(`${this.authService.baseUri}/templates/${id}`, {
-			headers: headers,
-		})
-		.map(res => res.json())
-		.subscribe(
-			(response) => {
-				let templates = response.map((template) => {
-					template.id = template._id;
-					delete template._id;
-					return template;
-				});
-				this.templatesObserver.next(templates);
-			},
-			err => {
-				this.notificationObserver.next({
-					type: false,
-					message: 'Error connecting to server'
-				})
-			}
-		)
+		this.getTemplatesPending = this.http.get(
+			`${this.authService.baseUri}/templates/${id}`, {
+				headers: headers,
+			})
+			.map(res => res.json())
+			.subscribe(
+				(response) => {
+					let templates = response.map((template) => {
+						template.id = template._id;
+						delete template._id;
+						return template;
+					});
+					this.templatesObserver.next(templates);
+				},
+				err => {
+					this.notificationObserver.next({
+						type: false,
+						message: 'Error connecting to server'
+					})
+				}
+			);
 	}
 
 	getTemplate(id: string) {
@@ -107,7 +113,7 @@ export class TemplateService implements OnInit {
 								type: true
 							});
 						} else {
-							console.log(data.message);
+							console.log(data.payload);
 							this.notificationObserver.next({
 								message: 'Could not save template',
 								type: false

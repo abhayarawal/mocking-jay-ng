@@ -377,8 +377,6 @@ class Segments implements OnInit {
 			(response) => {
 				this.segments = response;
 			});
-
-		this.segmentService.getSegments(session.id);
 	}
 
 	remove(id: string) {
@@ -405,7 +403,6 @@ class ContextualMenu {
 
 @Component({
 	template: `
-		<layout-header></layout-header>
 		<div class="wrapping__viewport">
 			<contextual-menu></contextual-menu>
 			<div class="wrapping__content">
@@ -413,7 +410,7 @@ class ContextualMenu {
 			</div>
 		</div>
 	`,
-	directives: [RouterLink, RouterOutlet, LayoutHeader, ContextualMenu]
+	directives: [RouterLink, RouterOutlet, ContextualMenu]
 })
 @RouteConfig([
 		{ path: '/', name: 'Segments', component: Segments, useAsDefault: true },

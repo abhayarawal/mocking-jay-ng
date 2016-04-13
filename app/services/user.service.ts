@@ -16,69 +16,52 @@ export interface Notification {
 	type: boolean
 }
 
-var USERS: [User] = [
-	{
-		id: "ekny5h2qd",
-		fname: "John",
-		lname: "Doe",
-		email: "john.doe@google.com",
-		type: UserType.Faculty,
-		meta: {
-			avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-03-20_at_4.35.11_PM.png?3896038397320089616"
-		}
-	},
-	{
-		id: "czrvbw1fz",
-		fname: "Taylor",
-		lname: "Swift",
-		email: "taylor.swift@google.com",
-		type: UserType.Student,
-		meta: {
-			avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-02-18_at_3.11.09_PM.png?5003393221482762451"
-		}
-	},
-	{
-		id: "yxmfwkcl2",
-		fname: "Jane",
-		lname: "Douglas",
-		email: "jane.douglas@outsidexbox.com",
-		type: UserType.Student,
-		meta: {
-			avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/lady.png?8325253379137164394"
-		}
-	},
-	{
-		id: "31fqm5773",
-		fname: "Evie",
-		lname: "Frye",
-		email: "evie.frye@ubi.com",
-		type: UserType.Faculty,
-		meta: {
-			avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/lady2.png?18444122143504349695"
-		}
-	}
-];
 
 @Injectable()
 export class UserService {
-	notification$: Observable<Notification>;
-	private observer: Observer<Notification>;
+	user$: Observable<User>;
+	private userObserver: Observer<User>;
 
 	authService: AuthService;
 
-	users: [User] = USERS;
+	userCache: User[];
 
 	constructor(
 		private http: Http,
 		@Inject(AuthService) AuthService
 	){
 		this.authService = AuthService;
-		this.notification$ = new Observable<Notification>(observer => this.observer = observer).share();
+		this.user$ = new Observable<User>(observer => this.userObserver = observer).share();
 	}
 
-	getUser(id: string = null) {
-		if (id) {
-			return Promise.resolve((this.users.filter(user => user.id == id))[0]);
+	getUser(uid: string = null) {
+		if (uid) {
+			
+			let headers = this.authService.getAuthHeader();
+			this.http.get(`${this.authService.baseUri}/users/${uid}`, {
+				headers: headers,
+			})
+				.map(res => res.json())
+				.subscribe(
+				(response) => {
+					if (response.success) {
+						let user = response.payload;
+						switch (user.type) {
+							case "student":
+								user.type = UserType.Student
+								break;
+							case "faculty":
+								user.type = UserType.Faculty
+								break;
+						}
+						user.id = user._id;
+						delete user._id;
+
+						// this.user
+						this.userObserver.next(user);
+					}
+				});
+
 		} else {
 			let [_, session] = this.authService.getSession();
 			return Promise.resolve(session);

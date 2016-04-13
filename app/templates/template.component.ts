@@ -314,7 +314,6 @@ class ContextualMenu {
 
 @Component({
 	template: `
-		<layout-header></layout-header>
 		<div class="wrapping__viewport">
 			<contextual-menu></contextual-menu>
 			<div class="wrapping__content">
@@ -322,7 +321,7 @@ class ContextualMenu {
 			</div>
 		</div>
 	`,
-	directives: [RouterLink, RouterOutlet, LayoutHeader, ContextualMenu]
+	directives: [RouterLink, RouterOutlet, ContextualMenu]
 })
 @RouteConfig([
 		{ path: '/', name: 'Templates', component: Templates, useAsDefault: true },

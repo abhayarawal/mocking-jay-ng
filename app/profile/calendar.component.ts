@@ -19,7 +19,7 @@ var range = (x, y): number[] => {
 @Component({
 	selector: 'cal-day',
 	template: `
-		<a [routerLink]="['/ProfileViewport', 'DaySegment', {id: id, month: month, day: day, year: year}]">{{day}}</a>
+		<a [routerLink]="['/ProfileViewport', 'CalendarRouter', {id: id}, 'DaySegment', {month: month, day: day, year: year}]">{{day}}</a>
 	`,
 	directives: [RouterLink],
 	inputs: ['id', 'year', 'month', 'day']

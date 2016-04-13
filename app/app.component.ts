@@ -7,6 +7,7 @@ import {AuthComponent, LogoutComponent} from './auth/auth.component';
 import {TemplateViewport} from './templates/template.component';
 import {SegmentViewport} from './segments/segment.component';
 import {NotificationService, Notification} from './notification.service';
+import {LayoutHeader} from './layouts/header.layout';
 
 import {AuthService} from './auth/auth.service';
 
@@ -52,11 +53,12 @@ class NotificationComponent  implements OnInit {
 	selector: 'mount-node',
 	template: `
 		<div class="app__wrap">
+			<layout-header></layout-header>
 			<router-outlet></router-outlet>
 		</div>
 		<notification-component></notification-component>
 	`,
-	directives: [RouterOutlet, RouterLink, NotificationComponent]
+	directives: [RouterOutlet, RouterLink, LayoutHeader, NotificationComponent]
 })
 @RouteConfig([
 	{ path: '/', name: 'AuthComponent', component: AuthComponent, useAsDefault: true },

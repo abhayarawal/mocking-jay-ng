@@ -438,7 +438,7 @@ $top__height: 40px;
 .app__top
 {
 	background: #fff;
-	padding: 5px 10px 0 10px;
+	padding: 0px 10px 0 10px;
 	
 	.top__left
 	{
@@ -449,6 +449,8 @@ $top__height: 40px;
 		@include mq($brk__lg) {
 			@include col(1.5/5, false);
 		}
+
+		padding-top: 5px;
 
 		div
 		{
@@ -476,6 +478,9 @@ $top__height: 40px;
 		@include mq($brk__lg) {
 			@include col(2/5, false);
 		}
+
+		padding-top: 5px;
+		
 	}
 	
 	.top__right
@@ -674,6 +679,18 @@ $top__height: 40px;
 					a
 					{
 						font-size: 17px;
+						line-height: 25px;
+						display: block;
+						width: 25px;
+						text-align: center;
+
+						@include border-radius(100%);
+
+						&.router-link-active
+						{
+							background: #7A6FF0;
+							color: #fff;
+						}
 					}
 				}
 				
