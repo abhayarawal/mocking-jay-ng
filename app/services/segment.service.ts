@@ -99,6 +99,8 @@ export class SegmentService implements OnInit {
 								}
 							});
 
+							console.log('after', segment);
+
 							delete segment._id;
 							return segment;
 						});

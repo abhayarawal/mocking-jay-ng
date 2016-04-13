@@ -179,10 +179,10 @@ export class LayoutHeader implements OnInit {
 		this.session$ = this.authService.session$;
 		this.session$.subscribe(
 			(response) => {
-				if (!response) {
-					this.user = null;
-				} else {
+				if (response) {
 					this.update();
+				} else {
+					this.user = null;
 				}
 			});
 	}
