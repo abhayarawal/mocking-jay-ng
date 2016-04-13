@@ -7,13 +7,18 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
 
-import {Segment} from '../interfaces/interface';
+import {Segment, UserType} from '../interfaces/interface';
 import {TemplateService} from './template.service';
 import {AuthService} from '../auth/auth.service';
 
 var genId = () => {
 	return Math.random().toString(36).substr(2, 9);
 };
+
+export interface Notification {
+	message: string,
+	type: boolean
+}
 
 
 @Injectable()
@@ -23,10 +28,14 @@ export class SegmentService implements OnInit {
 	segments$: Observable<Segment[]>;
 	private segmentsObserver: Observer<Segment[]>;
 
+	notification$: Observable<Notification>;
+	private notificationObserver: Observer<Notification>;
+
 	templateService: TemplateService;
 	authService: AuthService;
 
 	constructor(
+		private http: Http,
 		@Inject(TemplateService) TemplateService,
 		@Inject(AuthService) AuthService
 	) {
@@ -34,6 +43,8 @@ export class SegmentService implements OnInit {
 		this.authService = AuthService;
 
 		this.segments$ = new Observable<Segment[]>(observer => this.segmentsObserver = observer).share();
+		this.notification$ = new Observable<Notification>(observer => this.notificationObserver = observer).share();
+
 
 		let segments = localStorage.getItem('segments');
 		if (typeof segments !== 'undefined' && segments !== null) {
@@ -44,26 +55,64 @@ export class SegmentService implements OnInit {
 	}
 
 	triggerObserve() {
-		this.segments = this.segments.map((segment) => {
-			this.templateService.getTemplate(segment.template_id).then(template => {
-				segment.template = template;
-			});
-			return segment;
-		});
-		this.segmentsObserver.next(this.segments);
+		// this.segments = this.segments.map((segment) => {
+		// 	this.templateService.getTemplate(segment.template_id).then(template => {
+		// 		segment.template = template;
+		// 	});
+		// 	return segment;
+		// });
+		// this.segmentsObserver.next(this.segments);
 	}
 
 	getSegments(id: string) {
-		return Promise.resolve(
-			this.segments.filter(
-				segment => segment.user_id == id).map(
-					(segment) => {
-						this.templateService.getTemplate(segment.template_id).then(template => {
-							segment.template = template;
+		let templates$ = this.templateService.templates$;
+
+		templates$.subscribe(
+			(templates) => {
+
+				let headers = this.authService.getAuthHeader();
+				this.http.get(`${this.authService.baseUri}/segments/${id}`, {
+					headers: headers,
+				})
+					.map(res => res.json())
+					.subscribe(
+					(response) => {
+						let segments = response.map((segment) => {
+							segment.id = segment._id;
+
+							templates.forEach((template) => {
+								if (template.id == segment._template) {
+									segment.template = template;
+								}
+							});
+
+							delete segment._id;
+							return segment;
 						});
-						return segment;
-			})
-		);
+
+						this.segmentsObserver.next(segments);
+					},
+					err => {
+						this.notificationObserver.next({
+							type: false,
+							message: 'Error connecting to server'
+						})
+					});
+
+			});
+
+		this.templateService.getTemplates(id);
+
+		// return Promise.resolve(
+		// 	this.segments.filter(
+		// 		segment => segment.user_id == id).map(
+		// 			(segment) => {
+		// 				this.templateService.getTemplate(segment.template_id).then(template => {
+		// 					segment.template = template;
+		// 				});
+		// 				return segment;
+		// 	})
+		// );
 	}
 
 	getSegment(id: string) {
@@ -77,20 +126,78 @@ export class SegmentService implements OnInit {
 	}
 
 	addSegment(segment: any) {
-		let segments = localStorage.getItem('segments');
-		if (typeof segments !== 'undefined' && segments !== null) {
-			this.segments.push(segment);
-			localStorage.setItem('segments', JSON.stringify(this.segments));
+		let [sessionExist, session] = this.authService.getSession();
+		if (sessionExist) {
+			if (session.type == UserType.Faculty && session.id) {
+				let authHeader = this.authService.getAuthHeader();
+
+				this.http.post(`${this.authService.baseUri}/segments/`, JSON.stringify(segment), {
+					headers: authHeader
+				})
+					.map(res => res.json())
+					.subscribe(
+					(data) => {
+						console.log(this.notificationObserver);
+						if (data.success) {
+							this.notificationObserver.next({
+								message: 'Template has been saved',
+								type: true
+							});
+						} else {
+							console.log(data.message);
+							this.notificationObserver.next({
+								message: 'Could not save segment',
+								type: false
+							});
+						}
+					},
+					err => {
+						this.notificationObserver.next({
+							message: 'Error connecting to server',
+							type: false
+						});
+					});
+			}
 		}
 	}
 
 	removeSegment(id: string) {
-		let index = this.segments.map(segment => segment.id).indexOf(id);
-		if (index >= 0 && index < this.segments.length) {
-			this.segments.splice(index, 1);
-			localStorage.setItem('segments', JSON.stringify(this.segments));
-			this.triggerObserve();
+		let [sessionExist, session] = this.authService.getSession();
+		if (sessionExist) {
+			let authHeaders = this.authService.getAuthHeader();
+			this.http.delete(`${this.authService.baseUri}/segments/${id}`, {
+				headers: authHeaders
+			})
+				.map(res => res.json())
+				.subscribe(
+				(response) => {
+					if (response.success) {
+						this.notificationObserver.next({
+							type: true,
+							message: 'Segment has been removed'
+						});
+						this.getSegments(session.id);
+					} else {
+						this.notificationObserver.next({
+							type: false,
+							message: 'Could not remove segment'
+						});
+					}
+				},
+				err => {
+					this.notificationObserver.next({
+						type: false,
+						message: 'Error connecting to server'
+					});
+				});
 		}
+
+		// let index = this.segments.map(segment => segment.id).indexOf(id);
+		// if (index >= 0 && index < this.segments.length) {
+		// 	this.segments.splice(index, 1);
+		// 	localStorage.setItem('segments', JSON.stringify(this.segments));
+		// 	this.triggerObserve();
+		// }
 	}
 
 	getSegmentsByRoute(id, month, day, year) {
@@ -99,9 +206,9 @@ export class SegmentService implements OnInit {
 		);
 
 		segments = (segments.map((segment) => {
-			segment.template = this.templateService.getTemplateSync(segment.template_id);
+			segment.template = this.templateService.getTemplateSync(segment._template);
 			return segment;
-		})).filter((segment) => segment.template.user_id == id);
+		})).filter((segment) => segment.template._user == id);
 
 		return Promise.resolve(segments);
 	}
@@ -123,14 +230,14 @@ export class SegmentService implements OnInit {
 		let [_, session] = this.authService.getSession();
 
 		let segment: Segment = {
-			id: genId(),
+			id: "",
 			date: date,
 			start: time,
 			end: time,
 			repeat: false,
 			location: "",
-			template_id: "",
-			user_id: session.id
+			_template: "",
+			_user: session.id
 		};
 
 		return Promise.resolve(segment);

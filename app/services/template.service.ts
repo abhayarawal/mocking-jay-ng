@@ -107,6 +107,7 @@ export class TemplateService implements OnInit {
 								type: true
 							});
 						} else {
+							console.log(data.message);
 							this.notificationObserver.next({
 								message: 'Could not save template',
 								type: false
@@ -170,7 +171,7 @@ export class TemplateService implements OnInit {
 			interval: 15,
 			allow_multiple: false,
 			require_accept: true,
-			user_id: ""
+			_user: ""
 		};
 
 		return Promise.resolve(template);

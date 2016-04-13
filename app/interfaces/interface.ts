@@ -37,19 +37,19 @@ export interface Template {
 	interval: any,
 	allow_multiple: boolean,
 	require_accept: boolean,
-	user_id: string,
+	_user: string,
 	user?: {} 
 }
 
 export interface Segment {
 	id: string,
-	template_id: string,
+	_template: string,
 	template?: Template,
 	date: Date,
 	start: Time,
 	end: Time,
 	repeat: boolean,
-	user_id: string,
+	_user: string,
 	repeat_until?: Date,
 	repeat_days?: [number],
 	instance_of?: string,

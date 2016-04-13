@@ -20,6 +20,12 @@ import {CalendarSelectElm} from '../form/calendar.form.component';
 // TOO MUCH MONKEY PATCHING ..... FIX IT!!!!!
 // CHECK IF TEMPLATES ARE EMPTY!!
 
+export interface Notification {
+	message: string,
+	type: boolean
+}
+
+
 @Component({
 	selector: 'mj-radio',
 	template: `
@@ -211,6 +217,8 @@ class SegmentCreate implements OnInit {
 	templates: SelectObject[] = [];
 	templates$: Observable<Template[]>;
 
+	notification$: Observable<Notification>;
+
 	timeOfDay: SelectObject[] = [
 		{ value: TimeOfDay.AM, text: 'AM' },
 		{ value: TimeOfDay.PM, text: 'PM' }
@@ -243,7 +251,7 @@ class SegmentCreate implements OnInit {
 	}
 
 	updateTemplate(event: string) {
-		this.segment.template_id = event;
+		this.segment._template = event;
 	};
 
 	updateDate([month, day, year]: [number, number, number]) {
@@ -284,15 +292,26 @@ class SegmentCreate implements OnInit {
 
 	ngOnInit() {
 		let [_, session] = this.authService.getSession();
-		this.templateService.getTemplates(session.id).then(
-			templates => this.templates = templates.map(
-				(template) => {
-					return { value: template.id, text: template.name }
-				}));
 
+		this.notification$ = this.segmentService.notification$;
+		this.notification$.subscribe(
+			(data) => {
+				let {message, type} = data;
+				this.notificationService.notify(message, true, !type);
+			}
+		);
 
+		this.templates$ = this.templateService.templates$;
+		this.templates$.subscribe(
+			(response) => {
+				this.templates = response.map(
+					(template) => {
+						return { value: template.id, text: template.name }
+					});
+			});
 
 		this.segmentService.getNewSegment().then(segment => this.segment = segment);
+		this.templateService.getTemplates(session.id);
 	}
 
 	get formatted() {
@@ -331,6 +350,7 @@ class Segments implements OnInit {
 
 	segments: Segment[];
 	segments$: Observable<Segment[]>;
+	notification$: Observable<Notification>;
 	templates: Template[];
 
 	constructor(
@@ -343,12 +363,26 @@ class Segments implements OnInit {
 
 	ngOnInit() {
 		let [_, session] = this.authService.getSession();
-		this.segmentService.getSegments(session.id).then(segments => this.segments = segments);
+
+		this.notification$ = this.segmentService.notification$;
+		this.notification$.subscribe(
+			(data) => {
+				let {message, type} = data;
+				this.notificationService.notify(message, true, !type);
+			}
+		);
+		
+		this.segments$ = this.segmentService.segments$;
+		this.segments$.subscribe(
+			(response) => {
+				this.segments = response;
+			});
+
+		this.segmentService.getSegments(session.id);
 	}
 
 	remove(id: string) {
 		this.segmentService.removeSegment(id);
-		this.notificationService.notify("Removed segment", true, true);
 	}
 }
 

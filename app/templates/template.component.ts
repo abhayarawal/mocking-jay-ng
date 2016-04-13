@@ -210,6 +210,9 @@ class TemplateCreate implements OnInit {
 			(data) => {
 				let {message, type} = data;
 				this.notificationService.notify(message, true, !type);
+				if (type) {
+					this.router.navigateByUrl('/templates');
+				}
 			}
 		)
 	}
@@ -218,7 +221,7 @@ class TemplateCreate implements OnInit {
 		if (this.templateForm.valid) {
 			this.templateService.addTemplate(this.template);
 		} else {
-			this.notificationService.notify("template form invalid", true, true);
+			this.notificationService.notify("Template form not valid", true, true);
 		}
 	}
 
@@ -285,7 +288,6 @@ class Templates implements OnInit {
 
 	remove(id: string) {
 		this.templateService.removeTemplate(id);
-		this.notificationService.notify("Template has been removed", true, true);
 	}
 
 	flush() {
