@@ -377,6 +377,8 @@ class Segments implements OnInit {
 			(response) => {
 				this.segments = response;
 			});
+
+		this.segmentService.getSegments(session.id);
 	}
 
 	remove(id: string) {

@@ -87,8 +87,8 @@ export class SegmentService implements OnInit {
 				this.http.get(uri, {
 					headers: headers,
 				})
-				.map(response => response.json())
-				.subscribe(
+					.map(response => response.json())
+					.subscribe(
 					(response) => {
 						let segments = response.map((segment) => {
 							segment.id = segment._id;
