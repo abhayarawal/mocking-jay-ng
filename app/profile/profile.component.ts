@@ -313,6 +313,8 @@ class CalendarRouter implements OnInit, OnActivate {
 	{ path: '/:id/...', name: 'CalendarRouter', component: CalendarRouter }
 ])
 export class ProfileViewport {
+	constructor() {
+	}
 }
 
 

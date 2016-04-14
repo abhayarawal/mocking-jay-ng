@@ -312,16 +312,18 @@ class DayComponent implements OnInit {
 	selector: 'fragment-message',
 	template: `
 		<div *ngIf="fragment" class="message__wrap">
-			<div *ngIf="fragment.message">
+			<div *ngIf="fragment.messages">
 				<label>Message:</label>
-				<div class="message">
-					<span class="icon-message"></span>
-					{{fragment.message}}
+				<div *ngFor="#msg of fragment.messages">
+					<div class="response">
+						<span class="icon-message"></span>
+						{{msg}}
+					</div>
 				</div>
 			</div>
-			<div *ngIf="fragment.response">
+			<div *ngIf="fragment.responses">
 				<label>Response:</label>
-				<div *ngFor="#res of fragment.response">
+				<div *ngFor="#res of fragment.responses">
 					<div class="response">
 						<span class="icon-messages"></span>
 						{{res}}
@@ -411,7 +413,10 @@ class FragmentContextStudent implements OnInit {
 	@Input() fragment: Fragment;
 	@Input() user: User;
 
-	message: string;
+	message: string = "";
+	notification$: Observable<Notification>;
+	user$: Observable<User>;
+	fragment$: Observable<FragmentResponse>;
 
 	notify_select: SelectObject[] = [
 		{ value: 10, text: '10 min' },
@@ -433,18 +438,6 @@ class FragmentContextStudent implements OnInit {
 	}
 
 	cancel() {
-		// if (!('history' in this.fragment)) {
-		// 	this.fragment.history = [];
-		// }
-
-		// this.fragment.history.push(this.fragment);
-		// this.fragment.user_id = "";
-		// this.fragment.message = "";
-		// this.fragment.response = [];
-		// this.fragment.status = Status.default;
-
-		// this.fragment.status = Status.default;
-		// this.notificationService.notify("Appointment canceled", true, true);
 	}
 
 	create() {
@@ -454,13 +447,31 @@ class FragmentContextStudent implements OnInit {
 			this.fragment.status = Status.approved;
 		}
 
-		// this.fragment.message = this.message;
-		this.fragment._user = this.user.id;
-		this.fragmentService.addFragment(this.fragment);
+		if (!('messages' in this.fragment)) {
+			this.fragment.messages = [];
+		}
 
-		this.notificationService.notify(`
-			Appointment created for ${this.fragment.segment.template.name} at ${this.fragment.start.hour}:${this.fragment.start.minute}
-		`, true, false);
+		if (this.message.trim().length > 0) {
+			this.fragment.messages.push(this.message.trim());
+		}
+
+		this.fragmentService.updateFragment(this.fragment);
+
+		this.notification$ = this.fragmentService.notification$;
+		this.notification$.subscribe(
+			(response) => {
+				this.notificationService.notify(response.message, true, !response.type);
+			});
+
+		this.fragment$ = this.fragmentService.fragment$;
+		this.fragment$.subscribe(
+			(response: FragmentResponse) => {
+				if (this.fragment.id == response.id) {
+					if ('fragment' in response) {
+						this.fragment = response.fragment;
+					}
+				}
+			});
 
 		this.message = '';
 	}
@@ -634,15 +645,13 @@ class FragmentContextFaculty implements OnInit {
 		}
 	}
 
-	update(status: Status, response: boolean = false) {
-		if (!response) {
-			if (!('response' in this.fragment)) {
-				this.fragment.response = [];
-			}
+	update(status: Status) {
+		if (!('responses' in this.fragment)) {
+			this.fragment.responses = [];
+		}
 
-			if (this.response.trim().length > 0) {
-				this.fragment.response.push(this.response.trim());
-			}
+		if (this.response.trim().length > 0) {
+			this.fragment.responses.push(this.response.trim());
 		}
 
 		let fragment = this.fragment;

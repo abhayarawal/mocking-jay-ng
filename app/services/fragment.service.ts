@@ -83,7 +83,7 @@ export class FragmentService {
 	}
 
 	addFragment(fragment: Fragment) {
-		let { id, date, start, end, _segment, status, message, history } = fragment;
+		let { id, date, start, end, _segment, status, messages, responses, history } = fragment;
 
 		let packet = {
 			date: date,
@@ -91,7 +91,8 @@ export class FragmentService {
 			end: end,
 			_segment: _segment,
 			status: status,
-			message: message,
+			messages: messages,
+			responses: responses,
 			history: history
 		};
 
@@ -106,7 +107,7 @@ export class FragmentService {
 				if (response.success) {
 					this.notificationObserver.next({
 						type: true,
-						message: "Fragment has been updated"
+						message: "Fragment has been created and updated"
 					});
 
 					let fg = response.payload;
@@ -144,6 +145,17 @@ export class FragmentService {
 				.subscribe(
 					(response: any) => {
 						console.log(response);
+						if (response.success) {
+							this.notificationObserver.next({
+								type: true,
+								message: "Fragment has been updated"
+							});
+						} else {
+							this.notificationObserver.next({
+								type: false,
+								message: "Sorry, something went wrong"
+							});
+						}
 					});
 		}
 
