@@ -21,11 +21,21 @@ var genId = () => {
 	return Math.random().toString(36).substr(2, 9);
 };
 
+export interface FragmentResponse {
+	id: string,
+	fragment: Fragment
+}
 
 @Injectable()
 export class FragmentService {
 	notification$: Observable<Notification>;
-	private observer: Observer<Notification>;
+	private notificationObserver: Observer<Notification>;
+
+	fragments$: Observable<Fragment[]>;
+	private fragmentsObserver: Observer<Fragment[]>;
+
+	fragment$: Observable<FragmentResponse>;
+	private fragmentObserver: Observer<FragmentResponse>;
 
 	authService: AuthService;
 	segmentService: SegmentService;
@@ -39,30 +49,19 @@ export class FragmentService {
 	) {
 		this.segmentService = SegmentService;
 		this.authService = AuthService;
-		this.notification$ = new Observable<Notification>(observer => this.observer = observer).share();
 
-		let fragments = localStorage.getItem('fragments');
-		if (typeof fragments !== 'undefined' && fragments !== null) {
-			this.fragments = JSON.parse(fragments);
-		} else {
-			localStorage.setItem('fragments', JSON.stringify([]));
-		}
+		this.notification$ = new Observable<Notification>(observer => this.notificationObserver = observer).share();
+		this.fragments$ = new Observable<Fragment[]>(observer => this.fragmentsObserver = observer).share();
+		this.fragment$ = new Observable<FragmentResponse>(observer => this.fragmentObserver = observer).share();
 	}
 
-	getFragments(segment, month, day, year) {
-		let fragments = this.fragments
-			.filter((fragment) =>
-					fragment.segment_id == segment.id && fragment.date.month == month && fragment.date.day == day && fragment.date.year == year)
-			.map((fragment) => {
-				fragment.segment = segment;
-				return fragment;
-		});
-
-		// this.fragments.forEach((f, i) => {
-		// 	console.log(f.segment_id == segment.id, f.segment_id, segment.id);
-		// });
-
-		return Promise.resolve(fragments);
+	getFragments(segment) {
+		return this.http.get(
+			`${this.authService.baseUri}/fragments/${segment.id}`,
+			{ headers: this.authService.getAuthHeader() }
+		)
+			.map(res => res.json())
+			.toPromise();
 	}
 
 	merge(frags1: Fragment[], frags2: Fragment[]): Fragment[] {
@@ -70,7 +69,9 @@ export class FragmentService {
 			let fg: Fragment = fragment;
 			for (var i = frags2.length - 1; i >= 0; i--) {
 				let tmp = frags2[i];
-				if (tmp.start.hour == fragment.start.hour && fragment.start.minute == tmp.start.minute && fragment.segment_id == tmp.segment_id) {
+				if (tmp.start.hour == fragment.start.hour 
+						&& fragment.start.minute == tmp.start.minute 
+						&& fragment._segment == tmp._segment) {
 					fg = tmp;
 					break;
 				}
@@ -82,29 +83,78 @@ export class FragmentService {
 	}
 
 	addFragment(fragment: Fragment) {
-		let {id, date, start, end, segment_id, status, user_id, message, history} = fragment;
-		this.fragments.push({
-			id: id,
+		let { id, date, start, end, _segment, status, message, history } = fragment;
+
+		let packet = {
 			date: date,
 			start: start,
 			end: end,
-			segment_id: segment_id,
+			_segment: _segment,
 			status: status,
-			user_id: user_id,
 			message: message,
 			history: history
-		});
-		localStorage.setItem('fragments', JSON.stringify(this.fragments));
+		};
+
+		this.http.post(
+			`${this.authService.baseUri}/fragments/`,
+			JSON.stringify(packet),
+			{ headers: this.authService.getAuthHeader() })
+		.map(res => res.json())
+		.subscribe(
+			(response: any) => {
+				console.log(response);
+				if (response.success) {
+					this.notificationObserver.next({
+						type: true,
+						message: "Fragment has been updated"
+					});
+
+					let fg = response.payload;
+					fg.id = fg._id;
+					delete fg._id;
+					fg.segment = fragment.segment;
+
+					this.fragmentObserver.next({
+						id: id,
+						fragment: fg
+					});
+
+				} else {
+					this.notificationObserver.next({
+						type: false,
+						message: "Sorry, something went wrong"
+					});
+					this.fragmentObserver.next({
+						id: id,
+						fragment: fragment
+					});
+				}
+			});
 	}
 
-	updateFragment(fragment: Fragment): [boolean, Fragment] {
-		let index = this.fragments.map(f => f.id).indexOf(fragment.id);
-		if (index >= 0 && index < this.fragments.length) {
-			this.fragments[index] = fragment;
-			localStorage.setItem('fragments', JSON.stringify(this.fragments));
-			return [true, fragment];
+	updateFragment(fragment: Fragment) {
+		if ('persistent' in fragment) {
+			this.addFragment(fragment);
+		} else {
+			this.http.put(
+				`${this.authService.baseUri}/fragments/${fragment.id}`,
+				JSON.stringify(fragment),
+				{ headers: this.authService.getAuthHeader() })
+				.map(res => res.json())
+				.subscribe(
+					(response: any) => {
+						console.log(response);
+					});
 		}
-		return [false, fragment];
+
+		// let index = this.fragments.map(f => f.id).indexOf(fragment.id);
+		// if (index >= 0 && index < this.fragments.length) {
+		// 	this.fragments[index] = fragment;
+		// 	localStorage.setItem('fragments', JSON.stringify(this.fragments));
+		// 	return [true, fragment];
+		// }
+		// return [false, fragment];
+		
 	}
 
 	genFragments (segment: Segment): Fragment[] {
@@ -147,7 +197,8 @@ export class FragmentService {
 				},
 				status: Status.default,
 				segment: segment,
-				segment_id: segment.id
+				_segment: segment.id,
+				persistent: true
 			});
 		}
 
@@ -163,20 +214,20 @@ export class FragmentService {
 					date: fragment.date,
 					start: fragment.start,
 					end: fragment.end,
-					segment_id: fragment.segment_id,
+					segment_id: fragment._segment,
 					status: Status.unavailable,
 					segment: fragment.segment
 				}
 
 				if (fragment.status !== Status.default) {
 					if (session.type == UserType.Faculty) {
-						if (session.id == sg.user_id) {
+						if (session.id == sg._user) {
 							return fragment;
 						} else {
 							return unavailable;
 						}
 					} else {
-						if (session.id == fragment.user_id) {
+						if (session.id == fragment._user) {
 							return fragment;
 						} else {
 							return unavailable;

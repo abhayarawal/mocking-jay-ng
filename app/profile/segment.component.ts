@@ -11,7 +11,7 @@ import {CalendarService, MonthPipe, WeekPipe, WeekFullPipe} from './calendar.ser
 import {Time, Template, Segment, Status, Fragment, User, UserType} from '../interfaces/interface';
 
 import {UserService} from '../services/user.service';
-import {FragmentService} from '../services/fragment.service';
+import {FragmentService, FragmentResponse} from '../services/fragment.service';
 import {SegmentService} from '../services/segment.service';
 import {RouterService} from '../services/router.service';
 import {Notification, NotificationService} from '../notification.service';
@@ -145,10 +145,12 @@ class FragmentComponent implements OnInit {
 		<div class="segment" *ngIf="segment">
 			<h3 class="segment__title">
 				<span>{{ segment.template.name }}</span>
-				{{fragments[0] | timePipe:false}} - {{fragments[fragments.length-1] | timePipe:true}}
+				<div *ngIf="fragments.length > 0">
+					{{fragments[0] | timePipe:false}} - {{fragments[fragments.length-1] | timePipe:true}}
+				</div>
 			</h3>
-			<div class="fragments">
-				<ul *ngIf="fragments">
+			<div class="fragments" *ngIf="fragments">
+				<ul>
 					<fragment-component *ngFor="#fragment of fragments" [fragment]="fragment"></fragment-component>
 				</ul>
 			</div>
@@ -160,12 +162,14 @@ class FragmentComponent implements OnInit {
 })
 class SegmentComponent implements OnInit {
 	@Input() segment: Segment;
-	fragments: Fragment[];
+	fragments: Fragment[] = [];
+
+	fragments$: Observable<Fragment[]>;
 
 	constructor(
 		private fragmentService: FragmentService,
 		private routeParams: RouteParams,
-		private calendarService: CalendarService,
+		private calendarService: CalendarService
 	) {}
 
 	ngOnInit() {
@@ -177,11 +181,23 @@ class SegmentComponent implements OnInit {
 				month = date.getMonth(),
 				year = date.getFullYear();
 
-		this.fragmentService.getFragments(this.segment, month, day, year).then(
-			(fragments) => {
-				this.fragments = this.fragmentService.validateFragments(
-					this.fragmentService.merge(this.fragments, fragments), this.segment);
+		this.fragmentService.getFragments(this.segment).then((fragments) => {
+			let fgs = fragments.map((fragment) => {
+				fragment.id = fragment._id;
+				fragment.segment = this.segment;
+				delete fragment._id;
+				return fragment;
 			});
+			this.fragments = this.fragmentService.merge(this.fragments, fgs);
+		});
+
+		// this.fragmentService.getFragments(this.segment);
+
+		// this.fragmentService.getFragments(this.segment, month, day, year).then(
+		// 	(fragments) => {
+		// 		this.fragments = this.fragmentService.validateFragments(
+		// 			this.fragmentService.merge(this.fragments, fragments), this.segment);
+		// 	});
 	}
 }
 
@@ -438,8 +454,8 @@ class FragmentContextStudent implements OnInit {
 			this.fragment.status = Status.approved;
 		}
 
-		this.fragment.message = this.message;
-		this.fragment.user_id = this.user.id;
+		// this.fragment.message = this.message;
+		this.fragment._user = this.user.id;
 		this.fragmentService.addFragment(this.fragment);
 
 		this.notificationService.notify(`
@@ -474,6 +490,7 @@ class FragmentProfile {
 	selector: 'fragment-context-faculty',
 	template: `
 		<div class="fragment__ctx">
+			{{fragment.id}}
 			<h3 class="ctx__head">
 				{{fragment.segment.template.name}}
 			</h3>
@@ -567,7 +584,9 @@ class FragmentContextFaculty implements OnInit {
 	template_user: User;
 	response: string = '';
 
+	notification$: Observable<Notification>;
 	user$: Observable<User>;
+	fragment$: Observable<FragmentResponse>;
 
 	notify_select: SelectObject[] = [
 		{ value: 10, text: '10 min' },
@@ -587,6 +606,21 @@ class FragmentContextFaculty implements OnInit {
 	}
 
 	ngOnInit() {
+		this.notification$ = this.fragmentService.notification$;
+		this.notification$.subscribe(
+			(response) => {
+				this.notificationService.notify(response.message, true, !response.type);
+			});
+
+		this.fragment$ = this.fragmentService.fragment$;
+		this.fragment$.subscribe(
+			(response : FragmentResponse) => {
+				if (this.fragment.id == response.id) {
+					if ('fragment' in response) {
+						this.fragment = response.fragment;
+					}
+				}
+			});
 	}
 
 	ngOnChanges() {
@@ -595,12 +629,12 @@ class FragmentContextFaculty implements OnInit {
 			(user) => {
 				this.template_user = user;
 			});
-		if (this.fragment.user_id) {
-			this.userService.getUser(this.fragment.user_id);
+		if (this.fragment._user) {
+			this.userService.getUser(this.fragment._user);
 		}
 	}
 
-	update(status: Status, message: string, response: boolean = false) {
+	update(status: Status, response: boolean = false) {
 		if (!response) {
 			if (!('response' in this.fragment)) {
 				this.fragment.response = [];
@@ -611,79 +645,32 @@ class FragmentContextFaculty implements OnInit {
 			}
 		}
 
-		this.fragment.status = status;
-		let [done, fragment] = this.fragmentService.updateFragment(this.fragment);
-		this.fragment = fragment;
-		if (done) {
-			this.notificationService.notify(`Appointment ${message}`, true);
-		}
+		let fragment = this.fragment;
+		fragment.status = status;
+		this.fragmentService.updateFragment(fragment);
 
 		this.response = '';
 	}
 
-	history(status: Status) {
-		if (!('response' in this.fragment)) {
-			this.fragment.response = [];
-		}
-
-		if (this.response.trim().length > 0) {
-			this.fragment.response.push(this.response.trim());
-		}
-
-		let fragment: Fragment = {
-			id: this.fragment.id,
-			date: this.fragment.date,
-			start: this.fragment.start,
-			end: this.fragment.end,
-			segment_id: this.fragment.segment_id,
-			user_id: "",
-			segment: this.fragment.segment,
-			message: "",
-			status: Status.default,
-			response: []
-		}
-
-		this.fragment.status = status;
-
-		if (!('history' in this.fragment)) {
-			fragment.history = [];
-		} else {
-			fragment.history = this.fragment.history;
-		}
-
-		delete this.fragment.history;
-		fragment.history.push(this.fragment);
-		// this.fragment = fragment;
-	}
 
 	deny() {
-		// this.history(Status.denied);
-		this.update(Status.denied, 'denied', false);
+		this.update(Status.denied);
 	}
 
 	cancel() {
-		// this.history(Status.cancelled);
-		this.update(Status.cancelled, 'cancelled', false);
+		this.update(Status.cancelled);
 	}
 
 	approve() {
-		this.update(Status.approved, 'approved');
+		this.update(Status.approved);
 	}
 
 	open() {
-		this.update(Status.default, 'opened for everyone');
+		this.update(Status.default);
 	}
 
 	block() {
-		if ('user_id' in this.fragment) {
-			if (this.fragment.user_id.length > 0) {
-				this.update(Status.blocked, 'blocked');
-			}
-		} else {
-			this.fragment.status = Status.blocked;
-			this.fragmentService.addFragment(this.fragment);
-			this.notificationService.notify("Time interval blocked", true);
-		}
+		this.update(Status.blocked);
 	}
 }
 
@@ -715,12 +702,13 @@ class FragmentContext implements OnInit {
 		private segmentViewService:SegmentViewService,
 		private routeParams: RouteParams,
 		private notificationService: NotificationService,
-		private calendarService: CalendarService
+		private calendarService: CalendarService,
+		private routerService: RouterService
 	){
 	}
 
 	ngOnInit() { 
-		let [uid, _] = this.calendarService.getRouteParams();
+		let uid = this.routerService.UserId;
 
 		this.observable = this.segmentViewService.contextObservable$;
 		this.observable.subscribe(

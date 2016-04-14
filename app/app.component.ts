@@ -68,17 +68,17 @@ class NotificationComponent  implements OnInit {
 	{ path: '/segments/...', name: 'SegmentViewport', component: SegmentViewport }
 ])
 export class MountNode {
-	// constructor(
-	// 	private router: Router,
-	// 	private authService: AuthService
-	// ){}
+	constructor(
+		private router: Router,
+		private authService: AuthService
+	){}
 
-	// ngOnInit() {
-	// 	let [tokenExists, _] = this.authService.tokenExists();
-	// 	if (!tokenExists) {
-	// 		this.router.navigateByUrl('/');
-	// 	}
-	// }
+	ngOnInit() {
+		let [tokenExists, _] = this.authService.tokenExists();
+		if (!tokenExists) {
+			this.router.navigateByUrl('/');
+		}
+	}
 }
 
 

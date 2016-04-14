@@ -81,14 +81,15 @@ export interface Fragment {
 	date: Date,
 	start: Time,
 	end: Time,
-	segment_id: string,
-	user_id?: string,
+	_segment: string,
+	_user?: string,
 	segment?: Segment,
-	message?: string,
+	message?: string[],
 	status?: Status,
 	response?: string[],
 	instance_id?: string,
-	history?: Fragment[]
+	history?: Fragment[],
+	persistent?: boolean
 }
 
 

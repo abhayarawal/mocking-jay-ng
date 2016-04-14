@@ -213,7 +213,9 @@ class None implements OnInit{
 
 	constructor(
 		private userService: UserService,
-		private routeParams: RouteParams
+		private routeParams: RouteParams,
+		private router: Router,
+		private authService: AuthService
 	) { }
 
 	ngOnInit() {
@@ -255,13 +257,6 @@ class DaySegment implements OnInit {
 		this.day = date.getDate(),
 		this.month = date.getMonth(),
 		this.year = date.getFullYear();
-
-		// this.user$ = this.userService.user$;
-		// this.user$.subscribe(
-		// 	(user) => {
-		// 		this.user = user;
-		// 	});
-		// this.userService.getUser(id);
 	}
 }
 
