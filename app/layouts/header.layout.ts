@@ -85,7 +85,7 @@ class SearchBox implements OnInit {
 		this.searchResults = [
 			{
 				type: SearchType.User, obj: {
-					id: '570d420c2d151a6c05377a1b', fname: "John", lname: "Doe", email: "john.doe@google.com",
+					id: '571042bac49d06d536f49738', fname: "John", lname: "Doe", email: "john.doe@google.com",
 					meta: {
 						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-03-20_at_4.35.11_PM.png?3896038397320089616"
 					}
@@ -93,7 +93,7 @@ class SearchBox implements OnInit {
 			},
 			{
 				type: SearchType.User, obj: {
-					id: "570d428c71e3c07b05273552", fname: "Taylor", lname: "Swift", email: "taylor.swift@google.com",
+					id: "571042fcf09005e43602ef39", fname: "Taylor", lname: "Swift", email: "taylor.swift@google.com",
 					meta: {
 						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-02-18_at_3.11.09_PM.png?5003393221482762451"
 					}
@@ -101,7 +101,7 @@ class SearchBox implements OnInit {
 			},
 			{
 				type: SearchType.User, obj: {
-					id: "570d42c28fd425820557ed99", fname: "Jane", lname: "Douglas", email: "jane.douglas@outsidexbox.com",
+					id: "571042732e85f0c736ea83c3", fname: "Jane", lname: "Douglas", email: "jane.douglas@outsidexbox.com",
 					meta: {
 						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/lady.png?8325253379137164394"
 					}
@@ -109,7 +109,7 @@ class SearchBox implements OnInit {
 			},
 			{
 				type: SearchType.User, obj: {
-					id: "570d425b5df05b74054b6087", fname: "Evie", lname: "Frye", email: "evie.frye@ubi.com", type: UserType.Faculty,
+					id: "571042e34c682edc367747ec", fname: "Evie", lname: "Frye", email: "evie.frye@ubi.com", type: UserType.Faculty,
 					meta: {
 						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/lady2.png?18444122143504349695"
 					}
@@ -158,7 +158,7 @@ export class LayoutHeader implements OnInit {
 		{ location: ['/AuthComponent'], lnr: 'cog', text: 'Preferences' },
 	]
 
-	navs: Object[];
+	navs: any = [];
 
 	update() {
 		let [sessionExists, session] = this.authService.getSession();

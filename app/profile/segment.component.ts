@@ -639,7 +639,9 @@ class FragmentContextFaculty implements OnInit {
 		this.user$ = this.userService.user$;
 		this.user$.subscribe(
 			(user) => {
-				this.template_user = user;
+				if (this.fragment._user == user.id) {
+					this.template_user = user;
+				}
 			});
 		if (this.fragment._user) {
 			this.userService.getUser(this.fragment._user);

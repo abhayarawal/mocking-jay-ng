@@ -300,6 +300,7 @@ class CalendarRouter implements OnInit, OnActivate {
   }
 
 	ngOnInit() {
+		// using promises for now instead of observables
 		this.userService.getUserPromise(this.routeParams.get('id')).then(response => {
 			if (response.success) {
 				let usr = response.payload;
