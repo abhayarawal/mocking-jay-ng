@@ -342,6 +342,7 @@ class FragmentMessage {
 	selector: 'fragment-context-student',
 	template: `
 		<div class="fragment__ctx">
+			{{fragment.id}}
 			<h3 class="ctx__head">
 				{{fragment.segment.template.name}}
 			</h3>

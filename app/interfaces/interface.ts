@@ -13,9 +13,9 @@ export interface User {
 }
 
 export interface Faculty {
-	id: string,
-	user_id: string,
-	faculty_id: string
+	_id: string,
+	_user: string,
+	_faculty: string
 }
 
 export interface Date {

@@ -15,7 +15,7 @@ import {UserService} from '../services/user.service';
 import {CalendarService} from './calendar.service';
 import {SegmentViewport} from './segment.component';
 import {FacultyService} from '../services/faculty.service';
-import {NotificationService} from '../notification.service';
+import {NotificationService, Notification} from '../notification.service';
 import {RouterService} from '../services/router.service';
 
 
@@ -88,15 +88,15 @@ class ProfileContext implements OnInit {
 @Component({
 	selector: 'profile-nav',
 	template: `
-		<div class="profile__nav">
-			<div class="profile__card" *ngIf="user">
+		<div class="profile__nav" *ngIf="user">
+			<div class="profile__card">
 				<img src="{{user.meta?.avatar}}" />
 				<h3>
 					{{user.fname}} {{user.lname}}
 				</h3>
 				<div class="profile__mail"><a href="mailto:{{user.email}}">{{user.email}}</a></div>
 				<ul>
-					<li *ngIf="type==0 && user.type!=0">
+					<li *ngIf="session.id!==user.id">
 						<a class="lnr lnr-pushpin" (click)="togglePin()" [ngClass]="{pinned: pinned}"></a>
 					</li>
 					<li><a class="lnr lnr-license"></a></li>
@@ -104,11 +104,11 @@ class ProfileContext implements OnInit {
 					<li><a href="" class="lnr lnr-download"></a></li>
 				</ul>
 			</div>
-			<calendar [id]="user.id" *ngIf="user"></calendar>
-			<div class="faculty__list" *ngIf="user">
-				<ul *ngIf="type==0 && users">
+			<calendar [id]="user.id"></calendar>
+			<div class="faculty__list">
+				<ul *ngIf="users">
 					<li *ngFor="#usr of users">
-						<a [routerLink]="['/ProfileViewport', 'Calendar', {id: usr.id}]">
+						<a [routerLink]="['/ProfileViewport', 'CalendarRouter', {id: usr.id}]">
 							<img src="{{usr.meta?.avatar}}" alt="" />
 							<section>
 								<span>{{usr.fname}} {{usr.lname}}</span>
@@ -129,10 +129,12 @@ class ProfileNav implements OnInit {
 	month: String = '';
 	year: String = '';
 
-	type: UserType;
 	pinned: boolean;
 	users: User[];
+	session: User;
+
 	observable: Observable<Faculty[]>;
+	notification$: Observable<Notification>;
 
 	constructor(
 		private authService: AuthService,
@@ -143,40 +145,50 @@ class ProfileNav implements OnInit {
 	) { }
 
 	ngOnInit() {
+		let [_, session] = this.authService.getSession();
+		this.session = session;
+
 		let day = new Date();
 		this.day = `${day.getDate()}`;
 		this.month = `${day.getMonth()}`;
 		this.year = `${day.getFullYear()}`;
 
+		this.notification$ = this.facultyService.notification$;
+		this.notification$.subscribe(
+			(response) => {
+				this.notificationService.notify(response.message, true, !response.type);
+			});
+
 		this.observable = this.facultyService.observable$;
 		this.observable.subscribe(
 			(faculties) => {
+				let [pinned, _] = this.facultyService.inFaculty(this.user);
+				this.pinned = pinned;
+
 				this.users = [];
 				faculties.forEach(faculty => {
-					this.userService.getUser(faculty.faculty_id).then(
-						user => { this.users.push(user); });
+					this.userService.getUserPromise(faculty._faculty).then(
+						response => { 
+							if (response.success) {
+								let usr = response.payload;
+								usr.id = usr._id;
+								delete usr._id;
+								this.users.push(usr);
+							}
+						});
 				});
 			}
 		);
-
-		let [_, session] = this.authService.getSession();
-		this.type = session.type;
-
-		this.facultyService.triggerObservable();
 	}
 
 	togglePin() {
-		this.pinned = this.facultyService.toggleFaculty(this.user);
-		if (this.pinned) {
-			this.notificationService.notify('Faculty added to your list', true);
-		} else {
-			this.notificationService.notify('Faculty removed from your list', true, true);
-		}
+		this.facultyService.toggleFaculty(this.user);
 	}
 
 	ngOnChanges() {
 		if (this.user) {
-			this.pinned = this.facultyService.inFaculty(this.user);
+			console.log(this.user.email);
+			this.facultyService.getFaculties();
 		}
 	}
 }
@@ -288,13 +300,14 @@ class CalendarRouter implements OnInit, OnActivate {
   }
 
 	ngOnInit() {
-		this.user$ = this.userService.user$;
-		this.user$.subscribe(
-			(user) => {
-				this.user = user;
-			});
-
-		this.userService.getUser(this.routeParams.get('id'));
+		this.userService.getUserPromise(this.routeParams.get('id')).then(response => {
+			if (response.success) {
+				let usr = response.payload;
+				usr.id = usr._id;
+				delete usr._id;
+				this.user = usr;
+			}
+		});
 	}
 }
 

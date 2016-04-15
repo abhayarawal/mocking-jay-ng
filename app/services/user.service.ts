@@ -34,6 +34,15 @@ export class UserService {
 		this.user$ = new Observable<User>(observer => this.userObserver = observer).share();
 	}
 
+	getUserPromise(uid: string = null) {
+		let headers = this.authService.getAuthHeader();
+		return this.http.get(`${this.authService.baseUri}/users/${uid}`, {
+			headers: headers,
+		})
+			.map(res => res.json())
+			.toPromise();
+	}
+
 	getUser(uid: string = null) {
 		if (uid) {
 			
@@ -57,7 +66,6 @@ export class UserService {
 						user.id = user._id;
 						delete user._id;
 
-						// this.user
 						this.userObserver.next(user);
 					}
 				});
