@@ -88,9 +88,7 @@ export class FragmentService {
 		delete fg._id;
 
 		if (this.fragmentObserver) {
-			console.log("fragmentObserver!!!");
 			if (!this.fragmentObserver.isUnsubscribed) {
-				console.log("fragmentObserver SUBs!!!");
 				this.fragmentObserver.next({
 					id: fid,
 					fragment: fg

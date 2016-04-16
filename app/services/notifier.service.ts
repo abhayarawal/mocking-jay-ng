@@ -67,16 +67,21 @@ export class NotifierService {
 				encrypted: true
 			});
 
-			console.log(`Pusher channel at ${session.id}`);
-
 			let channel = this.pusher.subscribe(`${session.id}`);
 
 			channel.bind('fragment', (data) => {
 				this.notifierObserver.next(data.message);
-				console.log(data);
+			});
+
+
+			let fragmentChannel = this.pusher.subscribe(`fragments`);
+
+			fragmentChannel.bind('fragment', (data) => {
 				if ('payload' in data) {
 					let fragment = data.payload;
-					fragment._user = fragment._user._id;
+					if ('_user' in fragment) {
+						fragment._user = fragment._user._id;
+					}
 					fragment._segment = fragment._segment._id;
 					this.fragmentService.notifyFragment(data.fid, fragment);
 				}
