@@ -449,6 +449,18 @@ class FragmentContextStudent implements OnInit {
 		private notificationService: NotificationService,
 		private fragmentService: FragmentService
 	) {
+		this.fragment$ = this.fragmentService.fragment$;
+		this.fragment$.subscribe(
+			(response: FragmentResponse) => {
+				if (this.fragment.id == response.id) {
+					if ('fragment' in response) {
+						if (!('segment' in response.fragment)) {
+							response.fragment.segment = this.fragment.segment;
+						}
+						this.fragment = response.fragment;
+					}
+				}
+			});
 	}
 
 	ngOnInit() {
@@ -478,19 +490,6 @@ class FragmentContextStudent implements OnInit {
 		this.notification$.subscribe(
 			(response) => {
 				this.notificationService.notify(response.message, true, !response.type);
-			});
-
-		this.fragment$ = this.fragmentService.fragment$;
-		this.fragment$.subscribe(
-			(response: FragmentResponse) => {
-				if (this.fragment.id == response.id) {
-					if ('fragment' in response) {
-						if (!('segment' in response.fragment)) {
-							response.fragment.segment = this.fragment.segment;
-						}
-						this.fragment = response.fragment;
-					}
-				}
 			});
 
 		this.message = '';

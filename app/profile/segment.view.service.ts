@@ -14,11 +14,14 @@ export class SegmentViewService {
 	contextObservable$: Observable<Fragment>;
 	private contextObserver: Observer<Fragment>;
 
+	fragment: Fragment;
+
 	constructor() {
 		this.contextObservable$ = new Observable<Fragment>(observer => this.contextObserver = observer).share();
 	}
 
 	triggerContext(fragment: Fragment) {
+		this.fragment = fragment;
 		this.contextObserver.next(fragment);
 	}
 }

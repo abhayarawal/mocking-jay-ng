@@ -153,14 +153,14 @@ export class FragmentService {
 		if ('persistent' in fragment) {
 			this.addFragment(fragment);
 		} else {
-			this.http.put(
+			this.http.patch(
 				`${this.authService.baseUri}/fragments/${fragment.id}`,
 				JSON.stringify(fragment),
 				{ headers: this.authService.getAuthHeader() })
 				.map(res => res.json())
+				.retry(3)
 				.subscribe(
 					(response: any) => {
-						console.log(response);
 						if (response.success) {
 							this.notificationObserver.next({
 								type: true,
@@ -172,7 +172,16 @@ export class FragmentService {
 								message: "Sorry, something went wrong"
 							});
 						}
+					},
+				(err) => {
+					this.notificationObserver.next({
+						type: false,
+						message: "Sorry, something went wrong"
 					});
+				},
+				() => {
+					console.log("DONE!!!! Update");
+				});
 		}
 
 		// let index = this.fragments.map(f => f.id).indexOf(fragment.id);
