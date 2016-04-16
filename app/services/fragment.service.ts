@@ -149,11 +149,17 @@ export class FragmentService {
 			});
 	}
 
+	patch;
+
 	updateFragment(fragment: Fragment) {
+		console.log(fragment);
 		if ('persistent' in fragment) {
 			this.addFragment(fragment);
 		} else {
-			this.http.patch(
+			if (this.patch) {
+				this.patch.unsubscribe();
+			}
+			this.patch = this.http.patch(
 				`${this.authService.baseUri}/fragments/${fragment.id}`,
 				JSON.stringify(fragment),
 				{ headers: this.authService.getAuthHeader() })

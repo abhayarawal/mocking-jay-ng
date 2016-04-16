@@ -120,6 +120,8 @@ class FragmentComponent implements OnInit {
 						if (!('segment' in response.fragment)) {
 							response.fragment.segment = this.fragment.segment;
 						}
+						response.fragment._user = this.fragment._user;
+						response.fragment._segment = this.fragment._segment;
 						this.fragment = response.fragment;
 					}
 				}
@@ -457,6 +459,8 @@ class FragmentContextStudent implements OnInit {
 						if (!('segment' in response.fragment)) {
 							response.fragment.segment = this.fragment.segment;
 						}
+						response.fragment._user = this.fragment._user;
+						response.fragment._segment = this.fragment._segment;
 						this.fragment = response.fragment;
 					}
 				}
@@ -648,6 +652,8 @@ class FragmentContextFaculty implements OnInit {
 						if (!('segment' in response.fragment)) {
 							response.fragment.segment = this.fragment.segment;
 						}
+						response.fragment._user = this.fragment._user;
+						response.fragment._segment = this.fragment._segment;
 						this.fragment = response.fragment;
 						this.userService.getUser(this.fragment._user);
 					}
