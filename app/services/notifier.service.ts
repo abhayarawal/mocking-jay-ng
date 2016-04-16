@@ -70,6 +70,7 @@ export class NotifierService {
 			console.log(`Pusher channel at ${session.id}`);
 
 			let channel = this.pusher.subscribe(`${session.id}`);
+
 			channel.bind('fragment', (data) => {
 				this.notifierObserver.next(data.message);
 				console.log(data);

@@ -627,10 +627,15 @@ $top__height: 40px;
 				{
 					position: absolute;
 					width: 300px;
-					top: calc(100% + 5px);
-					@extend %card;
+					top: calc(100% + 18px);
+					padding: 10px;
 					left: 50%;
 					margin-left: -150px;
+					background: #8264e7 !important;
+					color: #fff;
+					border-bottom-left-radius: 5px;
+					border-bottom-right-radius: 5px;
+					font-weight: 500;
 
 					ul
 					{
@@ -723,8 +728,10 @@ $top__height: 40px;
 
 						&.router-link-active
 						{
-							background: #7A6FF0;
+							background: #906fff;
 							color: #fff;
+							// background: #906fff;
+							// color:white;
 						}
 					}
 				}

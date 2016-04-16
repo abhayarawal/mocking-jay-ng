@@ -54,6 +54,7 @@ class MainNav implements OnInit {
 	) {}
 
 	ngOnInit() {
+
 		this.notifier$ = this.notifierService.notifier$;
 		this.notifier$.subscribe(
 			(response) => {

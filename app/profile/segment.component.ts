@@ -328,7 +328,7 @@ class DayComponent implements OnInit {
 	selector: 'fragment-message',
 	template: `
 		<div *ngIf="fragment" class="message__wrap">
-			<div *ngIf="fragment.messages">
+			<div *ngIf="fragment.messages && fragment.messages.length > 0">
 				<label>Message:</label>
 				<div *ngFor="#msg of fragment.messages">
 					<div class="response">
@@ -337,7 +337,7 @@ class DayComponent implements OnInit {
 					</div>
 				</div>
 			</div>
-			<div *ngIf="fragment.responses">
+			<div *ngIf="fragment.responses && fragment.responses.length > 0">
 				<label>Response:</label>
 				<div *ngFor="#res of fragment.responses">
 					<div class="response">
