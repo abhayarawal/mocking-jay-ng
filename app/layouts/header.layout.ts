@@ -8,11 +8,25 @@ import 'rxjs/Rx';
 
 import {User, UserType} from '../interfaces/interface';
 import {AuthService} from '../auth/auth.service';
+import {Notifier, NotifierService} from '../services/notifier.service';
 
 @Component({
 	selector: 'main-nav',
 	template: `
 		<ul class="main__nav" *ngIf="navs">
+			<li>
+				<a>
+					<span class="unread">12</span>
+					<span class="lnr lnr-flag"></span>
+				</a>
+				<div class="notifiers">
+					<ul>
+						<li *ngFor="#nt of notifiers">
+							{{nt}}
+						</li>
+					</ul>
+				</div>
+			</li>
 			<li *ngFor="#nav of navs">
 				<a [routerLink]="nav.location">
           <span class='lnr lnr-{{nav.lnr}}'></span>
@@ -28,9 +42,24 @@ import {AuthService} from '../auth/auth.service';
 	`,
 	directives: [RouterLink]
 })
-class MainNav {
+class MainNav implements OnInit {
 	@Input() user: User;
 	@Input() navs: Object[];
+
+	notifiers: string[] = [];
+	notifier$: Observable<string>;
+
+	constructor(
+		private notifierService: NotifierService
+	) {}
+
+	ngOnInit() {
+		this.notifier$ = this.notifierService.notifier$;
+		this.notifier$.subscribe(
+			(response) => {
+				this.notifiers.push(response);
+			})
+	}
 }
 
 
@@ -154,7 +183,6 @@ export class LayoutHeader implements OnInit {
 		{ location: ['/ProfileViewport'], lnr: 'calendar-full', text: 'Calendar' },
 		{ location: ['/TemplateViewport'], lnr: 'layers', text: 'Templates' },
 		{ location: ['/SegmentViewport'], lnr: 'file-add', text: 'Events' },
-		{ location: ['/AuthComponent'], lnr: 'flag', text: 'Notifications' },
 		{ location: ['/AuthComponent'], lnr: 'cog', text: 'Preferences' },
 	]
 
@@ -166,7 +194,7 @@ export class LayoutHeader implements OnInit {
 			this.user = session;
 			if (session.type == UserType.Student) {
 				// fix this!!!
-				this.navs = [this.NAVS[0], this.NAVS[3], this.NAVS[4]];
+				this.navs = [this.NAVS[0], this.NAVS[3]];
 			} else {
 				this.navs = this.NAVS;
 			}

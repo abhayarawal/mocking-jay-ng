@@ -1,4 +1,4 @@
-import {Injectable, Injector, OnInit, NgZone} from "angular2/core";
+import {Injectable, Inject, Injector, OnInit, NgZone} from "angular2/core";
 import {Http, Response, Headers} from 'angular2/http';
 
 import {Observable} from 'rxjs/Observable';
@@ -27,7 +27,9 @@ export class AuthService implements OnInit {
 	baseUri: string = 'http://localhost:5000/api';
 	tokenId: string = 'mj-token-id';
 
-	constructor(private http: Http) {
+	constructor(
+		private http: Http
+	) {
 		this.notification$ = new Observable<Notification>(observer => this.observer = observer).share();
 		this.session$ = new Observable<boolean>(observer => this.sessionObserver = observer).share();
 	}

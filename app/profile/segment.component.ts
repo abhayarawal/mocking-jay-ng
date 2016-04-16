@@ -104,11 +104,27 @@ class FragmentComponent implements OnInit {
 	selected: boolean = false;
 
 	users: User[] = [];
+	fragment$: Observable<FragmentResponse>;
+
 
 	constructor(
 		private segmentViewService: SegmentViewService,
-		private userService: UserService
-	) {}
+		private userService: UserService,
+		private fragmentService: FragmentService
+	) {
+		this.fragment$ = this.fragmentService.fragment$;
+		this.fragment$.subscribe(
+			(response: FragmentResponse) => {
+				if (this.fragment.id == response.id) {
+					if ('fragment' in response) {
+						if (!('segment' in response.fragment)) {
+							response.fragment.segment = this.fragment.segment;
+						}
+						this.fragment = response.fragment;
+					}
+				}
+			});
+	}
 
 	send() {
 		if (this.fragment) {
@@ -469,6 +485,9 @@ class FragmentContextStudent implements OnInit {
 			(response: FragmentResponse) => {
 				if (this.fragment.id == response.id) {
 					if ('fragment' in response) {
+						if (!('segment' in response.fragment)) {
+							response.fragment.segment = this.fragment.segment;
+						}
 						this.fragment = response.fragment;
 					}
 				}
@@ -615,24 +634,29 @@ class FragmentContextFaculty implements OnInit {
 		private fragmentService: FragmentService,
 		private userService: UserService
 	) {
-	}
-
-	ngOnInit() {
 		this.notification$ = this.fragmentService.notification$;
 		this.notification$.subscribe(
 			(response) => {
 				this.notificationService.notify(response.message, true, !response.type);
 			});
 
+
 		this.fragment$ = this.fragmentService.fragment$;
 		this.fragment$.subscribe(
-			(response : FragmentResponse) => {
+			(response: FragmentResponse) => {
 				if (this.fragment.id == response.id) {
 					if ('fragment' in response) {
+						if (!('segment' in response.fragment)) {
+							response.fragment.segment = this.fragment.segment;
+						}
 						this.fragment = response.fragment;
+						this.userService.getUser(this.fragment._user);
 					}
 				}
 			});
+	}
+
+	ngOnInit() {
 	}
 
 	ngOnChanges() {

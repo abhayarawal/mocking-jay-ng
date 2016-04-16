@@ -166,17 +166,19 @@ class ProfileNav implements OnInit {
 				this.pinned = pinned;
 
 				this.users = [];
-				faculties.forEach(faculty => {
-					this.userService.getUserPromise(faculty._faculty).then(
-						response => { 
-							if (response.success) {
-								let usr = response.payload;
-								usr.id = usr._id;
-								delete usr._id;
-								this.users.push(usr);
-							}
-						});
-				});
+				if (faculties.length > 0) {
+					faculties.forEach(faculty => {
+						this.userService.getUserPromise(faculty._faculty).then(
+							response => { 
+								if (response.success) {
+									let usr = response.payload;
+									usr.id = usr._id;
+									delete usr._id;
+									this.users.push(usr);
+								}
+							});
+					});
+				}
 			}
 		);
 	}

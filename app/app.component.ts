@@ -10,6 +10,7 @@ import {NotificationService, Notification} from './notification.service';
 import {LayoutHeader} from './layouts/header.layout';
 
 import {AuthService} from './auth/auth.service';
+import {NotifierService} from './services/notifier.service';
 
 import {Http, Response, Headers} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
@@ -31,7 +32,9 @@ class NotificationComponent  implements OnInit {
 	notification: Notification;
 	notification$: Observable<Notification>;
 
-	constructor(private notificationService: NotificationService) {
+	constructor(
+		private notificationService: NotificationService,
+	) {
 	}
 
 	hide() {
@@ -70,7 +73,8 @@ class NotificationComponent  implements OnInit {
 export class MountNode {
 	constructor(
 		private router: Router,
-		private authService: AuthService
+		private authService: AuthService,
+		private notifierService: NotifierService		
 	){}
 
 	ngOnInit() {

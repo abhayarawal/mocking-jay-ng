@@ -621,11 +621,46 @@ $top__height: 40px;
 			{
 				display: inline-block;
 				vertical-align: middle;
+				position: relative;
+
+				.notifiers
+				{
+					position: absolute;
+					width: 300px;
+					top: calc(100% + 5px);
+					@extend %card;
+					left: 50%;
+					margin-left: -150px;
+
+					ul
+					{
+						li
+						{
+							text-align: left;
+							display: block;
+						}
+					}
+				}
 
 				a
 				{
 					color: #626262;
 					position: relative;
+
+					.unread
+					{
+						position: absolute;
+						left: -15px;
+						top: 2px;
+						display: block;
+						background: rgb(255, 63, 48);
+						@include border-radius(10px);
+						color: #fff;
+						font-size: 10px;
+						font-weight: 500;
+						line-height: 12px;
+						padding: 0 4px;
+					}
 
 					&:hover
 					{
@@ -1397,7 +1432,7 @@ textarea
 
 					&:before
 					{
-						content: "\e903";
+						content: "\e904";
 						font-family: 'icomoon' !important;
 						speak: none;
 						font-style: normal;
@@ -1409,7 +1444,7 @@ textarea
 						-moz-osx-font-smoothing: grayscale;
 						position: absolute;
 						left: 0px;
-						top: 5px;
+						top: 3px;
 						display: block;
 						font-size: 18px;
 						text-align: center;

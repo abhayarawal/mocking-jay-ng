@@ -82,10 +82,28 @@ export class FragmentService {
 		return fragments;
 	}
 
+	notifyFragment(fid: string, fragment: any) {
+		let fg = fragment;
+		fg.id = fg._id;
+		delete fg._id;
+
+		if (this.fragmentObserver) {
+			console.log("fragmentObserver!!!");
+			if (!this.fragmentObserver.isUnsubscribed) {
+				console.log("fragmentObserver SUBs!!!");
+				this.fragmentObserver.next({
+					id: fid,
+					fragment: fg
+				});
+			}
+		}
+	}
+
 	addFragment(fragment: Fragment) {
 		let { id, date, start, end, _segment, status, messages, responses, history } = fragment;
 
 		let packet = {
+			fid: id,
 			date: date,
 			start: start,
 			end: end,
@@ -193,7 +211,7 @@ export class FragmentService {
 			let tmp = now;
 			now = increment(now, 15);
 			frags.push({
-				id: genId(),
+				id: `${segment.id}/${i}`,
 				date: {
 					year: segment.date.year,
 					month: segment.date.month,
