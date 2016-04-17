@@ -424,7 +424,7 @@ html, body {
           left: -15px;
           top: 2px;
           display: block;
-          background: #ff3f30;
+          background: #ffc750;
           -webkit-border-radius: 10px;
           -moz-border-radius: 10px;
           -o-border-radius: 10px;
@@ -946,6 +946,74 @@ textarea {
       .segment__viewport .fragment__context .fragment__ctx .ctx__head span {
         display: block;
         font-size: 0.6em; }
+    .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header {
+      margin-top: 15px; }
+      .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul {
+        text-align: left;
+        display: block;
+        font-size: 0; }
+        .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li {
+          display: inline-block;
+          vertical-align: middle;
+          width: 50%;
+          font-size: 14px; }
+          .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li:first-child .selected {
+            border-right: none;
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px; }
+          .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li:last-child .selected {
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px; }
+          .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected {
+            background: #fff;
+            display: block;
+            -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+            -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.17);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -o-border-radius: 4px;
+            -ms-border-radius: 4px;
+            border-radius: 4px;
+            line-height: 32px;
+            text-align: center;
+            font-size: 15px;
+            color: #878787;
+            cursor: pointer;
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            transition: all 0.2s ease; }
+            .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected:hover {
+              background-repeat: repeat-x;
+              background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#fbfbfb));
+              background: -webkit-linear-gradient(top, #fbfbfb, #f6f6f6);
+              background: -moz-linear-gradient(top, #fbfbfb, #f6f6f6);
+              background: -ms-linear-gradient(top, #fbfbfb, #f6f6f6);
+              background: -o-linear-gradient(top, #fbfbfb, #f6f6f6); }
+            .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected:active {
+              background-repeat: repeat-x;
+              background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#ececec));
+              background: -webkit-linear-gradient(top, #ececec, #f6f6f6);
+              background: -moz-linear-gradient(top, #ececec, #f6f6f6);
+              background: -ms-linear-gradient(top, #ececec, #f6f6f6);
+              background: -o-linear-gradient(top, #ececec, #f6f6f6); }
+            .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected span {
+              display: inline-block;
+              padding: 0 4px;
+              text-align: center;
+              font-size: 18px;
+              line-height: 40px;
+              vertical-align: middle; }
+            .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected em {
+              display: inline-block;
+              font-style: normal;
+              line-height: 40px;
+              vertical-align: middle;
+              font-size: 13px;
+              font-weight: 500; }
     .segment__viewport .fragment__context .fragment__ctx .date__time span {
       display: inline-block;
       vertical-align: middle;
@@ -956,39 +1024,26 @@ textarea {
       display: block;
       margin-top: 15px; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls strong {
+        margin-top: 10px;
+        background: #fff;
         display: block;
-        margin: 25px 0 25px 0;
-        font-size: 17px;
+        font-size: 18px;
+        color: #555555;
+        border-top: 1px solid #ebebeb;
+        border-bottom: 1px solid #ebebeb;
+        padding: 4px 0 4px 0px;
+        cursor: default;
         position: relative;
-        padding-left: 25px; }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls strong:before {
-          content: "\e904";
-          font-family: 'icomoon' !important;
-          speak: none;
-          font-style: normal;
-          font-weight: normal;
-          font-variant: normal;
-          text-transform: none;
-          line-height: 1;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          position: absolute;
-          left: 0px;
-          top: 3px;
-          display: block;
-          font-size: 18px;
-          text-align: center;
-          display: block;
-          color: #7c7c7c; }
+        font-weight: 500;
+        text-align: center; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels {
         margin-top: 15px;
         font-size: 13px; }
         .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a {
           margin-right: 15px; }
-      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message__wrap label {
-        display: block;
-        margin-top: 10px;
-        font-weight: 500; }
+      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message__wrap {
+        margin-top: 35px;
+        display: block; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message {
         background: #fbecda;
         margin-top: 7px;
@@ -1038,7 +1093,7 @@ textarea {
             width: 32px;
             text-align: center;
             font-size: 15px;
-            color: #a3a3a3;
+            color: #878787;
             -webkit-transition: all 0.2s ease;
             -moz-transition: all 0.2s ease;
             -o-transition: all 0.2s ease;
@@ -1059,34 +1114,16 @@ textarea {
               background: -ms-linear-gradient(top, #ececec, #f6f6f6);
               background: -o-linear-gradient(top, #ececec, #f6f6f6); }
         .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group textarea {
-          height: 70px; }
-      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__notification {
-        margin-bottom: 15px;
-        width: 100%;
-        max-width: 100%;
-        margin-left: auto;
-        margin-right: auto; }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__notification:before, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__notification:after {
-          content: '';
-          display: table; }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__notification:after {
-          clear: both; }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__notification > section:first-child {
-          float: left;
-          width: 50%; }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__notification > section:last-child {
-          float: left;
-          width: 50%; }
+          height: 70px;
+          padding-right: 50px; }
       .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile {
+        margin-top: 8px;
         font-size: 0;
-        background: #fbfbfb;
-        padding: 7px 7px;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        -o-border-radius: 5px;
-        -ms-border-radius: 5px;
-        border-radius: 5px;
-        border: 1px solid #e8e8e8; }
+        background: #fff;
+        display: block;
+        color: #555555;
+        padding: 8px 0px;
+        cursor: default; }
         .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section {
           display: inline-block;
           vertical-align: middle;
@@ -1103,7 +1140,7 @@ textarea {
           .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section:last-child h5 {
             margin: 0;
             padding: 0;
-            font-weight: 400;
+            font-weight: 500;
             font-size: 16px; }
 
 .segment__wrap {

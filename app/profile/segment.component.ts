@@ -10,6 +10,7 @@ import {SegmentViewService} from './segment.view.service';
 import {CalendarService, MonthPipe, WeekPipe, WeekFullPipe} from './calendar.service';
 import {Time, Template, Message, Segment, Status, Fragment, User, UserType} from '../interfaces/interface';
 
+import {AuthService} from '../auth/auth.service';
 import {UserService} from '../services/user.service';
 import {FragmentService, FragmentResponse} from '../services/fragment.service';
 import {SegmentService} from '../services/segment.service';
@@ -343,7 +344,10 @@ export class MessageDatePipe implements PipeTransform {
 				<div *ngFor="#msg of fragment.messages">
 					<div class="message" [ngClass]="{response: msg.type==1}">
 						{{msg.body}}
-						<em *ngIf="msg.date">{{msg.date | msgDate}}</em>
+						<em *ngIf="msg.date">
+							{{msg.date | msgDate}}
+							<span *ngIf="user && user.type==msg.type">[Me]</span>
+						</em>
 					</div>
 				</div>
 			</div>
@@ -354,16 +358,47 @@ export class MessageDatePipe implements PipeTransform {
 class FragmentMessage implements OnInit {
 	@Input() fragment: Fragment;
 	sorted: Message[];
+	user: User;
+
+	constructor(
+		private authService: AuthService
+	) {
+	}
 
 	ngOnInit() {
-		let compare = (x, y) => {
-			if (x.date && y.date) {
-				return moment(x.date) < moment(y.date);
-			} else {
-				return y;
-			}
-		}
+		let [exists, session] = this.authService.getSession();
+		if (exists) this.user = session;
 	}
+}
+
+
+@Component({
+	selector: 'fragment-ctx-header',
+	template: `
+		<div class="fragment__ctx__header">
+			<ul>
+				<li>
+					<a>
+						<div class="selected">
+							<span class="icon-notifications_true"></span>
+							<em>Alert 2 days</em>
+						</div>
+					</a>
+				</li>
+				<li>
+					<a>
+						<div class="selected">
+							<span class="icon-alarm"></span>
+							<em>Nofication On</em>
+						</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+	`
+})
+class FragmentCtxHeader {
+
 }
 
 
@@ -371,7 +406,6 @@ class FragmentMessage implements OnInit {
 	selector: 'fragment-context-student',
 	template: `
 		<div class="fragment__ctx">
-			{{fragment.id}}
 			<h3 class="ctx__head">
 				{{fragment.segment.template.name}}
 			</h3>
@@ -386,7 +420,7 @@ class FragmentMessage implements OnInit {
 					<strong>Appointment not approved yet</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group message__box">
-						<label for="">Message: </label>
+						<label for="">Send message: </label>
 						<textarea [(ngModel)]="message"></textarea>
 						<a (click)="sendMessage()" class="icon-paperplane"></a>
 					</div>
@@ -395,20 +429,11 @@ class FragmentMessage implements OnInit {
 					</div>
 				</template>
 				<template [ngSwitchWhen]="2">
-					<div class="ctx__notification">
-						<section>
-							<label>Notify?</label>
-							<radius-radio [on]="true" [intext]="true"></radius-radio>
-						</section>
-						<section>
-							<label>Notification time</label>
-							<radius-select [selected]="2" [items]="notify_select" [notification]="true"></radius-select>
-						</section>
-					</div>
 					<strong>Appointment approved</strong>
+					<fragment-ctx-header></fragment-ctx-header>
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group message__box">
-						<label for="">Message: </label>
+						<label for="">Send message: </label>
 						<textarea [(ngModel)]="message"></textarea>
 						<a (click)="sendMessage()" class="icon-paperplane"></a>
 					</div>
@@ -446,7 +471,7 @@ class FragmentMessage implements OnInit {
 			</div>
 		</div>
 	`,
-	directives: [FragmentMessage, RadiusSelectComponent, RadiusRadioComponent],
+	directives: [FragmentMessage, RadiusSelectComponent, RadiusRadioComponent, FragmentCtxHeader],
 	pipes: [TimePipe]
 })
 class FragmentContextStudent implements OnInit {
@@ -549,7 +574,6 @@ class FragmentProfile {
 	selector: 'fragment-context-faculty',
 	template: `
 		<div class="fragment__ctx">
-			{{fragment.id}}
 			<h3 class="ctx__head">
 				{{fragment.segment.template.name}}
 			</h3>
@@ -565,7 +589,7 @@ class FragmentProfile {
 					<strong>Appointment not approved yet</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group message__box">
-						<label for="">Response:</label>
+						<label for="">Send message:</label>
 						<textarea [(ngModel)]="response"></textarea>
 						<a (click)="respond()" class="icon-paperplane"></a>
 					</div>
@@ -579,21 +603,12 @@ class FragmentProfile {
 				</template>
 
 				<template [ngSwitchWhen]="2">
-					<div class="ctx__notification">
-						<section>
-							<label>Notify?</label>
-							<radius-radio [on]="true" [intext]="true"></radius-radio>
-						</section>
-						<section>
-							<label>Notification time</label>
-							<radius-select [selected]="2" [items]="notify_select" [notification]="true"></radius-select>
-						</section>
-					</div>
 					<fragment-profile [user]="template_user"></fragment-profile>
 					<strong>Appointment approved</strong>
+					<fragment-ctx-header></fragment-ctx-header>
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group message__box">
-						<label for="">Response:</label>
+						<label for="">Send message:</label>
 						<textarea [(ngModel)]="response"></textarea>
 						<a (click)="respond()" class="icon-paperplane"></a>
 					</div>
@@ -635,7 +650,7 @@ class FragmentProfile {
 			</div>
 		</div>
 	`,
-	directives: [FragmentMessage, FragmentProfile, RadiusRadioComponent, RadiusSelectComponent],
+	directives: [FragmentMessage, FragmentProfile, RadiusRadioComponent, RadiusSelectComponent, FragmentCtxHeader],
 	pipes: [TimePipe]
 })
 class FragmentContextFaculty implements OnInit {
