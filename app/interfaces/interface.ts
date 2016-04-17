@@ -75,6 +75,11 @@ export enum Status {
 	blocked
 }
 
+export interface Message {
+	body: string,
+	date?: Date,
+	type?: UserType 
+}
 
 export interface Fragment {
 	id: string,
@@ -84,9 +89,10 @@ export interface Fragment {
 	_segment: string,
 	_user?: string,
 	segment?: Segment,
-	messages?: string[],
+	message?: string,
+	messages?: Message[],
 	status?: Status,
-	responses?: string[],
+	// responses?: Message[],
 	instance_id?: string,
 	history?: Fragment[],
 	persistent?: boolean

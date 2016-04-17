@@ -98,7 +98,7 @@ export class FragmentService {
 	}
 
 	addFragment(fragment: Fragment) {
-		let { id, date, start, end, _segment, status, messages, responses, history } = fragment;
+		let { id, date, start, end, _segment, status, messages, message, history } = fragment;
 
 		let packet = {
 			fid: id,
@@ -108,7 +108,7 @@ export class FragmentService {
 			_segment: _segment,
 			status: status,
 			messages: messages,
-			responses: responses,
+			message: message,
 			history: history
 		};
 
@@ -152,7 +152,6 @@ export class FragmentService {
 	patch;
 
 	updateFragment(fragment: Fragment) {
-		console.log(fragment);
 		if ('persistent' in fragment) {
 			this.addFragment(fragment);
 		} else {
@@ -182,11 +181,8 @@ export class FragmentService {
 				(err) => {
 					this.notificationObserver.next({
 						type: false,
-						message: "Sorry, something went wrong"
+						message: "Sorry, could not connect to server"
 					});
-				},
-				() => {
-					console.log("DONE!!!! Update");
 				});
 		}
 

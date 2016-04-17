@@ -8,7 +8,7 @@ import 'rxjs/Rx';
 
 import {SegmentViewService} from './segment.view.service';
 import {CalendarService, MonthPipe, WeekPipe, WeekFullPipe} from './calendar.service';
-import {Time, Template, Segment, Status, Fragment, User, UserType} from '../interfaces/interface';
+import {Time, Template, Message, Segment, Status, Fragment, User, UserType} from '../interfaces/interface';
 
 import {UserService} from '../services/user.service';
 import {FragmentService, FragmentResponse} from '../services/fragment.service';
@@ -326,33 +326,44 @@ class DayComponent implements OnInit {
 	}
 }
 
+@Pipe({
+	name: 'msgDate'
+})
+export class MessageDatePipe implements PipeTransform {
+	transform(date: string, args: string[]): any {
+		return moment(date).calendar();
+	}
+}
+
 @Component({
 	selector: 'fragment-message',
 	template: `
 		<div *ngIf="fragment" class="message__wrap">
 			<div *ngIf="fragment.messages && fragment.messages.length > 0">
-				<label>Message:</label>
 				<div *ngFor="#msg of fragment.messages">
-					<div class="response">
-						<span class="icon-message"></span>
-						{{msg}}
-					</div>
-				</div>
-			</div>
-			<div *ngIf="fragment.responses && fragment.responses.length > 0">
-				<label>Response:</label>
-				<div *ngFor="#res of fragment.responses">
-					<div class="response">
-						<span class="icon-messages"></span>
-						{{res}}
+					<div class="message" [ngClass]="{response: msg.type==1}">
+						{{msg.body}}
+						<em *ngIf="msg.date">{{msg.date | msgDate}}</em>
 					</div>
 				</div>
 			</div>
 		</div>
-	`
+	`,
+	pipes: [MessageDatePipe]
 })
-class FragmentMessage {
+class FragmentMessage implements OnInit {
 	@Input() fragment: Fragment;
+	sorted: Message[];
+
+	ngOnInit() {
+		let compare = (x, y) => {
+			if (x.date && y.date) {
+				return moment(x.date) < moment(y.date);
+			} else {
+				return y;
+			}
+		}
+	}
 }
 
 
@@ -374,6 +385,11 @@ class FragmentMessage {
 				<template [ngSwitchWhen]="1">
 					<strong>Appointment not approved yet</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
+					<div class="form__group message__box">
+						<label for="">Message: </label>
+						<textarea [(ngModel)]="message"></textarea>
+						<a (click)="sendMessage()" class="icon-paperplane"></a>
+					</div>
 					<div class="form__group">
 						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
 					</div>
@@ -391,6 +407,11 @@ class FragmentMessage {
 					</div>
 					<strong>Appointment approved</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
+					<div class="form__group message__box">
+						<label for="">Message: </label>
+						<textarea [(ngModel)]="message"></textarea>
+						<a (click)="sendMessage()" class="icon-paperplane"></a>
+					</div>
 					<div class="form__group">
 						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
 					</div>
@@ -473,6 +494,14 @@ class FragmentContextStudent implements OnInit {
 	cancel() {
 	}
 
+	sendMessage() {
+		if (this.message.trim().length > 0) {
+			this.fragment.message = this.message.trim();
+			this.fragmentService.updateFragment(this.fragment);
+			this.message = '';
+		}
+	}
+
 	create() {
 		if (this.fragment.segment.template.require_accept) {
 			this.fragment.status = Status.in_progress;
@@ -480,12 +509,8 @@ class FragmentContextStudent implements OnInit {
 			this.fragment.status = Status.approved;
 		}
 
-		if (!('messages' in this.fragment)) {
-			this.fragment.messages = [];
-		}
-
 		if (this.message.trim().length > 0) {
-			this.fragment.messages.push(this.message.trim());
+			this.fragment.message = this.message.trim();
 		}
 
 		this.fragmentService.updateFragment(this.fragment);
@@ -539,9 +564,10 @@ class FragmentProfile {
 					<fragment-profile [user]="template_user"></fragment-profile>
 					<strong>Appointment not approved yet</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
-					<div class="form__group">
+					<div class="form__group message__box">
 						<label for="">Response:</label>
 						<textarea [(ngModel)]="response"></textarea>
+						<a (click)="respond()" class="icon-paperplane"></a>
 					</div>
 					<div class="form__group">
 						<button class="button type__3" (click)="approve()">Approve appointment</button>
@@ -566,9 +592,10 @@ class FragmentProfile {
 					<fragment-profile [user]="template_user"></fragment-profile>
 					<strong>Appointment approved</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
-					<div class="form__group">
+					<div class="form__group message__box">
 						<label for="">Response:</label>
 						<textarea [(ngModel)]="response"></textarea>
+						<a (click)="respond()" class="icon-paperplane"></a>
 					</div>
 					<div class="form__group">
 						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
@@ -678,12 +705,8 @@ class FragmentContextFaculty implements OnInit {
 	}
 
 	update(status: Status) {
-		if (!('responses' in this.fragment)) {
-			this.fragment.responses = [];
-		}
-
 		if (this.response.trim().length > 0) {
-			this.fragment.responses.push(this.response.trim());
+			this.fragment.message = this.response.trim();
 		}
 
 		let fragment = this.fragment;
@@ -693,6 +716,11 @@ class FragmentContextFaculty implements OnInit {
 		this.response = '';
 	}
 
+	respond() {
+		if (this.response.trim().length > 0) {
+			this.update(this.fragment.status);
+		}
+	}
 
 	deny() {
 		this.update(Status.denied);
