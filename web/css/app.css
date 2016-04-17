@@ -940,6 +940,33 @@ textarea {
     height: calc(100% - 16px);
     overflow-x: hidden;
     overflow-y: auto; }
+    .segment__viewport .fragment__context .fragment__ctx .fragment__history {
+      position: absolute;
+      right: 10px;
+      top: 10px; }
+      .segment__viewport .fragment__context .fragment__ctx .fragment__history span {
+        width: 30px;
+        display: inline-block;
+        position: relative;
+        vertical-align: middle;
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        transition: all 0.2s ease; }
+        .segment__viewport .fragment__context .fragment__ctx .fragment__history span img {
+          -webkit-border-radius: 100%;
+          -moz-border-radius: 100%;
+          -o-border-radius: 100%;
+          -ms-border-radius: 100%;
+          border-radius: 100%; }
+        .segment__viewport .fragment__context .fragment__ctx .fragment__history span:not(:last-child) {
+          position: relative;
+          left: 20px;
+          z-index: 1;
+          margin-right: 2px; }
+      .segment__viewport .fragment__context .fragment__ctx .fragment__history:hover span:not(:last-child) {
+        left: auto; }
     .segment__viewport .fragment__context .fragment__ctx .ctx__head {
       text-transform: capitalize;
       font-weight: 400; }
@@ -1187,19 +1214,6 @@ textarea {
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none; }
-          .segment__wrap .segments .segment .fragments ul li .fragment__history {
-            position: absolute;
-            right: 10px;
-            top: 10px; }
-            .segment__wrap .segments .segment .fragments ul li .fragment__history span {
-              width: 30px;
-              display: inline-block; }
-              .segment__wrap .segments .segment .fragments ul li .fragment__history span img {
-                -webkit-border-radius: 100%;
-                -moz-border-radius: 100%;
-                -o-border-radius: 100%;
-                -ms-border-radius: 100%;
-                border-radius: 100%; }
           .segment__wrap .segments .segment .fragments ul li:hover {
             border-bottom: 1px solid #cacaca; }
           .segment__wrap .segments .segment .fragments ul li span {

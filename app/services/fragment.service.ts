@@ -89,6 +89,7 @@ export class FragmentService {
 
 		if (this.fragmentObserver) {
 			if (!this.fragmentObserver.isUnsubscribed) {
+				// console.log("fragment pushed", fg);
 				this.fragmentObserver.next({
 					id: fid,
 					fragment: fg
@@ -149,16 +150,12 @@ export class FragmentService {
 			});
 	}
 
-	patch;
 
 	updateFragment(fragment: Fragment) {
 		if ('persistent' in fragment) {
 			this.addFragment(fragment);
 		} else {
-			if (this.patch) {
-				this.patch.unsubscribe();
-			}
-			this.patch = this.http.patch(
+			this.http.patch(
 				`${this.authService.baseUri}/fragments/${fragment.id}`,
 				JSON.stringify(fragment),
 				{ headers: this.authService.getAuthHeader() })
@@ -185,15 +182,6 @@ export class FragmentService {
 					});
 				});
 		}
-
-		// let index = this.fragments.map(f => f.id).indexOf(fragment.id);
-		// if (index >= 0 && index < this.fragments.length) {
-		// 	this.fragments[index] = fragment;
-		// 	localStorage.setItem('fragments', JSON.stringify(this.fragments));
-		// 	return [true, fragment];
-		// }
-		// return [false, fragment];
-		
 	}
 
 	genFragments (segment: Segment): Fragment[] {
@@ -242,6 +230,23 @@ export class FragmentService {
 		}
 
 		return frags;
+	}
+
+
+	validateHistory(fragment: Fragment) {
+		let [exists, session] = this.authService.getSession();
+		if (exists && session.type == UserType.Student) {
+			if ('history' in fragment) {
+				let index = fragment.history.map((history) => history._user).indexOf(session.id);
+				if (!(index < 0)) {
+					let history = fragment.history[index];
+					fragment.status = history.status;
+					fragment.messages = history.messages;
+					fragment._user = history._user;
+				}
+			}
+		}
+		return fragment;
 	}
 
 	validateFragments(ts: Fragment[], sg: Segment) {

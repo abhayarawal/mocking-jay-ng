@@ -89,12 +89,6 @@ class SegmentUnavailable implements OnInit {
 				<span *ngSwitchWhen="6" [innerHTML]="'Blocked'"></span>
 			</span>
 			<!-- <span class="lnr lnr-pencil" *ngIf="selected"></span> -->
-
-			<div class="fragment__history" *ngIf="users">
-				<span *ngFor="#user of users">
-					<img src="{{user.meta?.avatar}}" alt="" />
-				</span>
-			</div>
 		</li>
 	`,
 	pipes: [TimePipe]
@@ -104,6 +98,7 @@ class FragmentComponent implements OnInit {
 	observable: Observable<Fragment>;
 	selected: boolean = false;
 
+	session: User;
 	users: User[] = [];
 	fragment$: Observable<FragmentResponse>;
 
@@ -123,7 +118,7 @@ class FragmentComponent implements OnInit {
 						}
 						response.fragment._user = this.fragment._user;
 						response.fragment._segment = this.fragment._segment;
-						this.fragment = response.fragment;
+						this.fragment = this.fragmentService.validateHistory(response.fragment);
 					}
 				}
 			});
@@ -145,15 +140,6 @@ class FragmentComponent implements OnInit {
 				}
 			}
 		);
-
-		if ('history' in this.fragment) {
-			// for (var i = this.fragment.history.length - 1; i >= 0; i--) {
-			// 	this.userService.getUser(this.fragment.history[i].user_id).then(
-			// 		user => {
-			// 			this.users.push(user);
-			// 		});
-			// }
-		}
 	}
 }
 
@@ -209,14 +195,6 @@ class SegmentComponent implements OnInit {
 			});
 			this.fragments = this.fragmentService.merge(this.fragments, fgs);
 		});
-
-		// this.fragmentService.getFragments(this.segment);
-
-		// this.fragmentService.getFragments(this.segment, month, day, year).then(
-		// 	(fragments) => {
-		// 		this.fragments = this.fragmentService.validateFragments(
-		// 			this.fragmentService.merge(this.fragments, fragments), this.segment);
-		// 	});
 	}
 }
 
@@ -406,6 +384,7 @@ class FragmentCtxHeader {
 	selector: 'fragment-context-student',
 	template: `
 		<div class="fragment__ctx">
+			{{fragment.id}}
 			<h3 class="ctx__head">
 				{{fragment.segment.template.name}}
 			</h3>
@@ -507,7 +486,7 @@ class FragmentContextStudent implements OnInit {
 						}
 						response.fragment._user = this.fragment._user;
 						response.fragment._segment = this.fragment._segment;
-						this.fragment = response.fragment;
+						this.fragment = this.fragmentService.validateHistory(response.fragment);
 					}
 				}
 			});
@@ -574,6 +553,13 @@ class FragmentProfile {
 	selector: 'fragment-context-faculty',
 	template: `
 		<div class="fragment__ctx">
+			<div class="fragment__history" *ngIf="users">
+				<span *ngFor="#user of users">
+					<img src="{{user.meta?.avatar}}" alt="" />
+				</span>
+			</div>
+
+			{{fragment.id}}
 			<h3 class="ctx__head">
 				{{fragment.segment.template.name}}
 			</h3>
@@ -657,6 +643,7 @@ class FragmentContextFaculty implements OnInit {
 	@Input() fragment: Fragment;
 	@Input() user: User;
 
+	users: User[];
 	template_user: User;
 	response: string = '';
 
@@ -696,7 +683,8 @@ class FragmentContextFaculty implements OnInit {
 						}
 						response.fragment._user = this.fragment._user;
 						response.fragment._segment = this.fragment._segment;
-						this.fragment = response.fragment;
+						this.fragment = this.fragmentService.validateHistory(response.fragment);
+						this.histroyLine();
 						this.userService.getUser(this.fragment._user);
 					}
 				}
@@ -717,6 +705,8 @@ class FragmentContextFaculty implements OnInit {
 		if (this.fragment._user) {
 			this.userService.getUser(this.fragment._user);
 		}
+
+		this.histroyLine();
 	}
 
 	update(status: Status) {
@@ -756,6 +746,22 @@ class FragmentContextFaculty implements OnInit {
 	block() {
 		this.update(Status.blocked);
 	}
+
+	histroyLine() {
+		this.users = [];
+		if ('history' in this.fragment) {
+			for (var i = this.fragment.history.length - 1; i >= 0; i--) {
+				this.userService.getUserPromise(this.fragment.history[i]._user).then(
+					response => {
+						if (response.success) {
+							let usr = response.payload; usr.id = usr._id; delete usr._id;
+							this.users.push(usr);
+						}
+					});
+			}
+		}
+	}
+
 }
 
 

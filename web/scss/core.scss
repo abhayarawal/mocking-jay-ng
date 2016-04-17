@@ -1415,6 +1415,44 @@ textarea
 
 		.fragment__ctx
 		{
+			.fragment__history
+		  {
+		  	position: absolute;
+		  	right: 10px;
+		  	top: 10px;
+
+		  	span
+		  	{
+		  		width: 30px;
+		  		display: inline-block;
+					position: relative;
+					vertical-align: middle;
+					@include transition(all 0.2s ease);
+					
+					img
+					{
+						@include border-radius(100%);
+					}
+
+					&:not(:last-child) {
+						position: relative;
+						left: 20px;
+						z-index: 1;
+						margin-right: 2px;
+					}
+		  	}
+
+		  	&:hover
+		  	{
+		  		span
+		  		{
+		  			&:not(:last-child) {
+		  				left: auto;
+		  			}
+		  		}
+		  	}
+		  }
+
 			.ctx__head
 			{
 				text-transform: capitalize;
@@ -1753,25 +1791,7 @@ textarea
 					  -moz-user-select: none;      
 					  -ms-user-select: none;       
 					  user-select: none;   
-
-					  .fragment__history
-					  {
-					  	position: absolute;
-					  	right: 10px;
-					  	top: 10px;
-
-					  	span
-					  	{
-					  		width: 30px;
-					  		display: inline-block;
-								
-								img
-								{
-									@include border-radius(100%);
-								}
-					  	}
-					  }
-
+					  
 						&:hover
 						{
 							border-bottom: 1px solid darken(#e3e3e3, 10%);

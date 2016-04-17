@@ -80,7 +80,9 @@ export class NotifierService {
 				if ('payload' in data) {
 					let fragment = data.payload;
 					if ('_user' in fragment) {
-						fragment._user = fragment._user._id;
+						if (fragment._user) {
+							fragment._user = fragment._user._id;
+						}
 					}
 					fragment._segment = fragment._segment._id;
 					this.fragmentService.notifyFragment(data.fid, fragment);

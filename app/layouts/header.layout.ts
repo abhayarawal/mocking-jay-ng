@@ -16,10 +16,10 @@ import {Notifier, NotifierService} from '../services/notifier.service';
 		<ul class="main__nav" *ngIf="navs">
 			<li>
 				<a>
-					<span class="unread">12</span>
+					<span class="unread">{{notifiers.length}}</span>
 					<span class="lnr lnr-flag"></span>
 				</a>
-				<div class="notifiers">
+				<div class="notifiers" *ngIf="notifiers.length > 0">
 					<ul>
 						<li *ngFor="#nt of notifiers">
 							{{nt}}
