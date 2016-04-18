@@ -72,13 +72,25 @@ export enum Status {
 	denied,
 	cancelled,
 	unavailable,
-	blocked
+	blocked,
+	invite
 }
 
 export interface Message {
 	body: string,
 	date?: Date,
 	type?: UserType 
+}
+
+export enum InviteStatus {
+	Pending,
+	Accepted,
+	Declined
+}
+
+export interface Invitee {
+	status: boolean,
+	email: string
 }
 
 export interface Fragment {
@@ -92,6 +104,7 @@ export interface Fragment {
 	message?: string,
 	messages?: Message[],
 	status?: Status,
+	invitees?: Invitee[],
 	// responses?: Message[],
 	instance_id?: string,
 	history?: Fragment[],

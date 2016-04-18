@@ -8,7 +8,7 @@ import 'rxjs/Rx';
 
 import {SegmentViewService} from './segment.view.service';
 import {CalendarService, MonthPipe, WeekPipe, WeekFullPipe} from './calendar.service';
-import {Time, Template, Message, Segment, Status, Fragment, User, UserType} from '../interfaces/interface';
+import {Time, Template, Message, Segment, Status, Fragment, User, UserType, Invitee, InviteStatus} from '../interfaces/interface';
 
 import {AuthService} from '../auth/auth.service';
 import {UserService} from '../services/user.service';
@@ -87,8 +87,13 @@ class SegmentUnavailable implements OnInit {
 				<span *ngSwitchWhen="4" [innerHTML]="'Cancelled'"></span>
 				<span *ngSwitchWhen="5" [innerHTML]="''"></span>
 				<span *ngSwitchWhen="6" [innerHTML]="'Blocked'"></span>
+				<span *ngSwitchWhen="7" [innerHTML]="'Invitation'"></span>
 			</span>
 			<!-- <span class="lnr lnr-pencil" *ngIf="selected"></span> -->
+
+			<div class="histroy" *ngIf="history">
+				<span class="icon-blur_on"></span>
+			</div>
 		</li>
 	`,
 	pipes: [TimePipe]
@@ -102,6 +107,7 @@ class FragmentComponent implements OnInit {
 	users: User[] = [];
 	fragment$: Observable<FragmentResponse>;
 
+	history: boolean = false;
 
 	constructor(
 		private segmentViewService: SegmentViewService,
@@ -116,12 +122,29 @@ class FragmentComponent implements OnInit {
 						if (!('segment' in response.fragment)) {
 							response.fragment.segment = this.fragment.segment;
 						}
-						response.fragment._user = this.fragment._user;
+						
 						response.fragment._segment = this.fragment._segment;
 						this.fragment = this.fragmentService.validateHistory(response.fragment);
+						this.updateHistory();
 					}
 				}
 			});
+	}
+
+	updateHistory() {
+		this.history = false;
+		if ('history' in this.fragment) {
+			this.userService.getUser().then((user) => {
+				if (user.type == UserType.Faculty) {
+					if ('_user' in this.fragment.segment) {
+						if (user.id == this.fragment.segment._user) {
+							if (this.fragment.history.length > 0)
+								this.history = true;
+						}
+					}
+				}
+			});
+		}
 	}
 
 	send() {
@@ -131,6 +154,8 @@ class FragmentComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.fragment = this.fragmentService.validateHistory(this.fragment);
+
 		this.observable = this.segmentViewService.contextObservable$;
 		this.observable.subscribe(
 			data => {
@@ -140,6 +165,8 @@ class FragmentComponent implements OnInit {
 				}
 			}
 		);
+
+		this.updateHistory();
 	}
 }
 
@@ -379,6 +406,227 @@ class FragmentCtxHeader {
 
 }
 
+interface ValidationResult {
+	[key: string]: boolean;
+}
+
+class InviteeValidator {
+	static shouldBeEmail(control: Control): ValidationResult {
+		let regExp = /^[a-z0-9-_\.]+@[a-z0-9-]+(\.\w+){1,4}$/i;
+		let validation = regExp.test(control.value.trim());
+		if (!validation) {
+			return { "shoudBeEmail": true };
+		}
+		return null;
+	}
+}
+
+@Component({
+	selector: 'fragment-invitees',
+	template: `
+		<div class="from__group invitees__box">
+			<label>Invitees:</label>
+			<ul>
+				<li *ngFor="#invity of invitees; #i = index">
+					<span class="icon-mail"></span>
+					{{invity}}
+					<a (click)="remove(i)">Remove</a>
+				</li>
+			</ul>
+			<div class="invitees__form">
+				<form [ngFormModel]="invityForm">
+					<input type="email" [(ngModel)]="email" ngControl="invityEmail" />
+					<button (click)="add()">Invite</button>
+				</form>
+			</div>
+		</div>
+	`
+})
+class FragmentInvitees implements OnInit {
+	@Output() update = new EventEmitter<[boolean, string[]]>();
+
+	invitees: string[] = [];
+	invityEmail: Control;
+	invityForm: ControlGroup;
+	sessionEmail: string;
+
+	email: string = "";
+
+	constructor(
+		private fb: FormBuilder,
+		private userService: UserService,
+		private notificationService: NotificationService
+	) {
+		this.invityEmail = new Control('', Validators.compose([Validators.required, InviteeValidator.shouldBeEmail]));
+		this.invityForm = fb.group({
+			'invityEmail': this.invityEmail
+		});
+	}
+
+	ngOnInit() {
+		this.userService.getUser().then((user) => {
+			this.sessionEmail = user.email;
+		});
+
+		this.emit(true);
+	}
+
+	remove(index: number) {
+		this.invitees.splice(index, 1);
+		this.emit(true);
+	}
+
+	emit(valid: boolean) {
+		this.update.next([valid, this.invitees]);
+	}
+
+	add() {
+		if (this.invityForm.valid) {
+			let {invityEmail} = this.invityForm.value;
+
+			this.userService.getUserByEmailPromise(invityEmail).then(
+				(response) => {
+					if (response.success) {
+						if (response.payload.email == this.sessionEmail) {
+							this.notificationService.notify(`You can't add yourself as an invitee :(`, true, true);
+						} else {
+							if (response.payload.type == 'faculty') {
+								this.notificationService.notify(`You can't add a faculty member :(`, true, true);
+							} else {
+								this.invitees.push(invityEmail);
+								this.email = "";
+								this.emit(true);
+							}
+						}
+					} else {
+						this.notificationService.notify(`${invityEmail} not found in our system`, true, true);
+					}
+				});
+		}
+	}
+}
+
+@Component({
+	selector: 'fragment-profile',
+	template: `
+		<div *ngIf="user" class="ctx__profile">
+			<section>
+				<img src="{{user.meta?.avatar}}" />
+			</section>
+			<section>
+				<h5>{{user.fname}} {{user.lname}}</h5>
+				{{user.email}}
+			</section>
+		</div>
+	`
+})
+class FragmentProfile {
+	@Input() user;
+}
+
+@Component({
+	selector: 'fragment-invitee-list',
+	template: `
+		<div class="fragment__invitee__list" *ngIf="fragment">
+			<h5>All invitees</h5>
+			<ul>
+				<li *ngFor="#invity of fragment.invitees">
+					<span [ngSwitch]="invity.status">
+						<span *ngSwitchWhen="0" [innerHTML]="'Request pending'"></span>
+						<span *ngSwitchWhen="1" [innerHTML]="'Accepted'"></span>
+						<span *ngSwitchWhen="2" [innerHTML]="'Declined'"></span>
+					</span>
+					{{invity.email}}
+				</li>
+			</ul>
+		</div>
+	`
+})
+class FragmentInviteeList {
+	@Input() fragment: Fragment;
+}
+
+
+@Component({
+	selector: 'fragment-invitation',
+	template: `
+		<div class="invitee__template">
+			<h5>Invitation by</h5>
+			<div *ngIf="invitor">
+				<fragment-profile [user]="invitor"></fragment-profile>
+				<div *ngIf="session && invitee">
+					<div [ngSwitch]="invitee.status">
+						<template [ngSwitchWhen]="0">
+							<strong>You haven't replied to the invitation</strong>
+						</template>
+						<template [ngSwitchWhen]="1">
+							<strong>You've accepted the invitation</strong>
+						</template>
+						<template [ngSwitchWhen]="2">
+							<strong>You've declined the invitation</strong>
+						</template>
+					</div>
+					<div class="form__group">
+						<button class="button type__3" (click)="accept()">Accept Invitation</button>
+						<button class="button type__1" (click)="decline()">Decline Invitation</button>
+					</div>
+				</div>
+				
+				<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
+			</div>
+		</div>
+	`,
+	directives: [FragmentProfile, FragmentInviteeList]
+})
+class FragmentInvitation implements OnInit {
+	@Input() fragment: Fragment;
+
+	invitor: User;
+	session: User;
+	invitee: Invitee;
+
+	constructor(
+		private fragmentService: FragmentService,
+		private userService: UserService
+	) {}
+
+	update() {
+		if (this.fragment.status == Status.invite) {
+			this.userService.getUserPromise(this.fragment._user).then((response) => {
+				if (response.success) {
+					this.invitor = response.payload;
+
+					this.userService.getUser().then(user => {
+						this.session = user;
+						this.fragment.invitees.forEach(invitee => {
+							if (invitee.email == user.email) {
+								this.invitee = invitee;
+							}
+						});
+					});
+				} else {
+				}
+			});
+		}
+	}
+
+	ngOnInit() {
+		this.update();
+	}
+
+	ngOnChanges() {
+		this.update();
+	}
+
+	accept() {
+		this.fragmentService.updateInvitation(InviteStatus.Accepted, this.fragment);
+	}
+
+	decline() {
+		this.fragmentService.updateInvitation(InviteStatus.Declined, this.fragment);
+	}
+}
+
 
 @Component({
 	selector: 'fragment-context-student',
@@ -406,6 +654,7 @@ class FragmentCtxHeader {
 					<div class="form__group">
 						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
 					</div>
+					<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
 				</template>
 				<template [ngSwitchWhen]="2">
 					<strong>Appointment approved</strong>
@@ -419,6 +668,7 @@ class FragmentCtxHeader {
 					<div class="form__group">
 						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
 					</div>
+					<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
 				</template>
 				<template [ngSwitchWhen]="3">
 					<strong>Appointment denied</strong>
@@ -438,11 +688,17 @@ class FragmentCtxHeader {
 					<strong>Appointment time blocked by advisor</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
 				</template>
+					
+				<template [ngSwitchWhen]="7">
+					<fragment-invitation [invitor]="invitor" [fragment]="fragment"></fragment-invitation>
+				</template>
+
 				<template ngSwitchDefault>
 					<div class="form__group">
 						<label for="">Message: </label>
 						<textarea [(ngModel)]="message"></textarea>
 					</div>
+					<fragment-invitees (update)="invitees($event)"></fragment-invitees>
 					<div class="form__group">
 						<button class="button type__2" (click)="create()">Create appointment</button>
 					</div>
@@ -450,7 +706,7 @@ class FragmentCtxHeader {
 			</div>
 		</div>
 	`,
-	directives: [FragmentMessage, RadiusSelectComponent, RadiusRadioComponent, FragmentCtxHeader],
+	directives: [FragmentMessage, RadiusSelectComponent, RadiusRadioComponent, FragmentCtxHeader, FragmentInvitees, FragmentInvitation, FragmentInviteeList],
 	pipes: [TimePipe]
 })
 class FragmentContextStudent implements OnInit {
@@ -461,6 +717,7 @@ class FragmentContextStudent implements OnInit {
 	notification$: Observable<Notification>;
 	user$: Observable<User>;
 	fragment$: Observable<FragmentResponse>;
+
 
 	notify_select: SelectObject[] = [
 		{ value: 10, text: '10 min' },
@@ -474,8 +731,15 @@ class FragmentContextStudent implements OnInit {
 	constructor(
 		private segmentViewService: SegmentViewService,
 		private notificationService: NotificationService,
-		private fragmentService: FragmentService
+		private fragmentService: FragmentService,
+		private userService: UserService
 	) {
+		this.notification$ = this.fragmentService.notification$;
+		this.notification$.subscribe(
+			(response) => {
+				this.notificationService.notify(response.message, true, !response.type);
+			});
+
 		this.fragment$ = this.fragmentService.fragment$;
 		this.fragment$.subscribe(
 			(response: FragmentResponse) => {
@@ -484,7 +748,9 @@ class FragmentContextStudent implements OnInit {
 						if (!('segment' in response.fragment)) {
 							response.fragment.segment = this.fragment.segment;
 						}
-						response.fragment._user = this.fragment._user;
+						if (this.fragment._user) {
+							response.fragment._user = this.fragment._user;
+						}
 						response.fragment._segment = this.fragment._segment;
 						this.fragment = this.fragmentService.validateHistory(response.fragment);
 					}
@@ -495,7 +761,16 @@ class FragmentContextStudent implements OnInit {
 	ngOnInit() {
 	}
 
+	ngOnChanges() {
+	}
+
 	cancel() {
+	}
+
+	invitees([valid, invitees]) {
+		if (valid) {
+			this.fragment.invitees = invitees;
+		}
 	}
 
 	sendMessage() {
@@ -519,35 +794,9 @@ class FragmentContextStudent implements OnInit {
 
 		this.fragmentService.updateFragment(this.fragment);
 
-		this.notification$ = this.fragmentService.notification$;
-		this.notification$.subscribe(
-			(response) => {
-				this.notificationService.notify(response.message, true, !response.type);
-			});
-
 		this.message = '';
 	}
 }
-
-
-@Component({
-	selector: 'fragment-profile',
-	template: `
-		<div *ngIf="user" class="ctx__profile">
-			<section>
-				<img src="{{user.meta?.avatar}}" />
-			</section>
-			<section>
-				<h5>{{user.fname}} {{user.lname}}</h5>
-				{{user.email}}
-			</section>
-		</div>
-	`
-})
-class FragmentProfile {
-	@Input() user;
-}
-
 
 @Component({
 	selector: 'fragment-context-faculty',
@@ -681,7 +930,10 @@ class FragmentContextFaculty implements OnInit {
 						if (!('segment' in response.fragment)) {
 							response.fragment.segment = this.fragment.segment;
 						}
-						response.fragment._user = this.fragment._user;
+						console.log(response.fragment._user);
+						if (this.fragment._user) {
+							response.fragment._user = this.fragment._user;
+						}
 						response.fragment._segment = this.fragment._segment;
 						this.fragment = this.fragmentService.validateHistory(response.fragment);
 						this.histroyLine();
@@ -750,7 +1002,7 @@ class FragmentContextFaculty implements OnInit {
 	histroyLine() {
 		this.users = [];
 		if ('history' in this.fragment) {
-			for (var i = this.fragment.history.length - 1; i >= 0; i--) {
+			for (var i = 0, l = this.fragment.history.length; i < l; i++) {
 				this.userService.getUserPromise(this.fragment.history[i]._user).then(
 					response => {
 						if (response.success) {

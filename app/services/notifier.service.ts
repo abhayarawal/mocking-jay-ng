@@ -18,12 +18,15 @@ var genId = () => {
 
 
 export interface Notifier {
-	id: string,
-	type: string,
+	_id: string,
+	type: number,
 	_user: string,
 	read: boolean,
-	data: string,
-	created_at: Date
+	data: {
+		message: string,
+		resource: {}
+	},
+	created_at?: Date
 }
 
 
@@ -40,6 +43,7 @@ export class NotifierService {
 	private notifierObserver: Observer<string>;
 
 	constructor(
+		private http: Http,
 		@Inject(AuthService) AuthService,
 		@Inject(FragmentService) FragmentService
 	) {
@@ -60,6 +64,15 @@ export class NotifierService {
 		this.setPusher();
 	}
 
+	getNotifications() {
+		return this.http.get(
+			`${this.authService.baseUri}/notifications/`,
+			{ headers: this.authService.getAuthHeader() }
+		)
+			.map(res => res.json())
+			.toPromise();
+	}
+
 	setPusher() {
 		let [exists, session] = this.authService.getSession();
 		if (exists) {
@@ -70,7 +83,11 @@ export class NotifierService {
 			let channel = this.pusher.subscribe(`${session.id}`);
 
 			channel.bind('fragment', (data) => {
-				this.notifierObserver.next(data.message);
+				this.notifierObserver.next(data);
+			});
+
+			channel.bind('invitee', (data) => {
+				this.notifierObserver.next(data);
 			});
 
 
@@ -79,12 +96,6 @@ export class NotifierService {
 			fragmentChannel.bind('fragment', (data) => {
 				if ('payload' in data) {
 					let fragment = data.payload;
-					if ('_user' in fragment) {
-						if (fragment._user) {
-							fragment._user = fragment._user._id;
-						}
-					}
-					fragment._segment = fragment._segment._id;
 					this.fragmentService.notifyFragment(data.fid, fragment);
 				}
 			});

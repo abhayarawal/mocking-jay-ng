@@ -7,7 +7,7 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
 
-import {User, UserType, Fragment, Segment, Status} from '../interfaces/interface';
+import {User, UserType, Fragment, Segment, Status, InviteStatus} from '../interfaces/interface';
 import {AuthService} from '../auth/auth.service';
 import {SegmentService} from './segment.service';
 
@@ -82,14 +82,52 @@ export class FragmentService {
 		return fragments;
 	}
 
+	morphFragment(fragment: Fragment): any {
+		let [exists, session] = this.authService.getSession();
+		if (exists && session.type == UserType.Student) {
+			if (fragment._user == session.id) {
+				return fragment;
+			} else {
+				if ('invitees' in fragment) {
+					var valid = false;
+					fragment.invitees.forEach((invitee) => {
+						if (invitee.email == session.email) {
+							valid = true;
+						}
+					});
+
+					if (valid) {
+						fragment.messages = [];
+						fragment.status = 7;
+						return fragment;
+					} else {
+						fragment.status = 5;
+						fragment.messages = [];
+						fragment.history = [];
+						return fragment;
+					}
+				} else {
+					fragment.status = 5;
+					fragment.messages = [];
+					fragment.history = [];
+					return fragment;
+				}
+			}
+		} else {
+
+			// NEED morph for faculty
+			return fragment;
+		}
+	}
+
 	notifyFragment(fid: string, fragment: any) {
-		let fg = fragment;
+		let fg = this.morphFragment(fragment);
 		fg.id = fg._id;
 		delete fg._id;
 
 		if (this.fragmentObserver) {
 			if (!this.fragmentObserver.isUnsubscribed) {
-				// console.log("fragment pushed", fg);
+				// console.log("fragment pushed", fg, fg._user);
 				this.fragmentObserver.next({
 					id: fid,
 					fragment: fg
@@ -98,8 +136,24 @@ export class FragmentService {
 		}
 	}
 
+	updateInvitation(status: InviteStatus, fragment: Fragment) {
+		this.http.patch(
+			`${this.authService.baseUri}/fragments/${fragment.id}/invite`,
+			JSON.stringify({status: status}),
+			{ headers: this.authService.getAuthHeader() })
+			.map(res => res.json())
+			.retry(3)
+			.subscribe(
+				(response: any) => {
+					this.notificationObserver.next({
+						type: true,
+						message: "Your invitation status has been updated"
+					});
+				});
+	}
+
 	addFragment(fragment: Fragment) {
-		let { id, date, start, end, _segment, status, messages, message, history } = fragment;
+		let { id, date, start, end, _segment, status, messages, message, history, invitees } = fragment;
 
 		let packet = {
 			fid: id,
@@ -110,7 +164,8 @@ export class FragmentService {
 			status: status,
 			messages: messages,
 			message: message,
-			history: history
+			history: history,
+			invitees: invitees
 		};
 
 		this.http.post(

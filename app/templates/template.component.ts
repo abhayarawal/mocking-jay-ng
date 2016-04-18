@@ -214,7 +214,7 @@ class TemplateCreate implements OnInit {
 					this.router.navigateByUrl('/templates');
 				}
 			}
-		)
+		);
 	}
 
 	submit() {

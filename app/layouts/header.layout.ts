@@ -9,22 +9,52 @@ import 'rxjs/Rx';
 import {User, UserType} from '../interfaces/interface';
 import {AuthService} from '../auth/auth.service';
 import {Notifier, NotifierService} from '../services/notifier.service';
+import {NotificationService, Notification} from '../notification.service';
+
+@Pipe({ name: 'unread' })
+export class UnreadNotifiers implements PipeTransform {
+  transform(allNotifier: Notifier[]) {
+    return allNotifier.filter(nt => !nt.read);
+  }
+}
+
+@Pipe({ name: 'read' })
+export class ReadNotifiers implements PipeTransform {
+  transform(allNotifier: Notifier[]) {
+    return allNotifier.filter(nt => nt.read);
+  }
+}
 
 @Component({
 	selector: 'main-nav',
 	template: `
 		<ul class="main__nav" *ngIf="navs">
 			<li>
-				<a>
-					<span class="unread">{{notifiers.length}}</span>
+				<a (click)="show=!show">
+					<span class="unread">{{unread}}</span>
 					<span class="lnr lnr-flag"></span>
 				</a>
-				<div class="notifiers" *ngIf="notifiers.length > 0">
+				<div class="notifiers" *ngIf="show">
 					<ul>
-						<li *ngFor="#nt of notifiers">
-							{{nt}}
+						<h5>Unread ({{unread}})</h5>
+						<li *ngFor="#nt of (notifiers | unread)">
+							<span class="icon-radio-off"></span>
+							<a (click)="resource(nt._id)">{{nt.data.message}}</a>
+							<button (click)="toggleRead(nt._id)" class="lnr lnr-chevron-down"></button>
 						</li>
 					</ul>
+
+					<ul>
+						<h5>Read</h5>
+						<li *ngFor="#nt of (notifiers | read)">
+							<span class="icon-radio-on"></span>
+							<a (click)="resource(nt._id)">{{nt.data.message}}</a>
+							<button (click)="toggleRead(nt._id)" class="lnr lnr-chevron-up"></button>
+						</li>
+					</ul>
+					<section>
+						<a>View all</a>
+					</section>
 				</div>
 			</li>
 			<li *ngFor="#nav of navs">
@@ -40,26 +70,61 @@ import {Notifier, NotifierService} from '../services/notifier.service';
 			</li>
 		</ul>
 	`,
-	directives: [RouterLink]
+	directives: [RouterLink],
+	pipes: [UnreadNotifiers, ReadNotifiers]
 })
 class MainNav implements OnInit {
 	@Input() user: User;
 	@Input() navs: Object[];
 
-	notifiers: string[] = [];
+	show: boolean = false;
+	notifiers: Notifier[] = [];
 	notifier$: Observable<string>;
 
 	constructor(
-		private notifierService: NotifierService
-	) {}
-
-	ngOnInit() {
-
+		private notifierService: NotifierService,
+		private router: Router
+	) {
 		this.notifier$ = this.notifierService.notifier$;
 		this.notifier$.subscribe(
 			(response) => {
 				this.notifiers.push(response);
+			});
+	}
+
+	ngOnInit() {
+		this.notifierService.getNotifications().then(
+			(notifiers) => {
+				this.notifiers = notifiers;
 			})
+	}
+
+	get unread() {
+		return this.notifiers.filter(nt => !nt.read).length;
+	}
+
+	toggleRead(id: string) {
+		this.notifiers = this.notifiers.map(notifier => {
+			if (notifier._id == id) {
+				notifier.read = !!!notifier.read;
+			}
+			return notifier;
+		});
+	}
+
+	resource(id: string) {
+		this.notifiers.forEach(notifier => {
+			if (notifier._id == id) {
+				switch (notifier.type) {
+					case 0:
+						let res = notifier.data.resource;
+						this.router.navigateByUrl(`/calendar/${res.user}/day/${res.month}/${res.day}/${res.year}`);
+						break;
+					default:
+						break;
+				}
+			}
+		});
 	}
 }
 
@@ -175,10 +240,18 @@ export class LayoutHeader implements OnInit {
 	user: User;
 	session$: Observable<boolean>;
 	show: boolean = false;
+	notification$: Observable<Notification>;
 
 	constructor(
-		private authService: AuthService
-	) {}
+		private authService: AuthService,
+		private notificationService: NotificationService
+	) {
+		this.notification$ = this.notificationService.notification$;
+		this.notification$.subscribe(
+			(data) => {
+			}
+		);
+	}
 
 	NAVS: Object[] = [
 		{ location: ['/ProfileViewport'], lnr: 'calendar-full', text: 'Calendar' },

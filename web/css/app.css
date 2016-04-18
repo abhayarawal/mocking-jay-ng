@@ -198,12 +198,12 @@ html, body {
   height: calc(100% - 40px);
   z-index: 4; }
 
-.segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a {
+.segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a {
   text-decoration: none;
   color: #898E95;
   border-bottom: 1px dotted #898E95;
   cursor: pointer; }
-  .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a:hover {
+  .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a:hover, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a:hover {
     color: #000;
     border-color: #000; }
 
@@ -391,31 +391,110 @@ html, body {
       position: relative; }
       .app__top .top__right .main__nav > li .notifiers {
         position: absolute;
-        width: 300px;
+        width: 350px;
         top: calc(100% + 18px);
-        padding: 10px;
+        padding: 10px 0 0 0;
         left: 50%;
-        margin-left: -150px;
-        background: #8264e7 !important;
+        margin-left: -175px;
+        background: rgba(231, 67, 114, 0.9) !important;
+        -webkit-box-shadow: 1px 2px 4px 0px rgba(104, 104, 104, 0.53);
+        -moz-box-shadow: 1px 2px 4px 0px rgba(104, 104, 104, 0.53);
+        box-shadow: 1px 2px 4px 0px rgba(104, 104, 104, 0.53);
         color: #fff;
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
+        -webkit-border-radius: 15px;
+        -moz-border-radius: 15px;
+        -o-border-radius: 15px;
+        -ms-border-radius: 15px;
+        border-radius: 15px;
         font-weight: 500; }
         .app__top .top__right .main__nav > li .notifiers:after {
           width: 0;
           height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 6px solid #8264e7;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+          border-bottom: 10px solid rgba(231, 67, 114, 0.93);
           position: absolute;
-          top: -6px;
+          top: -10px;
           left: 50%;
-          margin-left: -6px;
+          margin-left: -20px;
           display: block;
           content: ""; }
-        .app__top .top__right .main__nav > li .notifiers ul li {
+        .app__top .top__right .main__nav > li .notifiers h5 {
+          padding: 0;
+          margin: 0;
+          font-weight: 400;
           text-align: left;
-          display: block; }
+          color: #ffffff;
+          font-size: 14px;
+          padding: 0 30px;
+          margin-bottom: 5px; }
+        .app__top .top__right .main__nav > li .notifiers > ul {
+          margin-top: 10px; }
+          .app__top .top__right .main__nav > li .notifiers > ul > li {
+            text-align: left;
+            display: block;
+            position: relative;
+            background: rgba(205, 59, 101, 0.93);
+            border-top: 1px solid rgba(183, 53, 91, 0.93); }
+            .app__top .top__right .main__nav > li .notifiers > ul > li:last-child {
+              border-bottom: 1px solid rgba(183, 53, 91, 0.93); }
+            .app__top .top__right .main__nav > li .notifiers > ul > li span {
+              position: absolute;
+              left: 12px;
+              top: 0px;
+              display: block;
+              line-height: 35px;
+              font-size: 10px;
+              z-index: 1; }
+            .app__top .top__right .main__nav > li .notifiers > ul > li button {
+              height: 28px;
+              width: 28px;
+              position: absolute;
+              right: 5px;
+              top: 3px;
+              background: rgba(154, 44, 76, 0.93);
+              color: #fff;
+              display: block;
+              -webkit-border-radius: 100%;
+              -moz-border-radius: 100%;
+              -o-border-radius: 100%;
+              -ms-border-radius: 100%;
+              border-radius: 100%;
+              text-align: center;
+              font-size: 12px;
+              -webkit-transition: all 0.15s ease;
+              -moz-transition: all 0.15s ease;
+              -o-transition: all 0.15s ease;
+              -ms-transition: all 0.15s ease;
+              transition: all 0.15s ease;
+              z-index: 2; }
+            .app__top .top__right .main__nav > li .notifiers > ul > li a {
+              color: #fff;
+              font-size: 13px;
+              padding: 0 40px 0 30px;
+              cursor: pointer;
+              display: block;
+              font-weight: 500;
+              line-height: 35px;
+              -webkit-transition: all 0.2s ease;
+              -moz-transition: all 0.2s ease;
+              -o-transition: all 0.2s ease;
+              -ms-transition: all 0.2s ease;
+              transition: all 0.2s ease; }
+              .app__top .top__right .main__nav > li .notifiers > ul > li a.read {
+                font-weight: 400; }
+              .app__top .top__right .main__nav > li .notifiers > ul > li a:hover {
+                background: #ff497e; }
+        .app__top .top__right .main__nav > li .notifiers section {
+          text-align: center;
+          margin: 17px 0;
+          padding: 0 20px; }
+          .app__top .top__right .main__nav > li .notifiers section a {
+            color: #fff;
+            border-bottom: 1px dotted #fff;
+            line-height: 25px;
+            cursor: pointer;
+            font-size: 12px; }
       .app__top .top__right .main__nav > li a {
         color: #626262;
         position: relative; }
@@ -477,7 +556,7 @@ html, body {
             margin-left: -5px; }
       .app__top .top__right .main__nav > li:not(:last-child) {
         padding-right: 10px; }
-        .app__top .top__right .main__nav > li:not(:last-child) a {
+        .app__top .top__right .main__nav > li:not(:last-child) > a {
           font-size: 17px;
           line-height: 25px;
           display: block;
@@ -488,7 +567,7 @@ html, body {
           -o-border-radius: 100%;
           -ms-border-radius: 100%;
           border-radius: 100%; }
-          .app__top .top__right .main__nav > li:not(:last-child) a.router-link-active {
+          .app__top .top__right .main__nav > li:not(:last-child) > a.router-link-active {
             background: #906fff;
             color: #fff; }
       .app__top .top__right .main__nav > li:last-child {
@@ -960,13 +1039,6 @@ textarea {
           -o-border-radius: 100%;
           -ms-border-radius: 100%;
           border-radius: 100%; }
-        .segment__viewport .fragment__context .fragment__ctx .fragment__history span:not(:last-child) {
-          position: relative;
-          left: 20px;
-          z-index: 1;
-          margin-right: 2px; }
-      .segment__viewport .fragment__context .fragment__ctx .fragment__history:hover span:not(:last-child) {
-        left: auto; }
     .segment__viewport .fragment__context .fragment__ctx .ctx__head {
       text-transform: capitalize;
       font-weight: 400; }
@@ -1169,6 +1241,70 @@ textarea {
             padding: 0;
             font-weight: 500;
             font-size: 16px; }
+    .segment__viewport .fragment__context .fragment__ctx .invitees__box {
+      margin-top: 25px;
+      display: block; }
+      .segment__viewport .fragment__context .fragment__ctx .invitees__box h5 {
+        margin: 0;
+        padding: 0; }
+      .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li {
+        display: block;
+        padding: 4px 0 0 0; }
+        .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li span {
+          position: relative;
+          display: inline-block;
+          vertical-align: middle;
+          padding-right: 4px; }
+        .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a {
+          font-size: 12px; }
+      .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form {
+        margin-top: 10px;
+        position: relative; }
+        .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form button {
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          background: #fff;
+          display: block;
+          -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+          -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+          border: 1px solid rgba(0, 0, 0, 0.17);
+          -webkit-border-radius: 4px;
+          -moz-border-radius: 4px;
+          -o-border-radius: 4px;
+          -ms-border-radius: 4px;
+          border-radius: 4px;
+          line-height: 20px;
+          text-align: center;
+          font-size: 15px;
+          color: #878787;
+          cursor: pointer;
+          -webkit-transition: all 0.2s ease;
+          -moz-transition: all 0.2s ease;
+          -o-transition: all 0.2s ease;
+          -ms-transition: all 0.2s ease;
+          transition: all 0.2s ease; }
+          .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form button:hover {
+            background-repeat: repeat-x;
+            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#fbfbfb));
+            background: -webkit-linear-gradient(top, #fbfbfb, #f6f6f6);
+            background: -moz-linear-gradient(top, #fbfbfb, #f6f6f6);
+            background: -ms-linear-gradient(top, #fbfbfb, #f6f6f6);
+            background: -o-linear-gradient(top, #fbfbfb, #f6f6f6); }
+          .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form button:active {
+            background-repeat: repeat-x;
+            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#ececec));
+            background: -webkit-linear-gradient(top, #ececec, #f6f6f6);
+            background: -moz-linear-gradient(top, #ececec, #f6f6f6);
+            background: -ms-linear-gradient(top, #ececec, #f6f6f6);
+            background: -o-linear-gradient(top, #ececec, #f6f6f6); }
+    .segment__viewport .fragment__context .fragment__ctx .invitee__template h5 {
+      font-size: 15px;
+      margin: 0;
+      padding: 0;
+      font-weight: 500;
+      margin-top: 35px; }
 
 .segment__wrap {
   position: relative; }
@@ -1216,6 +1352,11 @@ textarea {
           user-select: none; }
           .segment__wrap .segments .segment .fragments ul li:hover {
             border-bottom: 1px solid #cacaca; }
+          .segment__wrap .segments .segment .fragments ul li .histroy {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            font-size: 15px; }
           .segment__wrap .segments .segment .fragments ul li span {
             display: block; }
             .segment__wrap .segments .segment .fragments ul li span.time {
@@ -1286,6 +1427,15 @@ textarea {
             border-left: 2px solid; }
             .segment__wrap .segments .segment .fragments ul li.status__6:hover, .segment__wrap .segments .segment .fragments ul li.status__5:hover {
               border-color: #b2b2b2; }
+          .segment__wrap .segments .segment .fragments ul li.status__7 {
+            border-color: #ffb949;
+            color: #e28b00;
+            border-bottom: none;
+            background: rgba(255, 185, 73, 0.17);
+            height: 60px;
+            border-left: 2px solid; }
+            .segment__wrap .segments .segment .fragments ul li.status__7:hover {
+              border-color: #ffb949; }
           .segment__wrap .segments .segment .fragments ul li.selected {
             background: #fcfcfc;
             z-index: 2;

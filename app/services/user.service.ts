@@ -43,6 +43,15 @@ export class UserService {
 			.toPromise();
 	}
 
+	getUserByEmailPromise(email: string = null) {
+		let headers = this.authService.getAuthHeader();
+		return this.http.get(`${this.authService.baseUri}/user/${email}`, {
+			headers: headers,
+		})
+			.map(res => res.json())
+			.toPromise();
+	}
+
 	getUser(uid: string = null) {
 		if (uid) {
 			
