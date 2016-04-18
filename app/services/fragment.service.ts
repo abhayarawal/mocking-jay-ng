@@ -85,7 +85,10 @@ export class FragmentService {
 	morphFragment(fragment: Fragment): any {
 		let [exists, session] = this.authService.getSession();
 		if (exists && session.type == UserType.Student) {
-			if (fragment._user == session.id) {
+			if (!fragment._user) {
+				return fragment;
+			}
+			else if (fragment._user == session.id) {
 				return fragment;
 			} else {
 				if ('invitees' in fragment) {

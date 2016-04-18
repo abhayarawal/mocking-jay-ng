@@ -118,11 +118,11 @@ class FragmentComponent implements OnInit {
 		this.fragment$.subscribe(
 			(response: FragmentResponse) => {
 				if (this.fragment.id == response.id) {
+					console.log(response.fragment.status);
 					if ('fragment' in response) {
 						if (!('segment' in response.fragment)) {
 							response.fragment.segment = this.fragment.segment;
 						}
-						
 						response.fragment._segment = this.fragment._segment;
 						this.fragment = this.fragmentService.validateHistory(response.fragment);
 						this.updateHistory();
