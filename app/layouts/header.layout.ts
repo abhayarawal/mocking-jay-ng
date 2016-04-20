@@ -40,7 +40,7 @@ export class ReadNotifiers implements PipeTransform {
 						<li *ngFor="#nt of (notifiers | unread)">
 							<span class="icon-radio-off"></span>
 							<a (click)="resource(nt._id)">{{nt.data.message}}</a>
-							<button (click)="toggleRead(nt._id)" class="lnr lnr-chevron-down"></button>
+							<button (click)="toggleRead(nt._id)" class="icon-done"></button>
 						</li>
 					</ul>
 
@@ -128,6 +128,7 @@ class MainNav implements OnInit {
 				}
 			}
 		});
+		this.toggleRead(id);
 	}
 }
 
