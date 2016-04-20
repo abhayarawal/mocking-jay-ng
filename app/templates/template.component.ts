@@ -237,11 +237,33 @@ class TemplateCreate implements OnInit {
 
 
 @Component({
+	selector: 'template-editor',
 	template: `
-		<h3>Templates</h3>
-		<!-- <a class="button type__1" (click)="flush()">Flush storage</a> -->
-		<ul *ngIf="templates" class="table">
-			<li *ngFor="#template of templates">
+		<div class="inner__row" *ngIf="template">
+			<div class="form__wrap">
+				<form>
+					<h3>Editing template</h3>
+					<a class="button type__2" (click)="remove(template.id)">Remove</a>
+				</form>
+			</div>
+		</div>
+	`
+})
+class TemplateEditor {
+	@Input() template: Template;
+
+	remove(id: string) {
+		console.log(`you're trying to remove ${id}`);
+	}
+}
+
+
+@Component({
+	selector: 'template-detail',
+	template: `
+		<li *ngIf="template" class="template__detail">
+
+			<div class="inner__row">
 				<section>
 					<strong>{{template.name}}</strong>
 				</section>
@@ -249,11 +271,31 @@ class TemplateCreate implements OnInit {
 					Interval {{template.interval}} min
 				</section>
 				<section>
-					<a class="button type__2" (click)="remove(template.id)">Remove</a>
+					<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
 				</section>
-			</li>
+			</div>
+			
+			<template-editor [template]="template" *ngIf="show"></template-editor>
+		</li>
+	`,
+	directives: [TemplateEditor]
+})
+class TemplateDetail {
+	@Input() template: Template;
+
+	show: boolean = false;
+}
+
+
+@Component({
+	template: `
+		<h3>Templates</h3>
+		<!-- <a class="button type__1" (click)="flush()">Flush storage</a> -->
+		<ul *ngIf="templates" class="table">
+			<template-detail *ngFor="#t of templates" [template]="t"></template-detail>
 		</ul>
-	`
+	`,
+	directives: [TemplateDetail]
 })
 class Templates implements OnInit {
 	templates: Template[];

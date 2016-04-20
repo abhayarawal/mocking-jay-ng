@@ -389,6 +389,16 @@ html, body {
       display: inline-block;
       vertical-align: middle;
       position: relative; }
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0); }
+  20%, 80% {
+    transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0); }
+  40%, 60% {
+    transform: translate3d(4px, 0, 0); } }
       .app__top .top__right .main__nav > li .notifiers {
         position: absolute;
         width: 350px;
@@ -500,6 +510,11 @@ html, body {
       .app__top .top__right .main__nav > li a {
         color: #626262;
         position: relative; }
+        .app__top .top__right .main__nav > li a.animate {
+          animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          perspective: 1000px; }
         .app__top .top__right .main__nav > li a .unread {
           position: absolute;
           left: -15px;
@@ -1968,16 +1983,29 @@ textarea {
     display: table; }
   .table li:after {
     clear: both; }
-  .table li section {
-    float: left;
-    width: 33.33333%;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem; }
-    .table li section:first-child {
-      text-transform: capitalize; }
-    .table li section h1, .table li section h2, .table li section h3, .table li section h4, .table li section h5, .table li section h6 {
-      margin: 0;
-      padding: 0; }
+  .table li .inner__row {
+    margin-left: -1.25rem;
+    margin-right: -1.25rem; }
+    .table li .inner__row:before, .table li .inner__row:after {
+      content: '';
+      display: table; }
+    .table li .inner__row:after {
+      clear: both; }
+    .table li .inner__row section {
+      float: left;
+      width: 33.33333%;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem; }
+      .table li .inner__row section:first-child {
+        text-transform: capitalize; }
+      .table li .inner__row section h1, .table li .inner__row section h2, .table li .inner__row section h3, .table li .inner__row section h4, .table li .inner__row section h5, .table li .inner__row section h6 {
+        margin: 0;
+        padding: 0; }
+    .table li .inner__row .form__wrap {
+      float: left;
+      width: 100%;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem; }
 
 .notification__component {
   position: fixed;
@@ -2004,7 +2032,7 @@ textarea {
   -ms-transition: all 0.4s ease;
   transition: all 0.4s ease;
   z-index: 20;
-  width: 270px;
+  width: 320px;
   overflow: hidden;
   -webkit-box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4);
   -moz-box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4);

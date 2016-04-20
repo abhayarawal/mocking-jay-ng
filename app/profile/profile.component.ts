@@ -26,11 +26,6 @@ import {RouterService} from '../services/router.service';
 			<div class="row">
 				<section>
 					<ul>
-						<li>
-							<a href="">
-								Professors <span class="lnr lnr-chevron-down"></span>
-							</a>
-						</li>
 						<li><a href="">Today's Events</a></li>
 						<li><a class="selected" [routerLink]="['/ProfileViewport', 'CalendarRouter', {id: id}, 'DaySegment', {month: month, day: day, year: year}]">Calendar</a></li>
 					</ul>

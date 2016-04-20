@@ -30,7 +30,7 @@ export class ReadNotifiers implements PipeTransform {
 	template: `
 		<ul class="main__nav" *ngIf="navs">
 			<li>
-				<a (click)="show=!show">
+				<a (click)="show=!show" [ngClass]="{animate: animate}">
 					<span class="unread">{{unread}}</span>
 					<span class="lnr lnr-flag"></span>
 				</a>
@@ -81,6 +81,9 @@ class MainNav implements OnInit {
 	notifiers: Notifier[] = [];
 	notifier$: Observable<string>;
 
+	animate: boolean = false;
+	timeout: any;
+
 	constructor(
 		private notifierService: NotifierService,
 		private router: Router
@@ -89,14 +92,28 @@ class MainNav implements OnInit {
 		this.notifier$.subscribe(
 			(response) => {
 				this.notifiers = [response].concat(this.notifiers);
+				this.runAnimate();
 			});
+	}
+
+	runAnimate() {
+		clearTimeout(this.timeout);
+		this.animate = false;
+		let length = this.notifiers.filter(nt => !nt.read).length;
+		if (length > 0) {
+			this.animate = true;
+			this.timeout = setTimeout(() => {
+				this.animate = false;
+			}, 1000);
+		}
 	}
 
 	ngOnInit() {
 		this.notifierService.getNotifications().then(
 			(notifiers) => {
 				this.notifiers = notifiers;
-			})
+				this.runAnimate();
+			});
 	}
 
 	get unread() {
