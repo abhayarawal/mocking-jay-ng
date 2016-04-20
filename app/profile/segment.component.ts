@@ -926,6 +926,7 @@ class FragmentContextFaculty implements OnInit {
 		this.fragment$.subscribe(
 			(response: FragmentResponse) => {
 				if (this.fragment.id == response.id) {
+					this.users = [];
 					if ('fragment' in response) {
 						if (!('segment' in response.fragment)) {
 							response.fragment.segment = this.fragment.segment;

@@ -74,6 +74,7 @@ export class NotifierService {
 	}
 
 	setPusher() {
+		console.log("setting up sync mode ...");
 		let [exists, session] = this.authService.getSession();
 		if (exists) {
 			this.pusher = new Pusher('86204f7d8b91b0b741e6', {
