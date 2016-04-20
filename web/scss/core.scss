@@ -697,8 +697,8 @@ $top__height: 40px;
 
 							button
 							{
-								height: 28px;
-								width: 28px;
+								height: 22px;
+								width: 22px;
 								position: absolute;
 								right: 5px;
 								top: 3px;
@@ -720,13 +720,15 @@ $top__height: 40px;
 
 							a
 							{
+								display: inline-block;
+								vertical-align: middle;
 								color: #fff;
 								font-size: 13px;
 								padding: 0 40px 0 30px;
 								cursor: pointer;
 								display: block;
 								font-weight: 500;
-								line-height: 35px;
+								line-height: 25px;
 								@include transition(all 0.2s ease);
 
 								&.read
@@ -1885,6 +1887,40 @@ textarea
 						{
 							@include bg-top-bottom(#ececec, #f6f6f6);
 
+						}
+					}
+				}
+			}
+
+			.fragment__invitee__list
+			{
+				display: block;
+				margin-top: 30px;
+
+				h5
+				{
+					margin: 0;
+					padding: 0;
+					font-weight: 400;
+					font-size: 14px;
+				}
+
+				ul
+				{
+					li
+					{
+						& > span
+						{
+							display: inline-block;
+							color: #777;
+							background: #ececec;
+							font-weight: 400;
+							font-size: 12px;
+							vertical-align: middle;
+							@include border-radius(4px);
+							font-weight: 500;
+							padding: 0 8px;
+							margin-right: 10px;
 						}
 					}
 				}

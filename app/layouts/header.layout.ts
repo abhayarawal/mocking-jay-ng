@@ -88,7 +88,7 @@ class MainNav implements OnInit {
 		this.notifier$ = this.notifierService.notifier$;
 		this.notifier$.subscribe(
 			(response) => {
-				this.notifiers.push(response);
+				this.notifiers = [response].concat(this.notifiers);
 			});
 	}
 
@@ -117,6 +117,9 @@ class MainNav implements OnInit {
 			if (notifier._id == id) {
 				switch (notifier.type) {
 					case 0:
+					case 1:
+					case 2:
+					case 3:
 						let res = notifier.data.resource;
 						this.router.navigateByUrl(`/calendar/${res.user}/day/${res.month}/${res.day}/${res.year}`);
 						break;

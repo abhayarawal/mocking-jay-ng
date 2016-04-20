@@ -525,7 +525,6 @@ class FragmentProfile {
 	selector: 'fragment-invitee-list',
 	template: `
 		<div class="fragment__invitee__list" *ngIf="fragment">
-			<h5>All invitees</h5>
 			<ul>
 				<li *ngFor="#invity of fragment.invitees">
 					<span [ngSwitch]="invity.status">
@@ -629,7 +628,6 @@ class FragmentInvitation implements OnInit {
 	selector: 'fragment-context-student',
 	template: `
 		<div class="fragment__ctx">
-			{{fragment.id}}
 			<h3 class="ctx__head">
 				{{fragment.segment.template.name}}
 			</h3>
@@ -809,7 +807,6 @@ class FragmentContextStudent implements OnInit {
 				</span>
 			</div>
 
-			{{fragment.id}}
 			<h3 class="ctx__head">
 				{{fragment.segment.template.name}}
 			</h3>
@@ -836,6 +833,7 @@ class FragmentContextStudent implements OnInit {
 						<a (click)="deny()">Deny appointment</a>
 						<a href="">Deny and make unavailable</a>
 					</div>
+					<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
 				</template>
 
 				<template [ngSwitchWhen]="2">
@@ -854,6 +852,7 @@ class FragmentContextStudent implements OnInit {
 					<div class="cancels">
 						<a href="">Cancel and make unavailable for everyone</a>
 					</div>
+					<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
 				</template>
 
 				<template [ngSwitchWhen]="3">
@@ -886,7 +885,7 @@ class FragmentContextStudent implements OnInit {
 			</div>
 		</div>
 	`,
-	directives: [FragmentMessage, FragmentProfile, RadiusRadioComponent, RadiusSelectComponent, FragmentCtxHeader],
+	directives: [FragmentMessage, FragmentProfile, RadiusRadioComponent, RadiusSelectComponent, FragmentCtxHeader, FragmentInviteeList],
 	pipes: [TimePipe]
 })
 class FragmentContextFaculty implements OnInit {

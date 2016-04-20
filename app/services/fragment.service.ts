@@ -114,7 +114,7 @@ export class FragmentService {
 					}
 				});
 
-				if (valid && ([3, 4, 6].indexOf(fragment.status) >= 0)) {
+				if (valid && ([3, 4, 6].indexOf(fragment.status) < 0)) {
 					fragment.messages = [];
 					fragment.status = 7;
 					return fragment;
