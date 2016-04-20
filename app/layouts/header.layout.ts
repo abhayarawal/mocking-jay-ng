@@ -266,12 +266,7 @@ export class LayoutHeader implements OnInit {
 		let [sessionExists, session] = this.authService.getSession();
 		if (sessionExists) {
 			this.user = session;
-			if (session.type == UserType.Student) {
-				// fix this!!!
-				this.navs = [this.NAVS[0], this.NAVS[3]];
-			} else {
-				this.navs = this.NAVS;
-			}
+			this.navs = this.NAVS;
 			this.navs[0].location = ['/ProfileViewport', 'CalendarRouter', { id: this.user.id }];
 		}
 	}

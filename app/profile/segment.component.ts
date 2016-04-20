@@ -118,7 +118,6 @@ class FragmentComponent implements OnInit {
 		this.fragment$.subscribe(
 			(response: FragmentResponse) => {
 				if (this.fragment.id == response.id) {
-					console.log(response.fragment.status);
 					if ('fragment' in response) {
 						if (!('segment' in response.fragment)) {
 							response.fragment.segment = this.fragment.segment;
@@ -135,12 +134,10 @@ class FragmentComponent implements OnInit {
 		this.history = false;
 		if ('history' in this.fragment) {
 			this.userService.getUser().then((user) => {
-				if (user.type == UserType.Faculty) {
-					if ('_user' in this.fragment.segment) {
-						if (user.id == this.fragment.segment._user) {
-							if (this.fragment.history.length > 0)
-								this.history = true;
-						}
+				if ('_user' in this.fragment.segment) {
+					if (user.id == this.fragment.segment._user) {
+						if (this.fragment.history.length > 0)
+							this.history = true;
 					}
 				}
 			});
@@ -765,6 +762,8 @@ class FragmentContextStudent implements OnInit {
 	}
 
 	cancel() {
+		this.fragment.status = Status.cancelled;
+		this.update();
 	}
 
 	invitees([valid, invitees]) {
@@ -781,6 +780,14 @@ class FragmentContextStudent implements OnInit {
 		}
 	}
 
+	update() {
+		if (this.message.trim().length > 0) {
+			this.fragment.message = this.message.trim();
+		}
+		this.fragmentService.updateFragment(this.fragment);
+		this.message = '';
+	}
+
 	create() {
 		if (this.fragment.segment.template.require_accept) {
 			this.fragment.status = Status.in_progress;
@@ -788,13 +795,7 @@ class FragmentContextStudent implements OnInit {
 			this.fragment.status = Status.approved;
 		}
 
-		if (this.message.trim().length > 0) {
-			this.fragment.message = this.message.trim();
-		}
-
-		this.fragmentService.updateFragment(this.fragment);
-
-		this.message = '';
+		this.update();
 	}
 }
 
@@ -947,6 +948,7 @@ class FragmentContextFaculty implements OnInit {
 	}
 
 	ngOnChanges() {
+		this.users = [];
 		this.user$ = this.userService.user$;
 		this.user$.subscribe(
 			(user) => {
@@ -1020,9 +1022,9 @@ class FragmentContextFaculty implements OnInit {
 @Component({
 	selector: 'fragment-context',
 	template: `
-		<div class="fragment__context" *ngIf="fragment && session && !(unauthorized)">
-			<fragment-context-student [user]="session" [fragment]="fragment" *ngIf="session.type==0"></fragment-context-student>
-			<fragment-context-faculty [user]="session" [fragment]="fragment" *ngIf="session.type==1"></fragment-context-faculty>
+		<div class="fragment__context" *ngIf="fragment && session">
+			<fragment-context-student [user]="session" [fragment]="fragment" *ngIf="!(session.id==fragment.segment._user)"></fragment-context-student>
+			<fragment-context-faculty [user]="session" [fragment]="fragment" *ngIf="(session.id==fragment.segment._user)"></fragment-context-faculty>
 		</div>
 		<div class="fragment__context" *ngIf="fragment && unauthorized">
 			<h3>Nothing to see here</h3>
@@ -1036,8 +1038,6 @@ class FragmentContext implements OnInit {
 	observable: Observable<Fragment>;
 	fragment: Fragment;
 	session: User;
-
-	unauthorized: boolean = false;
 
 	constructor(
 		private userService: UserService,
@@ -1062,9 +1062,6 @@ class FragmentContext implements OnInit {
 		);
 
 		this.userService.getUser().then(user => {
-			if (user.type == UserType.Faculty && user.id !== uid) {
-				this.unauthorized = true;
-			}
 			this.session = user;
 		});
 	}

@@ -96,7 +96,7 @@ export class NotifierService {
 			fragmentChannel.bind('fragment', (data) => {
 				if ('payload' in data) {
 					let fragment = data.payload;
-					this.fragmentService.notifyFragment(data.fid, fragment);
+					this.fragmentService.notifyFragment(data.fid, fragment, data._user);
 				}
 			});
 		}

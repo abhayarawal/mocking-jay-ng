@@ -334,11 +334,5 @@ export class TemplateViewport implements OnInit {
 	){}
 
 	ngOnInit() {
-		let [sessionExist, session] = this.authService.getSession();
-		if (sessionExist) {
-			if (session.type !== UserType.Faculty) {
-				this.router.navigateByUrl('/calendar');
-			}
-		}
 	}
 }

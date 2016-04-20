@@ -82,49 +82,59 @@ export class FragmentService {
 		return fragments;
 	}
 
-	morphFragment(fragment: Fragment): any {
+	morphFragment(fragment: Fragment, _user: string): any {
 		let [exists, session] = this.authService.getSession();
-		if (exists && session.type == UserType.Student) {
-			if (!fragment._user) {
-				return fragment;
-			}
-			else if (fragment._user == session.id) {
-				return fragment;
-			} else {
-				if ('invitees' in fragment) {
-					var valid = false;
-					fragment.invitees.forEach((invitee) => {
-						if (invitee.email == session.email) {
-							valid = true;
-						}
-					});
+		if (_user == session.id) {
+			return fragment;
+		}
 
-					if (valid) {
-						fragment.messages = [];
-						fragment.status = 7;
-						return fragment;
-					} else {
-						fragment.status = 5;
-						fragment.messages = [];
-						fragment.history = [];
-						return fragment;
+		if (!fragment._user) {
+			if ('history' in fragment) {
+				let valid: [boolean, number] = [false, -1];
+				fragment.history.forEach((history, index) => {
+					if (history._user == session.id) {
+						valid = [true, index];
 					}
+				});
+				if (valid[0]) {
+					fragment.status = fragment.history[valid[1]].status;
+					fragment.messages = fragment.history[valid[1]].messages;
+				}
+			}
+			return fragment;
+		}
+		else if (fragment._user == session.id) {
+			return fragment;
+		} else {
+			if ('invitees' in fragment) {
+				var valid = false;
+				fragment.invitees.forEach((invitee) => {
+					if (invitee.email == session.email) {
+						valid = true;
+					}
+				});
+
+				if (valid && ([3, 4, 6].indexOf(fragment.status) >= 0)) {
+					fragment.messages = [];
+					fragment.status = 7;
+					return fragment;
 				} else {
 					fragment.status = 5;
 					fragment.messages = [];
 					fragment.history = [];
 					return fragment;
 				}
+			} else {
+				fragment.status = 5;
+				fragment.messages = [];
+				fragment.history = [];
+				return fragment;
 			}
-		} else {
-
-			// NEED morph for faculty
-			return fragment;
 		}
 	}
 
-	notifyFragment(fid: string, fragment: any) {
-		let fg = this.morphFragment(fragment);
+	notifyFragment(fid: string, fragment: any, _user: string) {
+		let fg = this.morphFragment(fragment, _user);
 		fg.id = fg._id;
 		delete fg._id;
 

@@ -396,7 +396,7 @@ html, body {
         padding: 10px 0 0 0;
         left: 50%;
         margin-left: -175px;
-        background: rgba(231, 67, 114, 0.9) !important;
+        background: rgba(52, 200, 231, 0.9) !important;
         -webkit-box-shadow: 1px 2px 4px 0px rgba(104, 104, 104, 0.53);
         -moz-box-shadow: 1px 2px 4px 0px rgba(104, 104, 104, 0.53);
         box-shadow: 1px 2px 4px 0px rgba(104, 104, 104, 0.53);
@@ -412,7 +412,7 @@ html, body {
           height: 0;
           border-left: 10px solid transparent;
           border-right: 10px solid transparent;
-          border-bottom: 10px solid rgba(231, 67, 114, 0.93);
+          border-bottom: 10px solid rgba(52, 200, 231, 0.9);
           position: absolute;
           top: -10px;
           left: 50%;
@@ -434,10 +434,10 @@ html, body {
             text-align: left;
             display: block;
             position: relative;
-            background: rgba(205, 59, 101, 0.93);
-            border-top: 1px solid rgba(183, 53, 91, 0.93); }
+            background: rgba(16, 174, 205, 0.93);
+            border-top: 1px solid rgba(35, 164, 183, 0.93); }
             .app__top .top__right .main__nav > li .notifiers > ul > li:last-child {
-              border-bottom: 1px solid rgba(183, 53, 91, 0.93); }
+              border-bottom: 1px solid rgba(35, 164, 183, 0.93); }
             .app__top .top__right .main__nav > li .notifiers > ul > li span {
               position: absolute;
               left: 12px;
@@ -452,8 +452,8 @@ html, body {
               position: absolute;
               right: 5px;
               top: 3px;
-              background: rgba(154, 44, 76, 0.93);
-              color: #fff;
+              background: rgba(255, 255, 255, 0.54);
+              color: rgba(44, 97, 107, 0.93);
               display: block;
               -webkit-border-radius: 100%;
               -moz-border-radius: 100%;
@@ -484,7 +484,7 @@ html, body {
               .app__top .top__right .main__nav > li .notifiers > ul > li a.read {
                 font-weight: 400; }
               .app__top .top__right .main__nav > li .notifiers > ul > li a:hover {
-                background: #ff497e; }
+                background: rgba(94, 208, 228, 0.93); }
         .app__top .top__right .main__nav > li .notifiers section {
           text-align: center;
           margin: 17px 0;

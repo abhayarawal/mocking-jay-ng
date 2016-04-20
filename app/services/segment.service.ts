@@ -141,7 +141,7 @@ export class SegmentService implements OnInit {
 	addSegment(segment: any) {
 		let [sessionExist, session] = this.authService.getSession();
 		if (sessionExist) {
-			if (session.type == UserType.Faculty && session.id) {
+			if (session.id) {
 				let authHeader = this.authService.getAuthHeader();
 
 				this.http.post(`${this.authService.baseUri}/segments/`, JSON.stringify(segment), {
