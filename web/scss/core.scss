@@ -1396,11 +1396,6 @@ textarea
   text-align: center;
   vertical-align: middle;
 
-  &.thin
-  {
-  	border: 1px solid;
-  }
-
   &:active
   {
     @include transform(scale(0.95));
@@ -1434,6 +1429,11 @@ textarea
         // border-color: lighten($bg, 15%);
       }
     }
+  }
+
+  &.thin
+  {
+  	border: 1px solid;
   }
 }
 
@@ -1503,6 +1503,13 @@ textarea
 		overflow-y: auto;
 		padding: 20px 30px;
 		@include transition(all 0.1s ease);
+
+		.ctl
+		{
+			position: absolute;
+			right: 10px;
+			top: 10px;
+		}
 
 		&.move
 		{

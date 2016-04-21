@@ -944,8 +944,6 @@ textarea {
   border-radius: 2px;
   text-align: center;
   vertical-align: middle; }
-  .button.thin {
-    border: 1px solid; }
   .button:active {
     -webkit-transform: scale(0.95);
     -moz-transform: scale(0.95);
@@ -968,6 +966,8 @@ textarea {
     border: 2px solid;
     border-color: #d4d4d4;
     color: #bbbbbb; }
+  .button.thin {
+    border: 1px solid; }
 
 .auth {
   width: 100%;
@@ -1016,6 +1016,10 @@ textarea {
     -o-transition: all 0.1s ease;
     -ms-transition: all 0.1s ease;
     transition: all 0.1s ease; }
+    .segment__viewport .day__component .ctl {
+      position: absolute;
+      right: 10px;
+      top: 10px; }
     .segment__viewport .day__component.move {
       left: 30px;
       width: 60%;

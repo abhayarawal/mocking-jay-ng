@@ -245,6 +245,7 @@ class TemplateCreate implements OnInit {
 					<h3>Editing template</h3>
 					<a class="button type__2" (click)="remove(template.id)">Remove</a>
 				</form>
+				{{json}}
 			</div>
 		</div>
 	`
@@ -252,8 +253,15 @@ class TemplateCreate implements OnInit {
 class TemplateEditor {
 	@Input() template: Template;
 
+	constructor(
+		private templateService: TemplateService) {}
+
 	remove(id: string) {
-		console.log(`you're trying to remove ${id}`);
+		this.templateService.removeTemplate(id);
+	}
+
+	get json() {
+		return JSON.stringify(this.template);
 	}
 }
 
@@ -283,7 +291,7 @@ class TemplateEditor {
 class TemplateDetail {
 	@Input() template: Template;
 
-	show: boolean = false;
+	show: boolean = true;
 }
 
 

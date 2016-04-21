@@ -55,6 +55,17 @@ export class FragmentService {
 		this.fragment$ = new Observable<FragmentResponse>(observer => this.fragmentObserver = observer).share();
 	}
 
+
+	getFragmentsFor(month, day, year) {
+		return this.http.get(
+			`${this.authService.baseUri}/fragments/${month}/${day}/${year}`,
+			{ headers: this.authService.getAuthHeader() }
+		)
+			.map(res => res.json())
+			.toPromise();
+	}
+
+
 	getFragments(segment) {
 		return this.http.get(
 			`${this.authService.baseUri}/fragments/${segment.id}`,

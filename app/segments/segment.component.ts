@@ -328,20 +328,22 @@ class SegmentCreate implements OnInit {
 		<h3>Segments</h3>
 		<ul *ngIf="segments" class="table">
 			<li *ngFor="#segment of segments">
-				<section>
-				<h4>{{segment.template?.name}}</h4>
-				{{segment.id}}
-				</section>
-				<section>
-					<h5>{{segment.date.month}}/{{segment.date.day}}/{{segment.date.year}}</h5>
-					<div>
-						<strong>From</strong> {{segment.start.hour}}:{{segment.start.minute}} 
-						<strong>To:</strong> {{segment.end.hour}}:{{segment.end.minute}}
-					</div>
-				</section>
-				<section>
-					<a class="button type__2" (click)="remove(segment.id)">Remove</a>
-				</section>
+				<div class="inner__row">
+					<section>
+					<h4>{{segment.template?.name}}</h4>
+					{{segment.id}}
+					</section>
+					<section>
+						<h5>{{segment.date.month}}/{{segment.date.day}}/{{segment.date.year}}</h5>
+						<div>
+							<strong>From</strong> {{segment.start.hour}}:{{segment.start.minute}} 
+							<strong>To:</strong> {{segment.end.hour}}:{{segment.end.minute}}
+						</div>
+					</section>
+					<section>
+						<a class="button type__2" (click)="remove(segment.id)">Remove</a>
+					</section>
+				</div>
 			</li>
 		</ul>
 	`

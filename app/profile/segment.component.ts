@@ -284,6 +284,9 @@ class SegmentWrap {
 					<span>{{ weekDay | weekPipe }}</span>
 					{{month | monthPipe}} {{day}}, <span>{{year}}</span>
 				</h3>
+				<div class="ctl">
+					<a class="button type__4 thin">Today's Events</a>
+				</div>
 			</div>
 			<segment-wrap></segment-wrap>
 		</div>
