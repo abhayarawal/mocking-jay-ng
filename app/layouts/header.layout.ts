@@ -279,7 +279,7 @@ export class LayoutHeader implements OnInit {
 		{ location: ['/ProfileViewport'], lnr: 'calendar-full', text: 'Calendar' },
 		{ location: ['/TemplateViewport'], lnr: 'layers', text: 'Templates' },
 		{ location: ['/SegmentViewport'], lnr: 'file-add', text: 'Events' },
-		{ location: ['/AuthComponent'], lnr: 'cog', text: 'Preferences' },
+		{ location: ['/PreferencesViewport'], lnr: 'cog', text: 'Preferences' },
 	]
 
 	navs: any = [];

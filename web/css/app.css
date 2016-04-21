@@ -189,6 +189,14 @@ html, body {
   width: 100%;
   background: #fff; }
 
+.segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
 .app__wrap .viewport, .profile__viewport, .wrapping__viewport {
   display: block;
   left: 0px;
@@ -1123,7 +1131,7 @@ textarea {
                 background: -moz-linear-gradient(top, #ececec, #f6f6f6);
                 background: -ms-linear-gradient(top, #ececec, #f6f6f6);
                 background: -o-linear-gradient(top, #ececec, #f6f6f6); }
-              .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected span {
+              .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected > span {
                 display: inline-block;
                 padding: 0 4px;
                 text-align: center;
@@ -1570,6 +1578,9 @@ textarea {
   overflow-y: auto;
   -webkit-transform: translateZ(0);
   -webkit-backface-visibility: hidden; }
+  .wrapping__viewport .wrapping__content.type__2 {
+    top: 50px;
+    height: calc(100% - 75px); }
 
 .contextual__form {
   padding-left: 80px;

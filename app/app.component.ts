@@ -6,6 +6,8 @@ import {User, UserType} from './interfaces/interface';
 import {AuthComponent, LogoutComponent} from './auth/auth.component';
 import {TemplateViewport} from './templates/template.component';
 import {SegmentViewport} from './segments/segment.component';
+import {PreferencesViewport} from './preferences/preference.component';
+
 import {NotificationService, Notification} from './notification.service';
 import {LayoutHeader} from './layouts/header.layout';
 
@@ -68,7 +70,8 @@ class NotificationComponent  implements OnInit {
 	{ path: '/logout', name: 'LogoutComponent', component: LogoutComponent },
 	{ path: '/calendar/...', name: 'ProfileViewport', component: ProfileViewport },
 	{ path: '/templates/...', name: 'TemplateViewport', component: TemplateViewport },
-	{ path: '/segments/...', name: 'SegmentViewport', component: SegmentViewport }
+	{ path: '/segments/...', name: 'SegmentViewport', component: SegmentViewport },
+	{ path: '/preferences', name: 'PreferencesViewport', component: PreferencesViewport }
 ])
 export class MountNode {
 	constructor(

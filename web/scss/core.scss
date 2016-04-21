@@ -337,6 +337,16 @@ html, body
 
 $top__height: 40px;
 
+%no-select
+{
+	-webkit-touch-callout: none; 
+  -webkit-user-select: none;   
+  -khtml-user-select: none;    
+  -moz-user-select: none;      
+  -ms-user-select: none;       
+  user-select: none;  
+}
+
 %viewport
 {
 	display: block;
@@ -1644,6 +1654,7 @@ textarea
 								color: #878787;
 								cursor: pointer;
 								@include transition(all 0.2s ease);
+								@extend %no-select;
 
 								&:hover
 								{
@@ -1656,7 +1667,7 @@ textarea
 
 								}
 
-								span
+								& > span
 								{
 									display: inline-block;
 									padding: 0 4px;
@@ -2281,6 +2292,12 @@ textarea
 		overflow-y: auto;
 		-webkit-transform: translateZ(0);
 		-webkit-backface-visibility: hidden;
+
+		&.type__2
+		{
+			top: 50px;
+			height: calc(100% - 75px);
+		}
 	}
 }
 

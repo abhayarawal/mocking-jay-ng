@@ -414,9 +414,9 @@ interface Timey {
 				</li>
 				<li>
 					<a>
-						<div class="selected">
+						<div class="selected" (click)="notification=!notification">
 							<span class="icon-alarm"></span>
-							<em>Nofication On</em>
+							<em>Nofication <span *ngIf="notification">On</span> <span *ngIf="!notification">Off</span></em>
 						</div>
 					</a>
 				</li>
@@ -429,9 +429,10 @@ class FragmentCtxHeader {
 	show: boolean = false;
 	selected: number = 2;
 	timeout: any;
+	notification: boolean = true;
 
 	times: Timey[] = [
-		{ value: -1, text: 'No alert' },
+		{ value: -1, text: 'None' },
 		{ value: 15, text: '15 minutes' },
 		{ value: 30, text: '30 minutes' },
 		{ value: 60, text: '1 hour' },
