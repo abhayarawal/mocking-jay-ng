@@ -70,7 +70,7 @@ interface ValidationResult {
 class DateTimeValidator {
 	static shouldBeTime(control: Control): ValidationResult {
 		let validation = control.value.trim().match(/^\d{1,2}:\d{1,2}$/i),
-				error: ValidationResult = { "shouldBeTime": true };
+			error: ValidationResult = { "shouldBeTime": true };
 		if (!validation) {
 			return error;
 		} else {
@@ -85,7 +85,7 @@ class DateTimeValidator {
 
 	static shouldBeDate(control: Control): ValidationResult {
 		let validation = control.value.trim().match(/^\d{1,2}\/\d{1,2}\/\d{4}$/i),
-				error: ValidationResult = { "shouldBeDate": true };
+			error: ValidationResult = { "shouldBeDate": true };
 
 		if (!validation) {
 			return error;
@@ -234,7 +234,7 @@ class SegmentCreate implements OnInit {
 		private authService: AuthService,
 		private notificationService: NotificationService,
 		private fb: FormBuilder
-	){
+	) {
 		let date = new Date();
 		this.start = new Control(
 			`10:00`,
@@ -281,7 +281,7 @@ class SegmentCreate implements OnInit {
 			}
 
 			this.segmentService.addSegment(this.segment);
-			this.segmentService.getNewSegment().then(segment => { 
+			this.segmentService.getNewSegment().then(segment => {
 				this.segment.id = segment.id;
 			});
 			this.notificationService.notify(`Added new segment ${this.segment.id}`, true);
@@ -321,32 +321,72 @@ class SegmentCreate implements OnInit {
 }
 
 
+@Component({
+	selector: 'segment-editor',
+	template: `
+	<div class="inner__row" *ngIf="segment">
+		<div class="form__wrap">
+			<form>
+				<h3>Edit:</h3>
+				<a class="button type__2" (click)="remove(segment.id)">Remove</a>
+			</form>
+		</div>
+	</div>
+	`
+})
+class SegmentEditor {
+	@Input() segment: Segment;
+	constructor(
+		private segmentService: SegmentService) { }
+
+	remove(id: string) {
+		this.segmentService.removeSegment(id);
+	}
+}
+
+
+@Component({
+	selector: 'segment-detail',
+	template: `
+		<li *ngIf="segment" class="segment__detail">
+			<div class="inner__row">
+				<section>
+				<h4>{{segment.template?.name}}</h4>
+				{{segment.id}}
+				</section>
+				<section>
+					<h5>{{segment.date.month}}/{{segment.date.day}}/{{segment.date.year}}</h5>
+					<div>
+						<strong>From</strong> {{segment.start.hour}}:{{segment.start.minute}} 
+						<strong>To:</strong> {{segment.end.hour}}:{{segment.end.minute}}
+					</div>
+				</section>
+				<section>
+						<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
+				</section>
+				</div>
+
+				<segment-editor [segment]="segment" *ngIf="show"></segment-editor>
+			</li>
+
+	`,
+	directives: [SegmentEditor]
+})
+class SegmentDetail {
+	@Input() segment: Segment;
+	show: boolean = true;
+}
 
 
 @Component({
 	template: `
 		<h3>Segments</h3>
 		<ul *ngIf="segments" class="table">
-			<li *ngFor="#segment of segments">
-				<div class="inner__row">
-					<section>
-					<h4>{{segment.template?.name}}</h4>
-					{{segment.id}}
-					</section>
-					<section>
-						<h5>{{segment.date.month}}/{{segment.date.day}}/{{segment.date.year}}</h5>
-						<div>
-							<strong>From</strong> {{segment.start.hour}}:{{segment.start.minute}} 
-							<strong>To:</strong> {{segment.end.hour}}:{{segment.end.minute}}
-						</div>
-					</section>
-					<section>
-						<a class="button type__2" (click)="remove(segment.id)">Remove</a>
-					</section>
-				</div>
-			</li>
+			<segment-detail *ngFor="#s of segments" [segment]="s">
+			</segment-detail>
 		</ul>
-	`
+	`,
+	directives: [SegmentDetail]
 })
 class Segments implements OnInit {
 
@@ -373,7 +413,7 @@ class Segments implements OnInit {
 				this.notificationService.notify(message, true, !type);
 			}
 		);
-		
+
 		this.segments$ = this.segmentService.segments$;
 		this.segments$.subscribe(
 			(response) => {

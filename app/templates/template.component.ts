@@ -101,7 +101,7 @@ class TemplateValidator {
 
 	static shouldBeInterval(control: Control): ValidationResult {
 		let error: ValidationResult = { "shouldBeInterval": true },
-				validation = control.value.toString().trim().match(/^[\d]+$/i);
+			validation = control.value.toString().trim().match(/^[\d]+$/i);
 		if (!validation) {
 			return error;
 		} else {
@@ -235,33 +235,26 @@ class TemplateCreate implements OnInit {
 	}
 }
 
-
 @Component({
 	selector: 'template-editor',
 	template: `
-		<div class="inner__row" *ngIf="template">
-			<div class="form__wrap">
-				<form>
-					<h3>Editing template</h3>
-					<a class="button type__2" (click)="remove(template.id)">Remove</a>
-				</form>
-				{{json}}
-			</div>
-		</div>
+				<div class="inner__row" *ngIf="template">
+					<div class="form__wrap">
+						<form>
+							<h3>Edit:</h3>
+							<a class="button type__2" (click)="remove(template.id)">Remove</a>
+						</form>
+					</div>
+				</div>
 	`
 })
 class TemplateEditor {
 	@Input() template: Template;
-
 	constructor(
-		private templateService: TemplateService) {}
+		private templateService: TemplateService) { }
 
 	remove(id: string) {
 		this.templateService.removeTemplate(id);
-	}
-
-	get json() {
-		return JSON.stringify(this.template);
 	}
 }
 
@@ -269,22 +262,22 @@ class TemplateEditor {
 @Component({
 	selector: 'template-detail',
 	template: `
-		<li *ngIf="template" class="template__detail">
+	<li *ngIf="template" class="template__detail">
+				<div class="inner__row">
+					<section>
+						<strong>{{template.name}}</strong>
+					</section>
+					<section>
+						Interval {{template.interval}} min
+					</section>
+					<section>
+						<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
+					</section>
+				</div>
 
-			<div class="inner__row">
-				<section>
-					<strong>{{template.name}}</strong>
-				</section>
-				<section>
-					Interval {{template.interval}} min
-				</section>
-				<section>
-					<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
-				</section>
-			</div>
-			
 			<template-editor [template]="template" *ngIf="show"></template-editor>
-		</li>
+	
+			</li>
 	`,
 	directives: [TemplateEditor]
 })
@@ -294,13 +287,13 @@ class TemplateDetail {
 	show: boolean = true;
 }
 
-
 @Component({
 	template: `
 		<h3>Templates</h3>
 		<!-- <a class="button type__1" (click)="flush()">Flush storage</a> -->
 		<ul *ngIf="templates" class="table">
-			<template-detail *ngFor="#t of templates" [template]="t"></template-detail>
+			<template-detail *ngFor="#t of templates" [template]="t">
+			</template-detail>
 		</ul>
 	`,
 	directives: [TemplateDetail]
@@ -381,7 +374,7 @@ export class TemplateViewport implements OnInit {
 	constructor(
 		private authService: AuthService,
 		private router: Router
-	){}
+	) { }
 
 	ngOnInit() {
 	}
