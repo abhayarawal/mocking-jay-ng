@@ -352,7 +352,6 @@ class SegmentEditor {
 			<div class="inner__row">
 				<section>
 				<h4>{{segment.template?.name}}</h4>
-				{{segment.id}}
 				</section>
 				<section>
 					<h5>{{segment.date.month}}/{{segment.date.day}}/{{segment.date.year}}</h5>
@@ -362,7 +361,7 @@ class SegmentEditor {
 					</div>
 				</section>
 				<section>
-						<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
+					<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
 				</section>
 				</div>
 
@@ -374,7 +373,7 @@ class SegmentEditor {
 })
 class SegmentDetail {
 	@Input() segment: Segment;
-	show: boolean = true;
+	show: boolean = false;
 }
 
 

@@ -285,7 +285,7 @@ class SegmentWrap {
 					{{month | monthPipe}} {{day}}, <span>{{year}}</span>
 				</h3>
 				<div class="ctl">
-					<a class="button type__4 thin">Today's Events</a>
+					<a class="button type__4" (click)="getToday()">Today's Events</a>
 				</div>
 			</div>
 			<segment-wrap></segment-wrap>
@@ -300,6 +300,7 @@ class DayComponent implements OnInit {
 	observable: Observable<Fragment>;
 
 	fragView: boolean = false;
+	today: boolean = false;
 
 	id: string;
 	month: number;
@@ -309,7 +310,8 @@ class DayComponent implements OnInit {
 
 	constructor(
 		private calendarService: CalendarService,
-		private segmentViewService: SegmentViewService
+		private segmentViewService: SegmentViewService,
+		private fragmentService: FragmentService
 	) {}
 
 	ngOnInit() {
@@ -329,6 +331,17 @@ class DayComponent implements OnInit {
 			err => { },
 			() => { }
 		)
+	}
+
+	getToday() {
+		this.today = true;
+		this.fragmentService.getToday(
+			this.month, 
+			this.day, 
+			this.year
+		).then((response) => {
+			console.log(response);
+		});
 	}
 }
 
@@ -646,7 +659,7 @@ class FragmentInvitation implements OnInit {
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group message__box">
 						<label for="">Send message: </label>
-						<textarea [(ngModel)]="message"></textarea>
+						<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
 						<a (click)="sendMessage()" class="icon-paperplane"></a>
 					</div>
 					<div class="form__group">
@@ -660,7 +673,7 @@ class FragmentInvitation implements OnInit {
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group message__box">
 						<label for="">Send message: </label>
-						<textarea [(ngModel)]="message"></textarea>
+						<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
 						<a (click)="sendMessage()" class="icon-paperplane"></a>
 					</div>
 					<div class="form__group">
@@ -826,7 +839,7 @@ class FragmentContextStudent implements OnInit {
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group message__box">
 						<label for="">Send message:</label>
-						<textarea [(ngModel)]="response"></textarea>
+						<textarea [(ngModel)]="response" (keyup.enter)="respond()"></textarea>
 						<a (click)="respond()" class="icon-paperplane"></a>
 					</div>
 					<div class="form__group">
@@ -846,7 +859,7 @@ class FragmentContextStudent implements OnInit {
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="form__group message__box">
 						<label for="">Send message:</label>
-						<textarea [(ngModel)]="response"></textarea>
+						<textarea [(ngModel)]="response" (keyup.enter)="respond()"></textarea>
 						<a (click)="respond()" class="icon-paperplane"></a>
 					</div>
 					<div class="form__group">

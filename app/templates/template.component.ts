@@ -261,6 +261,7 @@ class TemplateCreate implements OnInit {
 					<div class="inner__row">
 						<section>
 							<button class="button type__2" (click)="updateTemplate()">Update template</button>
+							<button class="button type__1" (click)="remove()">Delete</button>
 						</section>
 					</div>
 				</form>
@@ -326,8 +327,8 @@ class TemplateEditor implements OnInit {
 		}
 	}
 
-	remove(id: string) {
-		this.templateService.removeTemplate(id);
+	remove() {
+		this.templateService.removeTemplate(this.template.id);
 	}
 
 	get json() {
@@ -361,7 +362,7 @@ class TemplateEditor implements OnInit {
 class TemplateDetail {
 	@Input() template: Template;
 
-	show: boolean = true;
+	show: boolean = false;
 }
 
 @Component({

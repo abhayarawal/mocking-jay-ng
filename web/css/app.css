@@ -1981,7 +1981,7 @@ textarea {
   -o-border-radius: 7px;
   -ms-border-radius: 7px;
   border-radius: 7px;
-  padding: 7px 0; }
+  padding: 7px 20px; }
   .table li:before, .table li:after {
     content: '';
     display: table; }

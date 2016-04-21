@@ -364,6 +364,15 @@ export class FragmentService {
 		return fragments;
 	}
 
+	getToday(month, day, year) {
+		return this.http.get(
+			`${this.authService.baseUri}/fragments/${month}/${day}/${year}`,
+			{ headers: this.authService.getAuthHeader() }
+		)
+			.map(res => res.json())
+			.toPromise();
+	}
+
 }
 
 
