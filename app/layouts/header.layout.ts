@@ -33,6 +33,7 @@ export class ReadNotifiers implements PipeTransform {
 				<a (click)="show=!show">
 					<span class="unread">{{unread}}</span>
 					<span class="lnr lnr-flag"></span>
+					<em>Notifications</em>
 				</a>
 				<div class="notifiers" *ngIf="show">
 					<ul>

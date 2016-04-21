@@ -2697,21 +2697,33 @@ textarea
 		@include border-radius(7px);
 		padding: 7px 0;
 
-		section
+		.inner__row
 		{
-			@include col(1/3);
+			@include row(true);
 
-			&:first-child
+			section
 			{
-				text-transform: capitalize;
+				@include col(1/3);
+
+				&:first-child
+				{
+					text-transform: capitalize;
+				}
+
+				h1, h2, h3, h4, h5, h6
+				{
+					margin: 0;
+					padding: 0;
+				}
 			}
 
-			h1, h2, h3, h4, h5, h6
+			.form__wrap
 			{
-				margin: 0;
-				padding: 0;
+				@include col(1/1);
 			}
+			
 		}
+
 	}
 }
 

@@ -321,13 +321,36 @@ class SegmentCreate implements OnInit {
 }
 
 
+@Component({
+	selector: 'segment-editor',
+	template: `
+	<div class="inner__row" *ngIf="segment">
+		<div class="form__wrap">
+			<form>
+				<h3>Edit:</h3>
+				<a class="button type__2" (click)="remove(segment.id)">Remove</a>
+			</form>
+		</div>
+	</div>
+	`
+})
+class SegmentEditor{
+	@Input() segment: Segment;
+	constructor(
+		private segmentService: SegmentService) {}
+
+	remove(id: string)
+	{
+		this.segmentService.removeSegment(id);
+	}
+}
 
 
 @Component({
+	selector: 'segment-detail',
 	template: `
-		<h3>Segments</h3>
-		<ul *ngIf="segments" class="table">
-			<li *ngFor="#segment of segments">
+		<li *ngIf="segment" class="segment__detail">
+			<div class="inner__row">
 				<section>
 				<h4>{{segment.template?.name}}</h4>
 				{{segment.id}}
@@ -340,11 +363,31 @@ class SegmentCreate implements OnInit {
 					</div>
 				</section>
 				<section>
-					<a class="button type__2" (click)="remove(segment.id)">Remove</a>
+						<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
 				</section>
+				</div>
+
+				<segment-editor [segment]="segment" *ngIf="show"></segment-editor>
 			</li>
+
+	`,
+	directives: [SegmentEditor]
+})
+class SegmentDetail{
+	@Input() segment: Segment;
+	show: boolean = true;
+}
+
+
+@Component({
+	template: `
+		<h3>Segments</h3>
+		<ul *ngIf="segments" class="table">
+			<segment-detail *ngFor="#s of segments" [segment]="s">
+			</segment-detail>
 		</ul>
-	`
+	`,
+	directives: [SegmentDetail]
 })
 class Segments implements OnInit {
 
