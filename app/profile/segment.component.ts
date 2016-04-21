@@ -389,6 +389,10 @@ class FragmentMessage implements OnInit {
 	}
 }
 
+interface Timey {
+	value: number,
+	text: string
+}
 
 @Component({
 	selector: 'fragment-ctx-header',
@@ -396,11 +400,16 @@ class FragmentMessage implements OnInit {
 		<div class="fragment__ctx__header">
 			<ul>
 				<li>
-					<a>
-						<div class="selected">
+					<a tabindex="150" (blur)="show=false">
+						<div class="selected" (click)="show=!show">
 							<span class="icon-notifications_true"></span>
-							<em>Alert 2 days</em>
+							<em>Alert {{times[selected].text}}</em>
 						</div>
+						<ul [ngClass]="{visible: show}">
+							<li *ngFor="#time of times; #i = index" (click)="remind(i)">
+								{{time.text}}
+							</li>
+						</ul>
 					</a>
 				</li>
 				<li>
@@ -416,6 +425,28 @@ class FragmentMessage implements OnInit {
 	`
 })
 class FragmentCtxHeader {
+
+	show: boolean = false;
+	selected: number = 2;
+	timeout: any;
+
+	times: Timey[] = [
+		{ value: -1, text: 'No alert' },
+		{ value: 15, text: '15 minutes' },
+		{ value: 30, text: '30 minutes' },
+		{ value: 60, text: '1 hour' },
+		{ value: 120, text: '2 hour' },
+		{ value: 1440, text: '1 day' },
+	];
+
+	remind(index: number) {
+		this.selected = index;
+
+		clearTimeout(this.timeout);
+		this.timeout = setTimeout(() => {
+			this.show = false;
+		}, 100);
+	}
 
 }
 

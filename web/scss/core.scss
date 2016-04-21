@@ -1628,6 +1628,9 @@ textarea
 						
 						& > a
 						{
+							position: relative;
+							display: block;
+
 							.selected 
 							{
 								background: #fff;
@@ -1671,6 +1674,53 @@ textarea
 									vertical-align: middle;
 									font-size: 13px;
 									font-weight: 500;
+								}
+							}
+
+							ul
+							{
+								position: absolute;
+								z-index: 5;
+								width: calc(100% - 20px);
+								visibility: hidden;
+								@include opacity(0);
+								@include transition(all 0.2s ease);
+								top: -35px;
+								left: 10px;
+								border: 1px solid #d6d7db;
+								padding: 10px 0;
+								@include border-radius(7px);
+								background: lighten(#ECEDF1, 2%);
+
+								&.visible
+								{
+									visibility: visible;
+									@include opacity(1);
+								}
+
+								li
+								{
+									display: block;
+									line-height: 27px;
+									padding: 0 25px;
+									cursor: pointer;
+									color: #898c94;
+
+									&.selected
+									{
+										font-weight: 700;
+									}
+
+									span
+									{
+										font-weight: 700;
+									}
+
+									&:hover
+									{
+										background: #898c94;
+										color: #fff;
+									}
 								}
 							}
 						}
