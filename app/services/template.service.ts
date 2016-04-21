@@ -95,6 +95,23 @@ export class TemplateService implements OnInit {
 		return (this.templates.filter(template => template.id === id))[0];
 	}
 
+	updateTemplate({id, allow_multiple, require_accept, name}) {
+		let packet = {
+			allow_multiple: allow_multiple,
+			require_accept: require_accept,
+			name: name
+		};
+
+		return this.http.patch(
+			`${this.authService.baseUri}/templates/${id}`,
+			JSON.stringify(packet),
+			{ headers: this.authService.getAuthHeader() }
+		)
+			.map(res => res.json())
+			.toPromise();
+	}
+
+
 	addTemplate(template: Template) {
 		let [sessionExist, session] = this.authService.getSession();
 		if (sessionExist) {

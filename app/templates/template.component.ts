@@ -238,23 +238,100 @@ class TemplateCreate implements OnInit {
 @Component({
 	selector: 'template-editor',
 	template: `
-				<div class="inner__row" *ngIf="template">
-					<div class="form__wrap">
-						<form>
-							<h3>Edit:</h3>
-							<a class="button type__2" (click)="remove(template.id)">Remove</a>
-						</form>
+		<div class="inner__row" *ngIf="template">
+			<div class="form__wrap">
+				<form [ngFormModel]="editForm">
+					<h3>Edit</h3>
+					
+					<div class="inner__row">
+						<section>
+							<label>Template name:</label>
+							<input type="text" [(ngModel)]="morphTemplate.name" ngControl="name" />
+						</section>
+						<section>
+							<label>Allow multiple?</label>
+							<radius-radio (update)="updateAllow($event)" [on]="template.allow_multiple" [intext]="true"></radius-radio>
+						</section>
+						<section>
+							<label>Require Accept?</label>
+							<radius-radio (update)="updateAccept($event)" [on]="template.require_accept" [intext]="true"></radius-radio>
+						</section>
 					</div>
-				</div>
-	`
+
+					<div class="inner__row">
+						<section>
+							<button class="button type__2" (click)="updateTemplate()">Update template</button>
+						</section>
+					</div>
+				</form>
+			</div>
+		</div>
+	`,
+	directives: [RadiusRadioComponent]
 })
-class TemplateEditor {
+class TemplateEditor implements OnInit {
 	@Input() template: Template;
+	
+	morphTemplate: Template;
+
+	name: Control;
+	nameDirty: boolean = false;
+
+	editForm: ControlGroup;
+
 	constructor(
-		private templateService: TemplateService) { }
+		private templateService: TemplateService,
+		private fb: FormBuilder,
+		private notificationService: NotificationService
+	) { }
+
+	ngOnInit() {
+		let { id, allow_multiple, require_accept, name } = this.template;
+
+		this.morphTemplate = {
+			id: id,
+			allow_multiple: allow_multiple,
+			require_accept: require_accept,
+			name: name
+		};
+
+		this.name = new Control(this.template.name, Validators.compose([Validators.required, TemplateValidator.shouldBeName]));
+		this.editForm = this.fb.group({
+			'name': this.name
+		});
+	}
+
+	updateAllow(event: boolean) {
+		this.morphTemplate.allow_multiple = event;
+	}
+
+	updateAccept(event: boolean) {
+		this.morphTemplate.require_accept = event;
+	}
+
+	updateTemplate() {
+		if (this.editForm.valid) {
+			this.templateService.updateTemplate(this.morphTemplate).then((response) => {
+				if (response.success) {
+					this.notificationService.notify(`Template has been modified`, true);
+					this.template.name = response.payload.name;
+					this.template.allow_multiple = response.payload.allow_multiple;
+					this.template.require_accept = response.payload.require_accept;
+				} else {
+					this.notificationService.notify(`Sorry, could not modify template`, true, true);
+				}
+			});
+		} else {
+			this.notificationService.notify(`Invalid form data`, true, true);
+		}
+	}
 
 	remove(id: string) {
 		this.templateService.removeTemplate(id);
+	}
+
+	get json() {
+		return JSON.stringify(this.morphTemplate);
 	}
 }
 
@@ -262,22 +339,22 @@ class TemplateEditor {
 @Component({
 	selector: 'template-detail',
 	template: `
-	<li *ngIf="template" class="template__detail">
-				<div class="inner__row">
-					<section>
-						<strong>{{template.name}}</strong>
-					</section>
-					<section>
-						Interval {{template.interval}} min
-					</section>
-					<section>
-						<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
-					</section>
-				</div>
+		<li *ngIf="template" class="template__detail">
+			<div class="inner__row">
+				<section>
+					<strong>{{template.name}}</strong>
+				</section>
+				<section>
+					Interval {{template.interval}} min
+				</section>
+				<section>
+					<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
+				</section>
+			</div>
 
-			<template-editor [template]="template" *ngIf="show"></template-editor>
-	
-			</li>
+		<template-editor [template]="template" *ngIf="show"></template-editor>
+
+		</li>
 	`,
 	directives: [TemplateEditor]
 })
@@ -290,7 +367,6 @@ class TemplateDetail {
 @Component({
 	template: `
 		<h3>Templates</h3>
-		<!-- <a class="button type__1" (click)="flush()">Flush storage</a> -->
 		<ul *ngIf="templates" class="table">
 			<template-detail *ngFor="#t of templates" [template]="t">
 			</template-detail>

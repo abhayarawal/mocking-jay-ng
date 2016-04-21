@@ -34,11 +34,11 @@ export interface Template {
 	id: string,
 	_id?: string,
 	name: string,
-	interval: any,
+	interval?: any,
 	allow_multiple: boolean,
 	require_accept: boolean,
-	_user: string,
-	user?: {} 
+	_user?: string,
+	user?: {}
 }
 
 export interface Segment {
