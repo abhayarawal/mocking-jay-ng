@@ -6,10 +6,13 @@ import {Http, Response, Headers} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/Rx';
 
+
+import {User, UserType} from '../interfaces/interface';
 import {NotificationService, Notification} from '../notification.service';
 
 import {AuthService} from '../auth/auth.service';
-
+import {UserService} from '../services/user.service';
+ 
 
 
 @Component({
@@ -25,20 +28,40 @@ import {AuthService} from '../auth/auth.service';
 		</div>
 
 		<div class="contextual__card">
-			<div class="contact__card">
-				This is where i'll display your contact card
+			<div class="contact__card" *ngIf="user">
+				{{json}}
 			</div>
 		</div>
 	`,
 	directives: []
 })
-class PreferencesForm {
+class PreferencesForm implements OnInit {
+
+	user: User;
 
 	constructor(
 		private fb: FormBuilder,
 		private router: Router,
-		private notificationService: NotificationService
+		private notificationService: NotificationService,
+		private userService: UserService,
+		private authService: AuthService
 	) {
+	}
+
+	ngOnInit() {
+		let [exists, session] = this.authService.getSession();
+
+		if (exists) {
+			this.userService.getUserPromise(session.id).then((response) => {
+				if (response.success) {
+					this.user = response.payload;
+				}
+			});
+		}
+	}
+
+	get json() {
+		return JSON.stringify(this.user);
 	}
 
 }

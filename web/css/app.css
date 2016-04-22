@@ -189,7 +189,7 @@ html, body {
   width: 100%;
   background: #fff; }
 
-.segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected {
+.segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected, .mj__radio__wrap .mj__radio {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -1636,6 +1636,15 @@ textarea {
         float: left;
         width: 14.28571%; }
 
+.contextual__card {
+  position: absolute;
+  border-left: 1px solid #e4e4e4;
+  padding-left: 30px;
+  top: 15px;
+  right: 15px;
+  width: calc(100% - 700px);
+  height: 400px; }
+
 .mj__radio__wrap {
   cursor: pointer; }
   .mj__radio__wrap .mj__radio {
@@ -1650,13 +1659,7 @@ textarea {
     border: 1px solid #DBDDE3;
     position: relative;
     vertical-align: middle;
-    cursor: pointer;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none; }
+    cursor: pointer; }
     .mj__radio__wrap .mj__radio:after {
       position: absolute;
       left: 2px;
