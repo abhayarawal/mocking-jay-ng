@@ -469,7 +469,7 @@ $top__height: 40px;
 
 			img
 			{
-				height: 60%;
+				height: 50%;
 				width: auto;
 				margin-top: 5px;
 				display: inline-block;
@@ -626,12 +626,14 @@ $top__height: 40px;
 		.main__nav
 		{
 			text-align: right;
+			// height: 40px;
 			
 			& > li
 			{
 				display: inline-block;
 				vertical-align: middle;
 				position: relative;
+				margin-top: 5px;
 
 				@keyframes shake {
 				  10%, 90% {
@@ -654,11 +656,11 @@ $top__height: 40px;
 				.notifiers
 				{
 					position: absolute;
-					width: 350px;
+					width: 400px;
 					top: calc(100% + 18px);
 					padding: 10px 0 0 0;
 					left: 50%;
-					margin-left: -175px;
+					margin-left: -200px;
 					// background: #8264e7 !important;
 					// background: rgba(30, 200, 231, 0.93) !important;
 					// background: rgba(231, 67, 114, 0.9) !important;
@@ -794,10 +796,12 @@ $top__height: 40px;
 					}
 				}
 
-				a
+				& > a
 				{
 					color: #626262;
 					position: relative;
+					// line-height: 25px;
+					// display: block;
 
 					&.animate
 					{
@@ -870,6 +874,8 @@ $top__height: 40px;
 				&:not(:last-child)
 				{
 					padding-right: 10px;
+					line-height: 25px;
+					display: inline-block;
 					
 					& > a
 					{
@@ -885,8 +891,6 @@ $top__height: 40px;
 						{
 							background: #906fff;
 							color: #fff;
-							// background: #906fff;
-							// color:white;
 						}
 					}
 				}
@@ -1519,6 +1523,8 @@ textarea
 			position: absolute;
 			right: 10px;
 			top: 10px;
+			@extend %border_a;
+			@extend %no-select;
 		}
 
 		&.move
@@ -2003,6 +2009,8 @@ textarea
 				{
 					li
 					{
+						// background: #ececec;
+						
 						& > span
 						{
 							display: inline-block;
@@ -2015,6 +2023,8 @@ textarea
 							font-weight: 500;
 							padding: 0 8px;
 							margin-right: 10px;
+							text-align: center;
+							width: 115px;
 						}
 					}
 				}
@@ -2304,7 +2314,7 @@ textarea
 .contextual__form
 {
 	padding-left: 80px;
-	max-width: 600px;
+	max-width: 50%;
 
 	.form__lnr
 	{
@@ -2372,7 +2382,7 @@ textarea
 	padding-left: 30px;
 	top: 15px;
 	right: 15px;
-	width: calc(100% - 700px);
+	width: 50%;
 	height: 400px;
 }
 

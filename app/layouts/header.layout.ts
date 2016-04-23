@@ -244,7 +244,7 @@ class SearchBox implements OnInit {
 			<div class="row">
 				<div class="top__left">
 					<div>
-						<img src="https://cdn.shopify.com/s/files/1/0521/5917/files/mj__logo.png?714379856798195830" alt="" />
+						<img src="https://cdn.shopify.com/s/files/1/0521/5917/files/mjlogosm.png?10550252934331944658" alt="" />
 					</div>
 				</div>
 				<div class="top__search">

@@ -189,7 +189,7 @@ html, body {
   width: 100%;
   background: #fff; }
 
-.segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected, .mj__radio__wrap .mj__radio {
+.segment__viewport .day__component .ctl, .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected, .mj__radio__wrap .mj__radio {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -206,12 +206,12 @@ html, body {
   height: calc(100% - 40px);
   z-index: 4; }
 
-.segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a {
+.segment__viewport .day__component .ctl a, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a {
   text-decoration: none;
   color: #898E95;
   border-bottom: 1px dotted #898E95;
   cursor: pointer; }
-  .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a:hover, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a:hover {
+  .segment__viewport .day__component .ctl a:hover, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a:hover, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a:hover {
     color: #000;
     border-color: #000; }
 
@@ -277,7 +277,7 @@ html, body {
       max-width: 275px;
       text-align: center; }
       .app__top .top__left div img {
-        height: 60%;
+        height: 50%;
         width: auto;
         margin-top: 5px;
         display: inline-block;
@@ -396,7 +396,8 @@ html, body {
     .app__top .top__right .main__nav > li {
       display: inline-block;
       vertical-align: middle;
-      position: relative; }
+      position: relative;
+      margin-top: 5px; }
 
 @keyframes shake {
   10%, 90% {
@@ -409,11 +410,11 @@ html, body {
     transform: translate3d(4px, 0, 0); } }
       .app__top .top__right .main__nav > li .notifiers {
         position: absolute;
-        width: 350px;
+        width: 400px;
         top: calc(100% + 18px);
         padding: 10px 0 0 0;
         left: 50%;
-        margin-left: -175px;
+        margin-left: -200px;
         background: rgba(52, 200, 231, 0.9) !important;
         -webkit-box-shadow: 1px 2px 4px 0px rgba(104, 104, 104, 0.53);
         -moz-box-shadow: 1px 2px 4px 0px rgba(104, 104, 104, 0.53);
@@ -515,15 +516,15 @@ html, body {
             line-height: 25px;
             cursor: pointer;
             font-size: 12px; }
-      .app__top .top__right .main__nav > li a {
+      .app__top .top__right .main__nav > li > a {
         color: #626262;
         position: relative; }
-        .app__top .top__right .main__nav > li a.animate {
+        .app__top .top__right .main__nav > li > a.animate {
           animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
           transform: translate3d(0, 0, 0);
           backface-visibility: hidden;
           perspective: 1000px; }
-        .app__top .top__right .main__nav > li a .unread {
+        .app__top .top__right .main__nav > li > a .unread {
           position: absolute;
           left: -15px;
           top: 2px;
@@ -539,11 +540,11 @@ html, body {
           font-weight: 500;
           line-height: 12px;
           padding: 0 4px; }
-        .app__top .top__right .main__nav > li a:hover em {
+        .app__top .top__right .main__nav > li > a:hover em {
           visibility: visible;
           opacity: 1;
           margin-top: 5px; }
-        .app__top .top__right .main__nav > li a em {
+        .app__top .top__right .main__nav > li > a em {
           position: absolute;
           background: #565656;
           color: #fff;
@@ -567,7 +568,7 @@ html, body {
           -o-transition: all 0.2s ease;
           -ms-transition: all 0.2s ease;
           transition: all 0.2s ease; }
-          .app__top .top__right .main__nav > li a em:after {
+          .app__top .top__right .main__nav > li > a em:after {
             width: 0;
             height: 0;
             border-left: 5px solid transparent;
@@ -580,7 +581,9 @@ html, body {
             content: "";
             margin-left: -5px; }
       .app__top .top__right .main__nav > li:not(:last-child) {
-        padding-right: 10px; }
+        padding-right: 10px;
+        line-height: 25px;
+        display: inline-block; }
         .app__top .top__right .main__nav > li:not(:last-child) > a {
           font-size: 17px;
           line-height: 25px;
@@ -1392,7 +1395,9 @@ textarea {
         border-radius: 4px;
         font-weight: 500;
         padding: 0 8px;
-        margin-right: 10px; }
+        margin-right: 10px;
+        text-align: center;
+        width: 115px; }
     .segment__viewport .fragment__context .fragment__ctx .invitee__template h5 {
       font-size: 15px;
       margin: 0;
@@ -1584,7 +1589,7 @@ textarea {
 
 .contextual__form {
   padding-left: 80px;
-  max-width: 600px; }
+  max-width: 50%; }
   .contextual__form .form__lnr span {
     display: inline-block;
     width: 42px;
@@ -1642,7 +1647,7 @@ textarea {
   padding-left: 30px;
   top: 15px;
   right: 15px;
-  width: calc(100% - 700px);
+  width: 50%;
   height: 400px; }
 
 .mj__radio__wrap {

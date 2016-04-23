@@ -272,7 +272,23 @@ class SegmentWrap {
 }
 
 
+@Component({
+	selector: 'today-events',
+	template: `
+		<ul *ngIf="fragments">
+			<li *ngFor="#fragment of fragments">
+				{{fragment._id}}
+			</li>
+		</ul>
+	`
+})
+class TodayEvents implements OnInit {
+	@Input() fragments: Fragment[];
 
+	ngOnInit() {
+
+	}
+}
 
 
 @Component({
@@ -285,13 +301,17 @@ class SegmentWrap {
 					{{month | monthPipe}} {{day}}, <span>{{year}}</span>
 				</h3>
 				<div class="ctl">
-					<a class="button type__4" (click)="getToday()">Today's Events</a>
+					<a (click)="getToday()">
+						<span *ngIf="!today">View: All my events</span>
+						<span *ngIf="today">View: Calendar</span>
+					</a>
 				</div>
 			</div>
-			<segment-wrap></segment-wrap>
+			<div *ngIf="today"><today-events [fragments]="todayList"></today-events></div>
+			<segment-wrap *ngIf="!today"></segment-wrap>
 		</div>
 	`,
-	directives: [SegmentWrap],
+	directives: [SegmentWrap, TodayEvents],
 	pipes: [MonthPipe, WeekPipe],
 	providers: [CalendarService]
 })
@@ -301,6 +321,7 @@ class DayComponent implements OnInit {
 
 	fragView: boolean = false;
 	today: boolean = false;
+	todayList: Fragment[] = [];
 
 	id: string;
 	month: number;
@@ -334,14 +355,17 @@ class DayComponent implements OnInit {
 	}
 
 	getToday() {
-		this.today = true;
-		this.fragmentService.getToday(
-			this.month, 
-			this.day, 
-			this.year
-		).then((response) => {
-			console.log(response);
-		});
+		this.today = !!!this.today;
+		if (this.today) {
+			this.fragmentService.getToday(
+				this.month,
+				this.day,
+				this.year
+			).then((response) => {
+				console.log(response);
+				this.todayList = response;
+			});
+		}
 	}
 }
 
