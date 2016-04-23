@@ -292,6 +292,19 @@ class ProfileCard {
 
 
 @Component({
+	selector: 'spinner',
+	template: `
+		<div class="spinner">
+			<div class="bounce1"></div>
+			<div class="bounce2"></div>
+			<div class="bounce3"></div>
+		</div>
+	`
+})
+class Spinner {}
+
+
+@Component({
 	selector: 'today-event',
 	template: `
 		<li *ngIf="fragment && user && template">
@@ -311,11 +324,9 @@ class ProfileCard {
 			</h4>
 			<profile-card [user]="user" *ngIf="user"></profile-card>
 		</li>
-		<li *ngIf="!user || !template">
-			Loading...
-		</li>
+		<spinner *ngIf="!user || !template"></spinner>
 	`,
-	directives: [ProfileCard],
+	directives: [ProfileCard, Spinner],
 	pipes: [TimePipe]
 })
 class TodayEvent {
