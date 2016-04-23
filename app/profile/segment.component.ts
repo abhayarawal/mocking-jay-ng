@@ -275,18 +275,44 @@ class SegmentWrap {
 @Component({
 	selector: 'today-events',
 	template: `
-		<ul *ngIf="fragments">
+		<ul *ngIf="fragments" class="today__events">
 			<li *ngFor="#fragment of fragments">
 				{{fragment._id}}
+				{{fragment | timePipe:false}} - {{fragment | timePipe:true}}
+
+				{{fragment.segment?._id}}
+				{{fragment.segment?.template?.name}}
+				{{fragment.segment?.template?.user?.email}}
 			</li>
 		</ul>
-	`
+	`,
+	pipes: [TimePipe]
 })
 class TodayEvents implements OnInit {
 	@Input() fragments: Fragment[];
 
-	ngOnInit() {
+	constructor(
+		private segmentService: SegmentService
+	) {}
 
+	ngOnInit() {
+	}
+
+	ngOnChanges() {
+		if (this.fragments) {
+			let maps = this.fragments.map(fragment => fragment._id);
+			this.fragments.forEach((fragment) => {
+				this.segmentService.getSegmentArray(fragment._segment).then((response2) => {
+					if (response2.success) {
+						let index = maps.indexOf(fragment._id);
+						let [sg, tm, us] = response2.payload;
+						this.fragments[index].segment = sg;
+						this.fragments[index].segment.template = tm;
+						this.fragments[index].segment.template.user = us;
+					}
+				});
+			});
+		}
 	}
 }
 
@@ -362,7 +388,6 @@ class DayComponent implements OnInit {
 				this.day,
 				this.year
 			).then((response) => {
-				console.log(response);
 				this.todayList = response;
 			});
 		}

@@ -94,6 +94,7 @@ export interface Invitee {
 }
 
 export interface Fragment {
+	_id?: string,
 	id: string,
 	date: Date,
 	start: Time,

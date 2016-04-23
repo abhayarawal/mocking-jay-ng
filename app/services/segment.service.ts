@@ -128,6 +128,14 @@ export class SegmentService implements OnInit {
 		// );
 	}
 
+	getSegmentArray(sid: string) {
+		return this.http.get(
+			`${this.authService.baseUri}/segments/${sid}/details`,
+			{ headers: this.authService.getAuthHeader() })
+			.map(res => res.json())
+			.toPromise();
+	}
+
 	getSegment(id: string) {
 		return Promise.resolve(
 			(this.segments.filter(segment => segment.id === id))[0]
