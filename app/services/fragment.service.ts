@@ -65,6 +65,14 @@ export class FragmentService {
 			.toPromise();
 	}
 
+	getSegmentArray(fid: string) {
+		return this.http.get(
+			`${this.authService.baseUri}/fragments/${fid}/details`,
+			{ headers: this.authService.getAuthHeader() })
+			.map(res => res.json())
+			.toPromise();
+	}
+
 
 	getFragments(segment) {
 		return this.http.get(

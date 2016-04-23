@@ -2286,4 +2286,5 @@ textarea {
         font-style: normal;
         font-weight: 400; }
       .today__events li h4 span.at {
-        font-size: 14px; }
+        font-size: 14px;
+        text-transform: lowercase; }

@@ -295,6 +295,15 @@ class ProfileCard {
 	selector: 'today-event',
 	template: `
 		<li *ngIf="fragment && user && template">
+			<span class="status" [ngSwitch]="fragment.status" *ngIf="fragment.status">
+				<span *ngSwitchWhen="1" [innerHTML]="'Waiting for approval'"></span>
+				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
+				<span *ngSwitchWhen="3" [innerHTML]="'Denied'"></span>
+				<span *ngSwitchWhen="4" [innerHTML]="'Cancelled'"></span>
+				<span *ngSwitchWhen="5" [innerHTML]="''"></span>
+				<span *ngSwitchWhen="6" [innerHTML]="'Blocked'"></span>
+				<span *ngSwitchWhen="7" [innerHTML]="'Invitation'"></span>
+			</span>
 			<h4>
 				<em>{{template.name}}</em> 
 				<span class="at">at</span> 
@@ -315,11 +324,11 @@ class TodayEvent {
 	template: Template;
 	user: User;
 
-	constructor(private segmentService: SegmentService) {}
+	constructor(private fragmentService: FragmentService) {}
 
 	ngOnChanges() {
 		if (this.fragment) {
-			this.segmentService.getSegmentArray(this.fragment._segment).then((response2) => {
+			this.fragmentService.getSegmentArray(this.fragment._id).then((response2) => {
 				if (response2.success) {
 					let [segment, template, user] = response2.payload;
 					this.segment = segment;
