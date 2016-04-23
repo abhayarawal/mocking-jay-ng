@@ -74,6 +74,18 @@ class SegmentUnavailable implements OnInit {
 	}
 }
 
+@Component({
+	selector: 'spinner',
+	template: `
+		<div class="spinner">
+			<div class="bounce1"></div>
+			<div class="bounce2"></div>
+			<div class="bounce3"></div>
+		</div>
+	`
+})
+class Spinner { }
+
 
 @Component({
 	selector: 'fragment-component',
@@ -229,21 +241,24 @@ class SegmentComponent implements OnInit {
 		<div class="segment__wrap">
 			<div class="segments">
 				<segment-unavailable [count]="2"></segment-unavailable>
-				<div class="segment" *ngIf="segments.length == 0">
-					<h3 class="segment__title">
-						<span>No events available</span>
-					</h3>
+				<div *ngIf="segments">
+					<div class="segment" *ngIf="segments.length == 0">
+						<h3 class="segment__title">
+							<span>No events available</span>
+						</h3>
+					</div>
+					<segment-component *ngFor="#segment of segments" [segment]="segment"></segment-component>
 				</div>
-				<segment-component *ngFor="#segment of segments" [segment]="segment"></segment-component>
+				<spinner *ngIf="!segments"></spinner>
 			</div>
 		</div>
 	`,
 	providers: [CalendarService],
-	directives: [SegmentUnavailable, SegmentComponent]
+	directives: [SegmentUnavailable, SegmentComponent, Spinner]
 })
 class SegmentWrap {
 	segments$: Observable<Segment[]>;
-	segments: Segment[] = [];
+	segments: Segment[];
 
 	constructor(
 		private calendarService: CalendarService,
@@ -289,19 +304,6 @@ class SegmentWrap {
 class ProfileCard {
 	@Input() user: User;
 }
-
-
-@Component({
-	selector: 'spinner',
-	template: `
-		<div class="spinner">
-			<div class="bounce1"></div>
-			<div class="bounce2"></div>
-			<div class="bounce3"></div>
-		</div>
-	`
-})
-class Spinner {}
 
 
 @Component({
