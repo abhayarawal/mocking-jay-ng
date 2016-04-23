@@ -3165,6 +3165,25 @@ textarea
 	}
 }
 
+.contact__card
+{
+	text-align: center;
 
+	.avatar
+	{
+		max-width: 200px;
+		display: inline-block;
+
+		img
+		{
+			@include border-radius(100%);
+		}
+	}
+
+	h3
+	{
+		display: block;
+	}
+}
 
 // end

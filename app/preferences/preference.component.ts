@@ -29,7 +29,14 @@ import {UserService} from '../services/user.service';
 
 		<div class="contextual__card">
 			<div class="contact__card" *ngIf="user">
-				{{json}}
+				<section class="avatar">
+					<img src="{{user.meta?.avatar}}" *ngIf="user.meta.avatar" alt="" />
+					<span *ngIf="!user.meta.avatar">AR</span>
+				</section>
+				<h3>{{user.lname}}, {{user.fname}}</h3>
+				<div class="email">
+					
+				</div>
 			</div>
 		</div>
 	`,

@@ -2320,3 +2320,17 @@ textarea {
   .spinner .bounce2 {
     -webkit-animation-delay: -0.16s;
     animation-delay: -0.16s; }
+
+.contact__card {
+  text-align: center; }
+  .contact__card .avatar {
+    max-width: 200px;
+    display: inline-block; }
+    .contact__card .avatar img {
+      -webkit-border-radius: 100%;
+      -moz-border-radius: 100%;
+      -o-border-radius: 100%;
+      -ms-border-radius: 100%;
+      border-radius: 100%; }
+  .contact__card h3 {
+    display: block; }
