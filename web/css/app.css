@@ -2252,3 +2252,38 @@ textarea {
             -webkit-box-shadow: 0 0 0 2px rgba(137, 140, 148, 0.53);
             -moz-box-shadow: 0 0 0 2px rgba(137, 140, 148, 0.53);
             box-shadow: 0 0 0 2px rgba(137, 140, 148, 0.53); }
+
+.profile__card {
+  font-size: 0;
+  display: block; }
+  .profile__card section {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 14px; }
+    .profile__card section:first-child {
+      width: 40px; }
+      .profile__card section:first-child img {
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        -o-border-radius: 100%;
+        -ms-border-radius: 100%;
+        border-radius: 100%; }
+    .profile__card section:last-child {
+      width: calc(100% - 40px);
+      padding-left: 12px; }
+      .profile__card section:last-child strong {
+        display: block; }
+
+.today__events {
+  margin-top: 20px; }
+  .today__events li {
+    margin-top: 20px;
+    display: block; }
+    .today__events li h4 {
+      text-transform: capitalize;
+      font-size: 17px; }
+      .today__events li h4 em {
+        font-style: normal;
+        font-weight: 400; }
+      .today__events li h4 span.at {
+        font-size: 14px; }

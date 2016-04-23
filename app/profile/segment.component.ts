@@ -271,49 +271,78 @@ class SegmentWrap {
 	}
 }
 
+@Component({
+	selector: 'profile-card',
+	template: `
+		<div class="profile__card" *ngIf="user">
+			<section>
+				<img src="{{user.meta.avatar}}" alt="" *ngIf="user.meta?.avatar" />
+				<span *ngIf="!user.meta?.avatar">AR</span>
+			</section>
+			<section>
+				<strong>{{user.lname}}, {{user.fname}}</strong>
+				{{user.email}}
+			</section>
+		</div>
+	`
+})
+class ProfileCard {
+	@Input() user: User;
+}
+
+
+@Component({
+	selector: 'today-event',
+	template: `
+		<li *ngIf="fragment && user && template">
+			<h4>
+				<em>{{template.name}}</em> 
+				<span class="at">at</span> 
+				<span>{{fragment | timePipe:false}} - {{fragment | timePipe:true}}</span>
+			</h4>
+			<profile-card [user]="user" *ngIf="user"></profile-card>
+		</li>
+		<li *ngIf="!user || !template">
+			Loading...
+		</li>
+	`,
+	directives: [ProfileCard],
+	pipes: [TimePipe]
+})
+class TodayEvent {
+	@Input() fragment: Fragment;
+	segment: Segment;
+	template: Template;
+	user: User;
+
+	constructor(private segmentService: SegmentService) {}
+
+	ngOnChanges() {
+		if (this.fragment) {
+			this.segmentService.getSegmentArray(this.fragment._segment).then((response2) => {
+				if (response2.success) {
+					let [segment, template, user] = response2.payload;
+					this.segment = segment;
+					this.template = template;
+					this.user = user;
+				}
+			});
+		}
+	}
+}
+
 
 @Component({
 	selector: 'today-events',
 	template: `
 		<ul *ngIf="fragments" class="today__events">
-			<li *ngFor="#fragment of fragments">
-				{{fragment._id}}
-				{{fragment | timePipe:false}} - {{fragment | timePipe:true}}
-
-				{{fragment.segment?._id}}
-				{{fragment.segment?.template?.name}}
-				{{fragment.segment?.template?.user?.email}}
-			</li>
+			<today-event *ngFor="#fragment of fragments" [fragment]="fragment"></today-event>
 		</ul>
 	`,
-	pipes: [TimePipe]
+	directives: [TodayEvent]
 })
-class TodayEvents implements OnInit {
+class TodayEvents {
 	@Input() fragments: Fragment[];
-
-	constructor(
-		private segmentService: SegmentService
-	) {}
-
-	ngOnInit() {
-	}
-
-	ngOnChanges() {
-		if (this.fragments) {
-			let maps = this.fragments.map(fragment => fragment._id);
-			this.fragments.forEach((fragment) => {
-				this.segmentService.getSegmentArray(fragment._segment).then((response2) => {
-					if (response2.success) {
-						let index = maps.indexOf(fragment._id);
-						let [sg, tm, us] = response2.payload;
-						this.fragments[index].segment = sg;
-						this.fragments[index].segment.template = tm;
-						this.fragments[index].segment.template.user = us;
-					}
-				});
-			});
-		}
-	}
 }
 
 
