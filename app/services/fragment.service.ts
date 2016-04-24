@@ -295,7 +295,7 @@ export class FragmentService {
 		let now: [number, number] = [t1, m1];
 		for (let i = 0, l = fragments; i < l; i++) {
 			let tmp = now;
-			now = increment(now, 15);
+			now = increment(now, segment.template.interval);
 			frags.push({
 				id: `${segment.id}/${i}`,
 				date: {
