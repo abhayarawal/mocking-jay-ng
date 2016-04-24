@@ -1033,14 +1033,14 @@ class FragmentContextStudent implements OnInit {
 					<strong>Appointment blocked for everyone</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
 					<div class="cancels">
-						<button class="button type__1" (click)="open()">
+						<button class="button type__2" (click)="open()">
 							<span class="icon-done"></span>Unblock interval
 						</button>
 					</div>
 				</template>
 				<template ngSwitchDefault>
 					<div class="border_a">
-						<button class="button type__2" (click)="block()">
+						<button class="button type__1" (click)="block()">
 							<span class="icon-close"></span>Block interval
 						</button>
 					</div>

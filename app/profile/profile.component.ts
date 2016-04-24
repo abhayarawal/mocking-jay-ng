@@ -85,7 +85,7 @@ class ProfileContext implements OnInit {
 	selector: 'profile-nav',
 	template: `
 		<div class="profile__nav" *ngIf="user">
-			<div class="profile__card">
+			<div class="profile__card__nav">
 				<img src="{{user.meta?.avatar}}" />
 				<h3>
 					{{user.fname}} {{user.lname}}

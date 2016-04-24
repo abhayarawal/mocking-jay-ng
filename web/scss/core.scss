@@ -889,8 +889,8 @@ $top__height: 40px;
 
 						&.router-link-active
 						{
-							background: #906fff;
-							color: #fff;
+							// background: #906fff;
+							// color: #fff;
 						}
 					}
 				}
@@ -933,7 +933,7 @@ $top__height: 40px;
 		// border-right: 1px solid #CDCDCD;
 		padding: 30px 0;
 
-		.profile__card
+		.profile__card__nav
 		{
 			text-align: center;
 			padding: 0 0px;
@@ -1426,18 +1426,18 @@ textarea
 
     &.#{$type}
     {
-      border: 1px solid;
+      // border: 1px solid;
       background: darken($bg, 0%);
       color: #fff;
       line-height: 38px;
-      font-weight: 400;
+      font-weight: 500;
       @include border-radius(7px);
-      padding: 0 20px 0 3px; 
+      padding: 0 20px 0 5px; 
 
       [class^="icon-"], [class*=" icon-"]
 			{
-				line-height: 32px;
-				width: 32px;
+				line-height: 26px;
+				width: 26px;
 				background: rgba(255, 255, 255, 0.95);
 	      color: darken($bg, 0%);
 				display: inline-block;
@@ -1470,11 +1470,6 @@ textarea
 				}
       }
     }
-  }
-
-  &.thin
-  {
-  	border: 1px solid;
   }
 }
 
@@ -2316,7 +2311,7 @@ textarea
 					&.router-link-active
 					{
 						border-color: #ff5c61;
-						// border-color: #b4b3b9;
+						// border-color: #ff7347;
 					}
 				}
 			}

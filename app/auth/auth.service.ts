@@ -24,7 +24,7 @@ export class AuthService implements OnInit {
 	session$: Observable<boolean>;
 	private sessionObserver: Observer<boolean>;
 
-	baseUri: string = 'http://localhost:5000/api';
+	baseUri: string = 'https://mj-gretel.herokuapp.com/api';
 	tokenId: string = 'mj-token-id';
 
 	constructor(
