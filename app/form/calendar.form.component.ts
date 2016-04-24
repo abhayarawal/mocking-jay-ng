@@ -148,6 +148,7 @@ export class CalendarSelectElm implements OnInit {
 		this.day = today.getDate();
 		this.month = today.getMonth();
 		this.year = today.getFullYear();
+		this.select([this.month, this.day, this.year]);
 	}
 }
 

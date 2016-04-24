@@ -157,8 +157,12 @@ class TemplateValidator {
 						</div>
 					</div>
 					<div class="form__group">
-						<button (click)="submit()" class="button type__3">Create Template</button>
-						<button class="button type__4">Cancel</button>
+						<button (click)="submit()" class="button type__3">
+							<span class="icon-done"></span>Create Template
+						</button>
+						<button class="button type__4">
+							<span class="icon-close"></span>Cancel
+						</button>
 					</div>
 				</form>
 				<div>{{json}}</div>
@@ -238,11 +242,9 @@ class TemplateCreate implements OnInit {
 @Component({
 	selector: 'template-editor',
 	template: `
-		<div class="inner__row" *ngIf="template">
+		<div class="inner__row editor" *ngIf="template">
 			<div class="form__wrap">
 				<form [ngFormModel]="editForm">
-					<h3>Edit</h3>
-					
 					<div class="inner__row">
 						<section>
 							<label>Template name:</label>
@@ -258,10 +260,10 @@ class TemplateCreate implements OnInit {
 						</section>
 					</div>
 
-					<div class="inner__row">
+					<div class="inner__row ctls">
 						<section>
-							<button class="button type__2" (click)="updateTemplate()">Update template</button>
-							<button class="button type__1" (click)="remove()">Delete</button>
+							<a (click)="updateTemplate()">Update template</a>
+							<a (click)="remove()">Delete</a>
 						</section>
 					</div>
 				</form>
@@ -343,7 +345,7 @@ class TemplateEditor implements OnInit {
 		<li *ngIf="template" class="template__detail">
 			<div class="inner__row">
 				<section>
-					<strong>{{template.name}}</strong>
+					<h5>{{template.name}}</h5>
 				</section>
 				<section>
 					Interval {{template.interval}} min
@@ -352,15 +354,14 @@ class TemplateEditor implements OnInit {
 					<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
 				</section>
 			</div>
-
-		<template-editor [template]="template" *ngIf="show"></template-editor>
-
+			<template-editor [template]="template" *ngIf="show"></template-editor>
 		</li>
 	`,
 	directives: [TemplateEditor]
 })
 class TemplateDetail {
 	@Input() template: Template;
+	@Input() index: number;
 
 	show: boolean = false;
 }
@@ -369,7 +370,7 @@ class TemplateDetail {
 	template: `
 		<h3>Templates</h3>
 		<ul *ngIf="templates" class="table">
-			<template-detail *ngFor="#t of templates" [template]="t">
+			<template-detail *ngFor="#t of templates; #i = index" [template]="t" [index]="i">
 			</template-detail>
 		</ul>
 	`,

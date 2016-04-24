@@ -118,7 +118,7 @@ class PreferencesForm implements OnInit {
 	];
 
 	phones: Alternate[] = [
-		{ data: '000-000-9999', show: true, notification: true, activated: true, type: AlternateType.Phone },
+		{ data: '123-456-7890', show: true, notification: true, activated: true, type: AlternateType.Phone },
 	];
 
 	constructor(

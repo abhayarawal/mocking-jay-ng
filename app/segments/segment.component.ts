@@ -162,7 +162,7 @@ class DateTimeValidator {
 					<div *ngIf="repeatView">
 						<div class="form__group">
 							<label for="">Repeat until</label>
-							<calendar-select-elm></calendar-select-elm>
+							<calendar-select-elm (update)="updateUntil($event)"></calendar-select-elm>
 							<div class="form__desc">
 								Select the segment repeat until date
 							</div>
@@ -171,25 +171,25 @@ class DateTimeValidator {
 							<label for="">Repeat days</label>
 							<div class="weekdays">
 								<section>
-									<mj-radio [on]="true" [text]="'Mon'"></mj-radio>
+									<mj-radio [on]="false" [text]="'Mon'" (update)="updateMon($event)"></mj-radio>
 								</section>
 								<section>
-									<mj-radio [on]="false" [text]="'Tue'"></mj-radio>
+									<mj-radio [on]="false" [text]="'Tue'" (update)="updateTue($event)"></mj-radio>
 								</section>
 								<section>
-									<mj-radio [on]="true" [text]="'Wed'"></mj-radio>
+									<mj-radio [on]="false" [text]="'Wed'" (update)="updateWed($event)"></mj-radio>
 								</section>
 								<section>
-									<mj-radio [on]="false" [text]="'Thu'"></mj-radio>
+									<mj-radio [on]="false" [text]="'Thu'" (update)="updateThu($event)"></mj-radio>
 								</section>
 								<section>
-									<mj-radio [on]="true" [text]="'Fri'"></mj-radio>
+									<mj-radio [on]="false" [text]="'Fri'" (update)="updateFri($event)"></mj-radio>
 								</section>
 								<section>
-									<mj-radio [on]="false" [text]="'Sat'"></mj-radio>
+									<mj-radio [on]="false" [text]="'Sat'" (update)="updateSat($event)"></mj-radio>
 								</section>
 								<section>
-									<mj-radio [on]="false" [text]="'Sun'"></mj-radio>
+									<mj-radio [on]="false" [text]="'Sun'" (update)="updateSun($event)"></mj-radio>
 								</section>
 							</div>
 							<div class="form__desc">
@@ -198,8 +198,13 @@ class DateTimeValidator {
 						</div>
 					</div>
 					<div class="form__group">
-						<button (click)="submit()" class="button type__3">Create Segment</button>
-						<button class="button type__4">Cancel</button>
+						<button (click)="submit()" class="button type__3">
+							<span class="icon-done"></span>Create Segment
+						</button>
+						<button class="button type__4">
+							<span class="icon-close"></span>
+							Cancel
+						</button>
 					</div>
 				</form>
 			</div>
@@ -262,7 +267,26 @@ class SegmentCreate implements OnInit {
 		};
 	}
 
-	updateRepeat(event: boolean) { this.repeatView = event };
+	updateUntil([month, day, year]: [number, number, number]) {
+		this.segment.repeat_until = {
+			month: month,
+			day: day,
+			year: year
+		};
+	}
+
+	updateRepeat(event: boolean) {
+		this.repeatView = event;
+		this.segment.repeat = event;
+	}
+
+	updateMon(event: boolean) { this.segment.repeat_days.mon = event; }
+	updateTue(event: boolean) { this.segment.repeat_days.tue = event; }
+	updateWed(event: boolean) { this.segment.repeat_days.wed = event; }
+	updateThu(event: boolean) { this.segment.repeat_days.thu = event; }
+	updateFri(event: boolean) { this.segment.repeat_days.fri = event; }
+	updateSat(event: boolean) { this.segment.repeat_days.sat = event; }
+	updateSun(event: boolean) { this.segment.repeat_days.sun = event; }
 
 	submit() {
 		if (this.segmentForm.valid) {

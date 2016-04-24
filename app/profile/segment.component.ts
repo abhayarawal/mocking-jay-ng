@@ -794,8 +794,8 @@ class FragmentInvitation implements OnInit {
 						<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
 						<a (click)="sendMessage()" class="icon-paperplane"></a>
 					</div>
-					<div class="form__group">
-						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+					<div class="form__group border_a">
+						<a (click)="cancel()">Cancel appointment</a>
 					</div>
 					<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
 				</template>
@@ -808,8 +808,8 @@ class FragmentInvitation implements OnInit {
 						<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
 						<a (click)="sendMessage()" class="icon-paperplane"></a>
 					</div>
-					<div class="form__group">
-						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+					<div class="form__group border_a">
+						<a (click)="cancel()">Cancel appointment</a>
 					</div>
 					<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
 				</template>
@@ -842,8 +842,8 @@ class FragmentInvitation implements OnInit {
 						<textarea [(ngModel)]="message"></textarea>
 					</div>
 					<fragment-invitees (update)="invitees($event)"></fragment-invitees>
-					<div class="form__group">
-						<button class="button type__2" (click)="create()">Create appointment</button>
+					<div class="form__group border_a">
+						<a (click)="create()">Create appointment</a>
 					</div>
 				</template>
 			</div>
@@ -974,8 +974,10 @@ class FragmentContextStudent implements OnInit {
 						<textarea [(ngModel)]="response" (keyup.enter)="respond()"></textarea>
 						<a (click)="respond()" class="icon-paperplane"></a>
 					</div>
-					<div class="form__group">
-						<button class="button type__3" (click)="approve()">Approve appointment</button>
+					<div class="form__group border_a">
+						<a (click)="approve()">
+							Approve appointment
+						</a>
 					</div>
 					<div class="cancels">
 						<a (click)="deny()">Deny appointment</a>
@@ -994,8 +996,8 @@ class FragmentContextStudent implements OnInit {
 						<textarea [(ngModel)]="response" (keyup.enter)="respond()"></textarea>
 						<a (click)="respond()" class="icon-paperplane"></a>
 					</div>
-					<div class="form__group">
-						<button class="button type__1" (click)="cancel()">Cancel appointment</button>
+					<div class="form__group border_a">
+						<a (click)="cancel()">Cancel appointment</a>
 					</div>
 					<div class="cancels">
 						<a href="">Cancel and make unavailable for everyone</a>
@@ -1028,7 +1030,9 @@ class FragmentContextStudent implements OnInit {
 					</div>
 				</template>
 				<template ngSwitchDefault>
-					<button class="button type__1" (click)="block()">Block interval</button>
+					<div class="border_a">
+						<a (click)="block()">Block interval</a>
+					</div>
 				</template>
 			</div>
 		</div>

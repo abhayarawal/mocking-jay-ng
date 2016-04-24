@@ -206,12 +206,12 @@ html, body {
   height: calc(100% - 40px);
   z-index: 4; }
 
-.segment__viewport .day__component .ctl a, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a, .pref__form .email__pref a {
+.segment__viewport .day__component .ctl a, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .border_a a, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a, .table li .editor .ctls a, .pref__form .email__pref a {
   text-decoration: none;
   color: #898E95;
   border-bottom: 1px dotted #898E95;
   cursor: pointer; }
-  .segment__viewport .day__component .ctl a:hover, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a:hover, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a:hover, .pref__form .email__pref a:hover {
+  .segment__viewport .day__component .ctl a:hover, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a:hover, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .border_a a:hover, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a:hover, .table li .editor .ctls a:hover, .pref__form .email__pref a:hover {
     color: #000;
     border-color: #000; }
 
@@ -902,11 +902,11 @@ input[type="text"], input[type="password"], input[type="telephone"], input[type=
   -o-transition: all 0.1s ease;
   -ms-transition: all 0.1s ease;
   transition: all 0.1s ease;
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  -o-border-radius: 7px;
-  -ms-border-radius: 7px;
-  border-radius: 7px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  border-radius: 5px;
   position: relative;
   color: #7d7d7d; }
   input[type="text"]:focus, input[type="password"]:focus, input[type="telephone"]:focus, input[type="email"]:focus, textarea:focus, select:focus, input[type="email"]:focus, input[type="number"]:focus {
@@ -934,9 +934,6 @@ textarea {
   border: 1px solid #f6a595 !important; }
 
 .button {
-  line-height: 32px;
-  padding: 0 20px;
-  color: white;
   border: none;
   outline: none;
   cursor: pointer;
@@ -948,11 +945,6 @@ textarea {
   -o-transition: all 0.1s ease;
   -ms-transition: all 0.1s ease;
   transition: all 0.1s ease;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -o-border-radius: 2px;
-  -ms-border-radius: 2px;
-  border-radius: 2px;
   text-align: center;
   vertical-align: middle; }
   .button:active {
@@ -962,21 +954,295 @@ textarea {
     -ms-transform: scale(0.95);
     transform: scale(0.95); }
   .button.type__1 {
-    border: 2px solid;
-    border-color: #ff5c61;
-    color: #ff2930; }
+    border: 1px solid;
+    background: #ff7347;
+    color: #fff;
+    line-height: 38px;
+    font-weight: 400;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -o-border-radius: 7px;
+    -ms-border-radius: 7px;
+    border-radius: 7px;
+    padding: 0 20px 0 3px; }
+    .button.type__1 [class^="icon-"], .button.type__1 [class*=" icon-"] {
+      line-height: 32px;
+      width: 32px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #ff7347;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+      font-size: 17px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      -o-border-radius: 50%;
+      -ms-border-radius: 50%;
+      border-radius: 50%;
+      -webkit-transition: all 0.8s ease;
+      -moz-transition: all 0.8s ease;
+      -o-transition: all 0.8s ease;
+      -ms-transition: all 0.8s ease;
+      transition: all 0.8s ease;
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg); }
+    .button.type__1:hover [class^="icon-"], .button.type__1:hover [class*=" icon-"] {
+      -webkit-transition: all 0.8s ease;
+      -moz-transition: all 0.8s ease;
+      -o-transition: all 0.8s ease;
+      -ms-transition: all 0.8s ease;
+      transition: all 0.8s ease;
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg); }
+    .button.type__1:active [class^="icon-"], .button.type__1:active [class*=" icon-"] {
+      -webkit-transition: all 0.2s ease;
+      -moz-transition: all 0.2s ease;
+      -o-transition: all 0.2s ease;
+      -ms-transition: all 0.2s ease;
+      transition: all 0.2s ease;
+      -webkit-transform: scale(0.75);
+      -moz-transform: scale(0.75);
+      -o-transform: scale(0.75);
+      -ms-transform: scale(0.75);
+      transform: scale(0.75); }
   .button.type__2 {
-    border: 2px solid;
-    border-color: #ffbe63;
-    color: #ffa930; }
+    border: 1px solid;
+    background: #ffbe63;
+    color: #fff;
+    line-height: 38px;
+    font-weight: 400;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -o-border-radius: 7px;
+    -ms-border-radius: 7px;
+    border-radius: 7px;
+    padding: 0 20px 0 3px; }
+    .button.type__2 [class^="icon-"], .button.type__2 [class*=" icon-"] {
+      line-height: 32px;
+      width: 32px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #ffbe63;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+      font-size: 17px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      -o-border-radius: 50%;
+      -ms-border-radius: 50%;
+      border-radius: 50%;
+      -webkit-transition: all 0.8s ease;
+      -moz-transition: all 0.8s ease;
+      -o-transition: all 0.8s ease;
+      -ms-transition: all 0.8s ease;
+      transition: all 0.8s ease;
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg); }
+    .button.type__2:hover [class^="icon-"], .button.type__2:hover [class*=" icon-"] {
+      -webkit-transition: all 0.8s ease;
+      -moz-transition: all 0.8s ease;
+      -o-transition: all 0.8s ease;
+      -ms-transition: all 0.8s ease;
+      transition: all 0.8s ease;
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg); }
+    .button.type__2:active [class^="icon-"], .button.type__2:active [class*=" icon-"] {
+      -webkit-transition: all 0.2s ease;
+      -moz-transition: all 0.2s ease;
+      -o-transition: all 0.2s ease;
+      -ms-transition: all 0.2s ease;
+      transition: all 0.2s ease;
+      -webkit-transform: scale(0.75);
+      -moz-transform: scale(0.75);
+      -o-transform: scale(0.75);
+      -ms-transform: scale(0.75);
+      transform: scale(0.75); }
   .button.type__3 {
-    border: 2px solid;
-    border-color: #30d6c8;
-    color: #23b0a4; }
+    border: 1px solid;
+    background: #30d6c8;
+    color: #fff;
+    line-height: 38px;
+    font-weight: 400;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -o-border-radius: 7px;
+    -ms-border-radius: 7px;
+    border-radius: 7px;
+    padding: 0 20px 0 3px; }
+    .button.type__3 [class^="icon-"], .button.type__3 [class*=" icon-"] {
+      line-height: 32px;
+      width: 32px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #30d6c8;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+      font-size: 17px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      -o-border-radius: 50%;
+      -ms-border-radius: 50%;
+      border-radius: 50%;
+      -webkit-transition: all 0.8s ease;
+      -moz-transition: all 0.8s ease;
+      -o-transition: all 0.8s ease;
+      -ms-transition: all 0.8s ease;
+      transition: all 0.8s ease;
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg); }
+    .button.type__3:hover [class^="icon-"], .button.type__3:hover [class*=" icon-"] {
+      -webkit-transition: all 0.8s ease;
+      -moz-transition: all 0.8s ease;
+      -o-transition: all 0.8s ease;
+      -ms-transition: all 0.8s ease;
+      transition: all 0.8s ease;
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg); }
+    .button.type__3:active [class^="icon-"], .button.type__3:active [class*=" icon-"] {
+      -webkit-transition: all 0.2s ease;
+      -moz-transition: all 0.2s ease;
+      -o-transition: all 0.2s ease;
+      -ms-transition: all 0.2s ease;
+      transition: all 0.2s ease;
+      -webkit-transform: scale(0.75);
+      -moz-transform: scale(0.75);
+      -o-transform: scale(0.75);
+      -ms-transform: scale(0.75);
+      transform: scale(0.75); }
   .button.type__4 {
-    border: 2px solid;
-    border-color: #d4d4d4;
-    color: #bbbbbb; }
+    border: 1px solid;
+    background: #d4d4d4;
+    color: #fff;
+    line-height: 38px;
+    font-weight: 400;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -o-border-radius: 7px;
+    -ms-border-radius: 7px;
+    border-radius: 7px;
+    padding: 0 20px 0 3px; }
+    .button.type__4 [class^="icon-"], .button.type__4 [class*=" icon-"] {
+      line-height: 32px;
+      width: 32px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #d4d4d4;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+      font-size: 17px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      -o-border-radius: 50%;
+      -ms-border-radius: 50%;
+      border-radius: 50%;
+      -webkit-transition: all 0.8s ease;
+      -moz-transition: all 0.8s ease;
+      -o-transition: all 0.8s ease;
+      -ms-transition: all 0.8s ease;
+      transition: all 0.8s ease;
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg); }
+    .button.type__4:hover [class^="icon-"], .button.type__4:hover [class*=" icon-"] {
+      -webkit-transition: all 0.8s ease;
+      -moz-transition: all 0.8s ease;
+      -o-transition: all 0.8s ease;
+      -ms-transition: all 0.8s ease;
+      transition: all 0.8s ease;
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg); }
+    .button.type__4:active [class^="icon-"], .button.type__4:active [class*=" icon-"] {
+      -webkit-transition: all 0.2s ease;
+      -moz-transition: all 0.2s ease;
+      -o-transition: all 0.2s ease;
+      -ms-transition: all 0.2s ease;
+      transition: all 0.2s ease;
+      -webkit-transform: scale(0.75);
+      -moz-transform: scale(0.75);
+      -o-transform: scale(0.75);
+      -ms-transform: scale(0.75);
+      transform: scale(0.75); }
+  .button.type__5 {
+    border: 1px solid;
+    background: #aa7bff;
+    color: #fff;
+    line-height: 38px;
+    font-weight: 400;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -o-border-radius: 7px;
+    -ms-border-radius: 7px;
+    border-radius: 7px;
+    padding: 0 20px 0 3px; }
+    .button.type__5 [class^="icon-"], .button.type__5 [class*=" icon-"] {
+      line-height: 32px;
+      width: 32px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #aa7bff;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+      font-size: 17px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      -o-border-radius: 50%;
+      -ms-border-radius: 50%;
+      border-radius: 50%;
+      -webkit-transition: all 0.8s ease;
+      -moz-transition: all 0.8s ease;
+      -o-transition: all 0.8s ease;
+      -ms-transition: all 0.8s ease;
+      transition: all 0.8s ease;
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg); }
+    .button.type__5:hover [class^="icon-"], .button.type__5:hover [class*=" icon-"] {
+      -webkit-transition: all 0.8s ease;
+      -moz-transition: all 0.8s ease;
+      -o-transition: all 0.8s ease;
+      -ms-transition: all 0.8s ease;
+      transition: all 0.8s ease;
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg); }
+    .button.type__5:active [class^="icon-"], .button.type__5:active [class*=" icon-"] {
+      -webkit-transition: all 0.2s ease;
+      -moz-transition: all 0.2s ease;
+      -o-transition: all 0.2s ease;
+      -ms-transition: all 0.2s ease;
+      transition: all 0.2s ease;
+      -webkit-transform: scale(0.75);
+      -moz-transform: scale(0.75);
+      -o-transform: scale(0.75);
+      -ms-transform: scale(0.75);
+      transform: scale(0.75); }
   .button.thin {
     border: 1px solid; }
 
@@ -2029,48 +2295,44 @@ textarea {
   .radius-progress.complete .progress em {
     color: #4FC3B8; }
 
-.table li {
-  width: 100%;
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  background: #fbfcff;
-  border: 1px solid #e8e8e8;
-  margin-top: 15px;
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  -o-border-radius: 7px;
-  -ms-border-radius: 7px;
-  border-radius: 7px;
-  padding: 7px 20px; }
-  .table li:before, .table li:after {
-    content: '';
-    display: table; }
-  .table li:after {
-    clear: both; }
-  .table li .inner__row {
-    margin-left: -1.25rem;
-    margin-right: -1.25rem; }
-    .table li .inner__row:before, .table li .inner__row:after {
-      content: '';
-      display: table; }
-    .table li .inner__row:after {
-      clear: both; }
-    .table li .inner__row section {
-      float: left;
-      width: 33.33333%;
-      padding-left: 1.25rem;
-      padding-right: 1.25rem; }
-      .table li .inner__row section:first-child {
-        text-transform: capitalize; }
-      .table li .inner__row section h1, .table li .inner__row section h2, .table li .inner__row section h3, .table li .inner__row section h4, .table li .inner__row section h5, .table li .inner__row section h6 {
-        margin: 0;
-        padding: 0; }
-    .table li .inner__row .form__wrap {
-      float: left;
-      width: 100%;
-      padding-left: 1.25rem;
-      padding-right: 1.25rem; }
+.table {
+  font-size: 0; }
+  .table li {
+    display: inline-block;
+    vertical-align: top;
+    border-bottom: 1px solid #EAECEE;
+    padding: 10px 0px;
+    font-size: 14px;
+    width: 100%; }
+    .table li.even {
+      background: #FFFFFF; }
+    .table li .inner__row {
+      margin-left: -1.25rem;
+      margin-right: -1.25rem; }
+      .table li .inner__row:before, .table li .inner__row:after {
+        content: '';
+        display: table; }
+      .table li .inner__row:after {
+        clear: both; }
+      .table li .inner__row section {
+        float: left;
+        width: 33.33333%;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem; }
+        .table li .inner__row section:first-child {
+          text-transform: capitalize; }
+        .table li .inner__row section h1, .table li .inner__row section h2, .table li .inner__row section h3, .table li .inner__row section h4, .table li .inner__row section h5, .table li .inner__row section h6 {
+          margin: 0;
+          padding: 0; }
+      .table li .inner__row .form__wrap {
+        float: left;
+        width: 100%;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem; }
+    .table li .editor {
+      margin-top: 15px; }
+      .table li .editor .ctls {
+        margin-top: 15px; }
 
 .notification__component {
   position: fixed;
@@ -2344,7 +2606,7 @@ textarea {
 
 .pref__form .email__pref {
   margin-top: 25px;
-  background: #fbfbfb;
+  background: #fcfcfc;
   border: 1px solid #DBDDE3;
   -webkit-border-radius: 7px;
   -moz-border-radius: 7px;

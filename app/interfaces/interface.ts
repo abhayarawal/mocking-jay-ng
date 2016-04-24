@@ -51,7 +51,15 @@ export interface Segment {
 	repeat: boolean,
 	_user: string,
 	repeat_until?: Date,
-	repeat_days?: [number],
+	repeat_days?: {
+		mon: boolean,
+		tue: boolean,
+		wed: boolean,
+		thu: boolean,
+		fri: boolean,
+		sat: boolean,
+		sun: boolean
+	},
 	instance_of?: string,
 	location?: string
 }

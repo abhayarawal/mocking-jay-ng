@@ -147,6 +147,7 @@ export class SegmentService implements OnInit {
 	}
 
 	addSegment(segment: any) {
+		console.log(segment);
 		let [sessionExist, session] = this.authService.getSession();
 		if (sessionExist) {
 			if (session.id) {
@@ -258,7 +259,16 @@ export class SegmentService implements OnInit {
 			repeat: false,
 			location: "",
 			_template: "",
-			_user: session.id
+			_user: session.id,
+			repeat_days: {
+				mon: false,
+				tue: false,
+				wed: false,
+				thu: false,
+				fri: false,
+				sat: false,
+				sun: false
+			}
 		};
 
 		return Promise.resolve(segment);
