@@ -1588,6 +1588,50 @@ textarea
 		overflow-x: hidden;
 		overflow-y: auto;
 
+		.not__allowed
+		{
+			padding: 10px 12px;
+			margin-top: 30px;
+			@include border-radius(5px);
+			background: rgba(223, 245, 255, 0.31);
+			color: #6daec9;
+			border: 1px solid #9addf2;
+
+			&.error
+			{
+				background: #ffdde2;
+				color: #ff051d;
+				border: 1px solid #ff8984;
+			}
+
+			h3, h4, h5
+			{
+				font-size: 14px;
+				font-weight: 400;
+				position: relative;
+				padding-left: 40px;
+
+				&:before
+				{
+					font-family: 'icomoon' !important;
+					speak: none;
+					font-style: normal;
+					font-weight: normal;
+					font-variant: normal;
+					text-transform: none;
+					content: "\e907";
+					display: block;
+					line-height: 30px;
+					width: 30px;
+					position: absolute;
+					left: 0px;
+					top: 50%;
+					margin-top: -15px;
+					font-size: 25px;
+				}
+			}
+		}
+
 		.fragment__ctx
 		{
 			.fragment__history
