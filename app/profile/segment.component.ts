@@ -928,10 +928,12 @@ class FragmentContextStudent implements OnInit {
 		} else {
 			if (this.fragment._user) {
 				if (!(this.fragment._user == session.id)) {
+					let in_invite = false;
 					if ('invitees' in this.fragment) {
 						this.fragment.invitees.forEach((invitee) => {
-							if (!(invitee.email == session.email)) { run = true; }
-						})
+							if (invitee.email == session.email) { in_invite = true; }
+						});
+						if (!in_invite) { run = true; }
 					} else {
 						run = true;
 					}
