@@ -709,9 +709,9 @@ class FragmentInviteeList {
 							<strong>You've declined the invitation</strong>
 						</template>
 					</div>
-					<div class="form__group">
-						<button class="button type__3" (click)="accept()">Accept Invitation</button>
-						<button class="button type__1" (click)="decline()">Decline Invitation</button>
+					<div class="form__group border_a">
+						<a (click)="accept()">Accept Invitation</a>
+						<a (click)="decline()">Decline Invitation</a>
 					</div>
 				</div>
 				
@@ -1165,8 +1165,8 @@ class FragmentContextFaculty implements OnInit {
 	}
 
 	histroyLine() {
-		this.users = [];
 		if ('history' in this.fragment) {
+			this.users = [];
 			for (var i = 0, l = this.fragment.history.length; i < l; i++) {
 				this.userService.getUserPromise(this.fragment.history[i]._user).then(
 					response => {
