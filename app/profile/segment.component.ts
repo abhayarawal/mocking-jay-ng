@@ -923,11 +923,19 @@ class FragmentContextStudent implements OnInit {
 		this.allow = true;
 
 		let [exists, session] = this.authService.getSession();
-		if (!(this.fragment._user == session.id)) {
-			if ('invitees' in this.fragment) {
-				this.fragment.invitees.forEach((invitee) => {
-					if (!(invitee.email == session.email)) { run = true; }
-				})
+		if (this.fragment.persistent) {
+			run = true;
+		} else {
+			if (this.fragment._user) {
+				if (!(this.fragment._user == session.id)) {
+					if ('invitees' in this.fragment) {
+						this.fragment.invitees.forEach((invitee) => {
+							if (!(invitee.email == session.email)) { run = true; }
+						})
+					} else {
+						run = true;
+					}
+				}
 			} else {
 				run = true;
 			}
