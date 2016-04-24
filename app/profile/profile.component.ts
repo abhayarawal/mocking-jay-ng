@@ -195,6 +195,7 @@ class ProfileNav implements OnInit {
 	template: `
 		<div class="profile__outlet">
 			<div class="overview__events">
+				<h3>Upcoming Events</h3>
 				<today-events [fragments]="fragments"></today-events>
 			</div>
 		</div>

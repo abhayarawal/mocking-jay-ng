@@ -262,8 +262,12 @@ class TemplateCreate implements OnInit {
 
 					<div class="inner__row ctls">
 						<section>
-							<a (click)="updateTemplate()">Update template</a>
-							<a (click)="remove()">Delete</a>
+							<button class="button type__3" (click)="updateTemplate()">
+								<span class="icon-done"></span>Update template
+							</button>
+							<button class="button type__1" (click)="remove()">
+								<span class="icon-close"></span>Delete
+							</button>
 						</section>
 					</div>
 				</form>
