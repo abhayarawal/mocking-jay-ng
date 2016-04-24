@@ -784,77 +784,83 @@ class FragmentInvitation implements OnInit {
 			<div>
 				Location: N/A
 			</div>
-			<div [ngSwitch]="fragment.status" class="ctx__controls">
-				<template [ngSwitchWhen]="1">
-					<strong>Appointment not approved yet</strong>
-					<fragment-message [fragment]="fragment"></fragment-message>
-					<div class="form__group message__box">
-						<label for="">Send message: </label>
-						<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
-						<a (click)="sendMessage()" class="icon-paperplane"></a>
-					</div>
-					<div class="form__group">
-						<button class="button type__1" (click)="cancel()">
-							<span class="icon-close"></span>Cancel appointment
-						</button>
-					</div>
-					<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
-				</template>
-				<template [ngSwitchWhen]="2">
-					<strong>Appointment approved</strong>
-					<fragment-ctx-header></fragment-ctx-header>
-					<fragment-message [fragment]="fragment"></fragment-message>
-					<div class="form__group message__box">
-						<label for="">Send message: </label>
-						<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
-						<a (click)="sendMessage()" class="icon-paperplane"></a>
-					</div>
-					<div class="form__group">
-						<button class="button type__1" (click)="cancel()">
-							<span class="icon-close"></span>Cancel appointment
-						</button>
-					</div>
-					<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
-				</template>
-				<template [ngSwitchWhen]="3">
-					<strong>Appointment denied</strong>
-					<fragment-message [fragment]="fragment"></fragment-message>
-				</template>
-				<template [ngSwitchWhen]="4">
-					<strong>Appointment cancelled</strong>
-					<fragment-message [fragment]="fragment"></fragment-message>
-				</template>
+			<div *ngIf="!talk">
+				<div [ngSwitch]="fragment.status" class="ctx__controls" *ngIf="allow">
+					<template [ngSwitchWhen]="1">
+						<strong>Appointment not approved yet</strong>
+						<fragment-message [fragment]="fragment"></fragment-message>
+						<div class="form__group message__box">
+							<label for="">Send message: </label>
+							<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
+							<a (click)="sendMessage()" class="icon-paperplane"></a>
+						</div>
+						<div class="form__group">
+							<button class="button type__1" (click)="cancel()">
+								<span class="icon-close"></span>Cancel appointment
+							</button>
+						</div>
+						<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
+					</template>
+					<template [ngSwitchWhen]="2">
+						<strong>Appointment approved</strong>
+						<fragment-ctx-header></fragment-ctx-header>
+						<fragment-message [fragment]="fragment"></fragment-message>
+						<div class="form__group message__box">
+							<label for="">Send message: </label>
+							<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
+							<a (click)="sendMessage()" class="icon-paperplane"></a>
+						</div>
+						<div class="form__group">
+							<button class="button type__1" (click)="cancel()">
+								<span class="icon-close"></span>Cancel appointment
+							</button>
+						</div>
+						<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
+					</template>
+					<template [ngSwitchWhen]="3">
+						<strong>Appointment denied</strong>
+						<fragment-message [fragment]="fragment"></fragment-message>
+					</template>
+					<template [ngSwitchWhen]="4">
+						<strong>Appointment cancelled</strong>
+						<fragment-message [fragment]="fragment"></fragment-message>
+					</template>
 
-				<template [ngSwitchWhen]="5">
-					<strong>Appointment time not available</strong>
-					<fragment-message [fragment]="fragment"></fragment-message>
-				</template>
+					<template [ngSwitchWhen]="5">
+						<strong>Appointment time not available</strong>
+						<fragment-message [fragment]="fragment"></fragment-message>
+					</template>
 
-				<template [ngSwitchWhen]="6">
-					<strong>Appointment time blocked by advisor</strong>
-					<fragment-message [fragment]="fragment"></fragment-message>
-				</template>
-					
-				<template [ngSwitchWhen]="7">
-					<fragment-invitation [invitor]="invitor" [fragment]="fragment"></fragment-invitation>
-				</template>
+					<template [ngSwitchWhen]="6">
+						<strong>Appointment time blocked by advisor</strong>
+						<fragment-message [fragment]="fragment"></fragment-message>
+					</template>
+						
+					<template [ngSwitchWhen]="7">
+						<fragment-invitation [invitor]="invitor" [fragment]="fragment"></fragment-invitation>
+					</template>
 
-				<template ngSwitchDefault>
-					<div class="form__group">
-						<label for="">Message: </label>
-						<textarea [(ngModel)]="message"></textarea>
-					</div>
-					<fragment-invitees (update)="invitees($event)"></fragment-invitees>
-					<div class="form__group border_a">
-						<button class="button type__3" (click)="create()">
-							<span class="icon-done"></span>Create appointment
-						</button>
-					</div>
-				</template>
+					<template ngSwitchDefault>
+						<div class="form__group">
+							<label for="">Message: </label>
+							<textarea [(ngModel)]="message"></textarea>
+						</div>
+						<fragment-invitees (update)="invitees($event)"></fragment-invitees>
+						<div class="form__group border_a">
+							<button class="button type__3" (click)="create()">
+								<span class="icon-done"></span>Create appointment
+							</button>
+						</div>
+					</template>
+				</div>
+				<div *ngIf="!allow" class="not__allowed">
+					<h4>Sorry, you cannot request multiple appointments for {{fragment.segment.template.name}} in the same day.</h4>
+				</div>
 			</div>
+			<spinner *ngIf="talk"></spinner>
 		</div>
 	`,
-	directives: [FragmentMessage, RadiusSelectComponent, RadiusRadioComponent, FragmentCtxHeader, FragmentInvitees, FragmentInvitation, FragmentInviteeList],
+	directives: [FragmentMessage, RadiusSelectComponent, RadiusRadioComponent, FragmentCtxHeader, FragmentInvitees, FragmentInvitation, FragmentInviteeList, Spinner],
 	pipes: [TimePipe]
 })
 class FragmentContextStudent implements OnInit {
@@ -865,6 +871,9 @@ class FragmentContextStudent implements OnInit {
 	notification$: Observable<Notification>;
 	user$: Observable<User>;
 	fragment$: Observable<FragmentResponse>;
+
+	talk: boolean;
+	allow: boolean;
 
 
 	notify_select: SelectObject[] = [
@@ -880,7 +889,9 @@ class FragmentContextStudent implements OnInit {
 		private segmentViewService: SegmentViewService,
 		private notificationService: NotificationService,
 		private fragmentService: FragmentService,
-		private userService: UserService
+		private segmentService: SegmentService,
+		private userService: UserService,
+		private authService: AuthService
 	) {
 		this.notification$ = this.fragmentService.notification$;
 		this.notification$.subscribe(
@@ -906,10 +917,37 @@ class FragmentContextStudent implements OnInit {
 			});
 	}
 
+	validateMultiple() {
+		this.talk = true;
+		let run = false;
+		this.allow = true;
+
+		let [exists, session] = this.authService.getSession();
+		if (!(this.fragment._user == session.id)) {
+			if ('invitees' in this.fragment) {
+				this.fragment.invitees.forEach((invitee) => {
+					if (!(invitee.email == session.email)) { run = true; }
+				})
+			} else {
+				run = true;
+			}
+		}
+		
+		if (run) {
+			this.segmentService.validateMultiple(this.fragment._segment).then((response) => {
+				this.allow = response.allow;
+				this.talk = false;
+			});
+		} else {
+			this.talk = false;
+		}
+	}
+
 	ngOnInit() {
 	}
 
 	ngOnChanges() {
+		this.validateMultiple();
 	}
 
 	cancel() {

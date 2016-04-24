@@ -56,6 +56,15 @@ export class SegmentService implements OnInit {
 		}
 	}
 
+	validateMultiple(sid: string) {
+		return this.http.get(
+			`${this.authService.baseUri}/segments/${sid}/validate`,
+			{ headers: this.authService.getAuthHeader() }
+		)
+			.map(res => res.json())
+			.toPromise();
+	}
+
 	triggerObserve() {
 		// this.segments = this.segments.map((segment) => {
 		// 	this.templateService.getTemplate(segment.template_id).then(template => {

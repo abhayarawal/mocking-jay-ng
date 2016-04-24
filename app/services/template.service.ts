@@ -66,6 +66,7 @@ export class TemplateService implements OnInit {
 			`${this.authService.baseUri}/templates/${id}`, {
 				headers: headers,
 			})
+			.delay(1000)
 			.map(res => res.json())
 			.subscribe(
 				(response) => {

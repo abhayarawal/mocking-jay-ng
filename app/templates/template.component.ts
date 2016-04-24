@@ -21,6 +21,18 @@ var genId = () => {
 };
 
 @Component({
+	selector: 'spinner',
+	template: `
+		<div class="spinner">
+			<div class="bounce1"></div>
+			<div class="bounce2"></div>
+			<div class="bounce3"></div>
+		</div>
+	`
+})
+class Spinner { }
+
+@Component({
 	selector: 'mj-radio',
 	template: `
 		<div class="mj__radio" [ngClass]="{on: on}" (click)="toggle()">
@@ -377,8 +389,9 @@ class TemplateDetail {
 			<template-detail *ngFor="#t of templates; #i = index" [template]="t" [index]="i">
 			</template-detail>
 		</ul>
+		<spinner *ngIf="!templates"></spinner>
 	`,
-	directives: [TemplateDetail]
+	directives: [TemplateDetail, Spinner]
 })
 class Templates implements OnInit {
 	templates: Template[];

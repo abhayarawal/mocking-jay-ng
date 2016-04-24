@@ -1412,7 +1412,7 @@ textarea
   }
 
   $button-types: (
-    (type__1 #ff7347)
+    (type__1 #ff6071)
     (type__2 #ffbe63)
     (type__3 #30d6c8)
     (type__4 #d4d4d4)
@@ -1431,7 +1431,7 @@ textarea
       color: #fff;
       line-height: 35px;
       font-weight: 500;
-      @include border-radius(7px);
+      @include border-radius(5px);
       padding: 0 20px 0 5px; 
 
       [class^="icon-"], [class*=" icon-"]
@@ -1703,6 +1703,8 @@ textarea
 									font-size: 18px;
 									line-height: 40px;
 									vertical-align: middle;
+									position: relative;
+									top: -2px;
 								}
 
 								em

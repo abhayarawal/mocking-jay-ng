@@ -101,6 +101,8 @@ export class FragmentService {
 		return fragments;
 	}
 
+
+
 	morphFragment(fragment: Fragment, _user: string): any {
 		let [exists, session] = this.authService.getSession();
 		if (_user == session.id) {
@@ -227,7 +229,7 @@ export class FragmentService {
 				} else {
 					this.notificationObserver.next({
 						type: false,
-						message: "Sorry, something went wrong"
+						message: response.message
 					});
 					this.fragmentObserver.next({
 						id: id,
