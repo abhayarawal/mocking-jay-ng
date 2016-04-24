@@ -2314,7 +2314,7 @@ textarea
 .contextual__form
 {
 	padding-left: 80px;
-	max-width: 50%;
+	width: 50%;
 
 	.form__lnr
 	{
@@ -2378,10 +2378,10 @@ textarea
 .contextual__card
 {
 	position: absolute;
-	border-left: 1px solid #e4e4e4;
 	padding-left: 30px;
+	padding-right: 30px;
 	top: 15px;
-	right: 15px;
+	right: 0px;
 	width: 50%;
 	height: 400px;
 }
@@ -2510,6 +2510,7 @@ textarea
 	color: #aeaeae;
 	border: 1px solid #e7eaeb;
 	cursor: pointer;
+	@extend %no-select;
 
 	&.on
 	{
@@ -2519,6 +2520,7 @@ textarea
 		{
 			left: 34px; 
 			background: rgb(90, 222, 211); 
+			@extend %no-select;
 		}
 	}
 
@@ -3182,8 +3184,109 @@ textarea
 
 	h3
 	{
+		margin-top: 17px;
 		display: block;
 	}
 }
+
+.pref__form
+{
+	.form__title
+	{
+		margin: 0;
+		padding: 0;
+		margin-top: 20px;
+		margin-bottom: 10px;
+	}
+
+	.email__pref
+	{
+		margin-top: 25px;
+		@extend %border_a;
+		background: #fbfbfb;
+		border: 1px solid #DBDDE3;
+		@include border-radius(7px);
+		padding: 15px 20px;
+
+		h5
+		{
+			margin: 0;
+			padding: 0;
+			font-weight: 400;
+			color: #999;
+			font-size: 17px;
+
+			span
+			{
+				font-size: 18px;
+				display: inline-block;
+				position: relative;
+				vertical-align: middle;
+				top: -2px;
+				margin-right: 5px;
+			}
+		}
+
+		.activation
+		{	
+			strong
+			{
+				margin-right: 10px;
+				display: inline-block;
+				vertical-align: middle;
+			}
+
+			.form__group
+			{
+				margin: 10px 0 0 0;
+
+				position: relative;
+
+				button
+				{
+					position: absolute;
+					top: 4px;
+					right: 4px;
+					background: #fff;
+					display: block;
+					@include box-shadow(0, 1px, 3px, 0, rgba(0, 0, 0, .06));
+					border: 1px solid rgba(0, 0, 0, 0.17);
+					@include border-radius(4px);
+					line-height: 20px;
+					text-align: center;
+					font-size: 15px;
+					color: #878787;
+					cursor: pointer;
+					@include transition(all 0.2s ease);
+
+					&:hover
+					{
+						@include bg-top-bottom(#fbfbfb, #f6f6f6);
+					}
+
+					&:active
+					{
+						@include bg-top-bottom(#ececec, #f6f6f6);
+
+					}
+				}
+			}
+		}
+
+		.ctls
+		{
+			margin-top: 5px;
+			@include row();
+
+			section
+			{
+				@include col(1/2, false);
+			}
+		}
+	}
+}
+
+
+
 
 // end

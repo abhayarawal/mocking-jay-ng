@@ -189,7 +189,7 @@ html, body {
   width: 100%;
   background: #fff; }
 
-.segment__viewport .day__component .ctl, .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected, .mj__radio__wrap .mj__radio {
+.segment__viewport .day__component .ctl, .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected, .mj__radio__wrap .mj__radio, .radius-radio, .radius-radio.on .radio-knob {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -206,12 +206,12 @@ html, body {
   height: calc(100% - 40px);
   z-index: 4; }
 
-.segment__viewport .day__component .ctl a, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a {
+.segment__viewport .day__component .ctl a, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a, .pref__form .email__pref a {
   text-decoration: none;
   color: #898E95;
   border-bottom: 1px dotted #898E95;
   cursor: pointer; }
-  .segment__viewport .day__component .ctl a:hover, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a:hover, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a:hover {
+  .segment__viewport .day__component .ctl a:hover, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a:hover, .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a:hover, .pref__form .email__pref a:hover {
     color: #000;
     border-color: #000; }
 
@@ -1589,7 +1589,7 @@ textarea {
 
 .contextual__form {
   padding-left: 80px;
-  max-width: 50%; }
+  width: 50%; }
   .contextual__form .form__lnr span {
     display: inline-block;
     width: 42px;
@@ -1643,10 +1643,10 @@ textarea {
 
 .contextual__card {
   position: absolute;
-  border-left: 1px solid #e4e4e4;
   padding-left: 30px;
+  padding-right: 30px;
   top: 15px;
-  right: 15px;
+  right: 0px;
   width: 50%;
   height: 400px; }
 
@@ -2333,4 +2333,95 @@ textarea {
       -ms-border-radius: 100%;
       border-radius: 100%; }
   .contact__card h3 {
+    margin-top: 17px;
     display: block; }
+
+.pref__form .form__title {
+  margin: 0;
+  padding: 0;
+  margin-top: 20px;
+  margin-bottom: 10px; }
+
+.pref__form .email__pref {
+  margin-top: 25px;
+  background: #fbfbfb;
+  border: 1px solid #DBDDE3;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  -o-border-radius: 7px;
+  -ms-border-radius: 7px;
+  border-radius: 7px;
+  padding: 15px 20px; }
+  .pref__form .email__pref h5 {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    color: #999;
+    font-size: 17px; }
+    .pref__form .email__pref h5 span {
+      font-size: 18px;
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+      top: -2px;
+      margin-right: 5px; }
+  .pref__form .email__pref .activation strong {
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle; }
+  .pref__form .email__pref .activation .form__group {
+    margin: 10px 0 0 0;
+    position: relative; }
+    .pref__form .email__pref .activation .form__group button {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #fff;
+      display: block;
+      -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+      -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.17);
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      -o-border-radius: 4px;
+      -ms-border-radius: 4px;
+      border-radius: 4px;
+      line-height: 20px;
+      text-align: center;
+      font-size: 15px;
+      color: #878787;
+      cursor: pointer;
+      -webkit-transition: all 0.2s ease;
+      -moz-transition: all 0.2s ease;
+      -o-transition: all 0.2s ease;
+      -ms-transition: all 0.2s ease;
+      transition: all 0.2s ease; }
+      .pref__form .email__pref .activation .form__group button:hover {
+        background-repeat: repeat-x;
+        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#fbfbfb));
+        background: -webkit-linear-gradient(top, #fbfbfb, #f6f6f6);
+        background: -moz-linear-gradient(top, #fbfbfb, #f6f6f6);
+        background: -ms-linear-gradient(top, #fbfbfb, #f6f6f6);
+        background: -o-linear-gradient(top, #fbfbfb, #f6f6f6); }
+      .pref__form .email__pref .activation .form__group button:active {
+        background-repeat: repeat-x;
+        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#ececec));
+        background: -webkit-linear-gradient(top, #ececec, #f6f6f6);
+        background: -moz-linear-gradient(top, #ececec, #f6f6f6);
+        background: -ms-linear-gradient(top, #ececec, #f6f6f6);
+        background: -o-linear-gradient(top, #ececec, #f6f6f6); }
+  .pref__form .email__pref .ctls {
+    margin-top: 5px;
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto; }
+    .pref__form .email__pref .ctls:before, .pref__form .email__pref .ctls:after {
+      content: '';
+      display: table; }
+    .pref__form .email__pref .ctls:after {
+      clear: both; }
+    .pref__form .email__pref .ctls section {
+      float: left;
+      width: 50%; }
