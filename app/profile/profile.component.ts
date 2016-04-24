@@ -8,12 +8,13 @@ import 'rxjs/Rx';
 
 import {LayoutHeader} from '../layouts/header.layout';
 import {Calendar} from './calendar.component';
-import {User, UserType, Faculty} from '../interfaces/interface';
+import {User, UserType, Faculty, Segment, Fragment, Template} from '../interfaces/interface';
 
 import {AuthService} from '../auth/auth.service';
 import {UserService} from '../services/user.service';
+import {FragmentService} from '../services/fragment.service';
 import {CalendarService} from './calendar.service';
-import {SegmentViewport} from './segment.component';
+import {SegmentViewport, TodayEvent, TodayEvents} from './segment.component';
 import {FacultyService} from '../services/faculty.service';
 import {NotificationService, Notification} from '../notification.service';
 import {RouterService} from '../services/router.service';
@@ -193,18 +194,36 @@ class ProfileNav implements OnInit {
 @Component({
 	template: `
 		<div class="profile__outlet">
-			<h2>Viewing</h2>
+			<div class="overview__events">
+				<today-events [fragments]="fragments"></today-events>
+			</div>
 		</div>
 	`,
-	directives: [ProfileNav]
+	directives: [ProfileNav, TodayEvents]
 })
 class Cal implements OnInit {
+	fragments: Fragment[];
+
 	constructor(
 		private userService: UserService,
-		private routeParams: RouteParams
+		private routeParams: RouteParams,
+		private fagmentService: FragmentService
 	) { }
 
 	ngOnInit() {
+		let d = new Date();
+
+		let date = {
+			day: d.getDate(),
+			month: d.getMonth(),
+			year: d.getFullYear()
+		}
+
+		this.fagmentService.getToday(
+			date.month, date.day, date.year
+		).then((response) => {
+			this.fragments = response;
+		});
 	}
 }
 

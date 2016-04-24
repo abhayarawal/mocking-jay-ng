@@ -331,7 +331,7 @@ class ProfileCard {
 	directives: [ProfileCard, Spinner],
 	pipes: [TimePipe]
 })
-class TodayEvent {
+export class TodayEvent {
 	@Input() fragment: Fragment;
 	segment: Segment;
 	template: Template;
@@ -363,10 +363,9 @@ class TodayEvent {
 	`,
 	directives: [TodayEvent]
 })
-class TodayEvents {
+export class TodayEvents {
 	@Input() fragments: Fragment[];
 }
-
 
 @Component({
 	selector: 'day-component',

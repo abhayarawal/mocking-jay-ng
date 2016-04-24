@@ -880,7 +880,7 @@ html, body {
         -ms-transform: scale(0.85);
         transform: scale(0.85); }
 
-.auth, .segment__viewport .day__component, .segment__viewport .fragment__context, .wrapping__viewport .wrapping__content {
+.auth, .segment__viewport .day__component, .segment__viewport .fragment__context, .wrapping__viewport .wrapping__content, .overview__events {
   background: #fff;
   -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
   -moz-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
@@ -2687,3 +2687,15 @@ textarea {
     .pref__form .email__pref .ctls section {
       float: left;
       width: 50%; }
+
+.overview__events {
+  position: absolute;
+  left: 50%;
+  margin-left: -400px;
+  width: 90%;
+  max-width: 800px;
+  top: 8px;
+  height: calc(100% - 16px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 20px 30px; }
