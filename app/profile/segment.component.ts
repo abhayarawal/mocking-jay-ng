@@ -709,7 +709,7 @@ class FragmentInviteeList {
 							<strong>You've declined the invitation</strong>
 						</template>
 					</div>
-					<div class="form__group border_a">
+					<div class="form__group border_a" *ngIf="momentAl">
 						<a (click)="accept()">Accept Invitation</a>
 						<a (click)="decline()">Decline Invitation</a>
 					</div>
@@ -723,6 +723,7 @@ class FragmentInviteeList {
 })
 class FragmentInvitation implements OnInit {
 	@Input() fragment: Fragment;
+	@Input() momentAl: boolean;
 
 	invitor: User;
 	session: User;
@@ -845,7 +846,7 @@ interface ErrorMessage {
 					</template>
 						
 					<template [ngSwitchWhen]="7">
-						<fragment-invitation [invitor]="invitor" [fragment]="fragment"></fragment-invitation>
+						<fragment-invitation [invitor]="invitor" [fragment]="fragment" [momentAl]="momentAl"></fragment-invitation>
 					</template>
 
 					<template ngSwitchDefault>
