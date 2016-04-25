@@ -310,21 +310,23 @@ class ProfileCard {
 	selector: 'today-event',
 	template: `
 		<li *ngIf="fragment && user && template">
-			<span class="status" [ngSwitch]="fragment.status" *ngIf="fragment.status">
-				<span *ngSwitchWhen="1" [innerHTML]="'Waiting for approval'"></span>
-				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
-				<span *ngSwitchWhen="3" [innerHTML]="'Denied'"></span>
-				<span *ngSwitchWhen="4" [innerHTML]="'Cancelled'"></span>
-				<span *ngSwitchWhen="5" [innerHTML]="''"></span>
-				<span *ngSwitchWhen="6" [innerHTML]="'Blocked'"></span>
-				<span *ngSwitchWhen="7" [innerHTML]="'Invitation'"></span>
-			</span>
-			<h4>
-				<em>{{template.name}}</em> 
-				<span class="at">at</span> 
-				<span>{{fragment | timePipe:false}} - {{fragment | timePipe:true}}</span>
-			</h4>
-			<profile-card [user]="user" *ngIf="user"></profile-card>
+			<div (click)="select()">
+				<span class="status" [ngSwitch]="fragment.status" *ngIf="fragment.status">
+					<span *ngSwitchWhen="1" [innerHTML]="'Waiting for approval'"></span>
+					<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
+					<span *ngSwitchWhen="3" [innerHTML]="'Denied'"></span>
+					<span *ngSwitchWhen="4" [innerHTML]="'Cancelled'"></span>
+					<span *ngSwitchWhen="5" [innerHTML]="''"></span>
+					<span *ngSwitchWhen="6" [innerHTML]="'Blocked'"></span>
+					<span *ngSwitchWhen="7" [innerHTML]="'Invitation'"></span>
+				</span>
+				<h4>
+					<em>{{template.name}}</em> 
+					<span class="at">at</span> 
+					<span>{{fragment | timePipe:false}} - {{fragment | timePipe:true}}</span>
+				</h4>
+				<profile-card [user]="user" *ngIf="user"></profile-card>
+			</div>
 		</li>
 		<spinner *ngIf="!user || !template"></spinner>
 	`,
@@ -337,7 +339,22 @@ export class TodayEvent {
 	template: Template;
 	user: User;
 
-	constructor(private fragmentService: FragmentService) {}
+	constructor(
+		private segmentViewService: SegmentViewService,
+		private fragmentService: FragmentService
+	) { }
+
+	select() {
+		this.fragment.id = this.fragment._id;
+		this.segment.id = this.segment._id;
+		this.template.id = this.template._id;
+		this.fragment.segment = this.segment;
+		this.fragment.segment.template = this.template;
+
+		if (this.fragment) {
+			this.segmentViewService.triggerContext(this.fragment);
+		}
+	}
 
 	ngOnChanges() {
 		if (this.fragment) {

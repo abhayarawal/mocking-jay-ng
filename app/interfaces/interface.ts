@@ -42,6 +42,7 @@ export interface Template {
 }
 
 export interface Segment {
+	_id?: string,
 	id: string,
 	_template: string,
 	template?: Template,
