@@ -113,7 +113,7 @@ class AlternatePref {
 class PreferencesForm implements OnInit {
 	user: User;
 	emails: Alternate[] = [
-		{ data: 'fuckoff@smurf.com', show: true, notification: false, activated: true, type: AlternateType.Email },
+		{ data: 'theblueone@smurf.com', show: true, notification: false, activated: true, type: AlternateType.Email },
 		{ data: 'katy.perry@music.com', show: true, notification: false, activated: false, type: AlternateType.Email },
 	];
 

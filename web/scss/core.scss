@@ -1628,15 +1628,18 @@ textarea
 		width: calc(100% - 20px);
 		top: 10px;
 		@extend %message;
+		padding: 15px 15px 30px 15px;
+		background: #fffcf9;
 
 		.status
 		{
 			display: block;
-			font-weight: 500;
+			font-weight: 300;
+			font-size: 17px;
 			text-align: center;
 			margin: 0;
 			padding: 0;
-			margin-top: 15px;
+			margin-top: 20px;
 			padding: 5px 0;
 			border-top: 1px solid #d9d9d9;
 			border-bottom: 1px solid #d9d9d9;
@@ -1645,13 +1648,18 @@ textarea
 		button
 		{
 			position: absolute;
-			right: 10px;
+			right: 15px;
 			top: 10px;
+			text-align: right;
+			padding: 0;
+			line-height: 25px;
+			width: 25px;
+			font-size: 15px;
 		}
 
 		.message__wrap
 		{
-			margin-top: 15px;
+			margin-top: 20px;
 		}
 	}
 
@@ -1704,7 +1712,7 @@ textarea
 
 			&.error
 			{
-				background: #ffdde2;
+				background: rgba(255, 221, 226, 0.52);
 				color: #ff051d;
 				border: 1px solid #ff8984;
 
@@ -1726,16 +1734,17 @@ textarea
 			.fragment__history
 		  {
 		  	position: absolute;
-		  	right: 10px;
-		  	top: 10px;
+		  	right: 0px;
+		  	top: 0px;
 
 		  	span
 		  	{
-		  		width: 30px;
+		  		width: 25px;
 		  		display: inline-block;
 					position: relative;
 					vertical-align: middle;
 					@include transition(all 0.2s ease);
+					margin-left: 4px;
 					
 					img
 					{
