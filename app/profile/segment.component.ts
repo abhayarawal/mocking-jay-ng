@@ -46,9 +46,9 @@ export class TimePipe implements PipeTransform {
 
 		if (m < 10) { m = `0${m}`; }
 
-		if (h == 12) { return `${h}:${m} Pm`; }
-		else if (h > 12) { return `${h - 12}:${m} Pm`; }
-		return `${h}:${m} Am`;
+		if (h == 12) { return `${h}:${m} PM`; }
+		else if (h > 12) { return `${h - 12}:${m} PM`; }
+		return `${h}:${m} AM`;
 	}
 }
 
@@ -989,18 +989,19 @@ class FragmentContextStudent implements OnInit {
 				this.allowed = response.allow;
 				if (!response.allow) {
 					this.errorMessage = {
-						message: `Sorry, you cannot request multiple appointments for ${this.fragment.segment.template.name} in the same day.`,
+						message: `Sorry, you cannot create multiple appointments for ${this.fragment.segment.template.name} in the same day.`,
 						error: false
 					}
-				} else {
-					if (!this.momentAl) {
-						this.errorMessage = {
-							message: `Sorry, but the moment's passed. Might want to call Doctor Who.`,
-							error: true
-						}
-						this.allowed = false;
+				} 
+
+				if (!this.momentAl) {
+					this.errorMessage = {
+						message: `Sorry, but the moment's passed. Might wanna call Doctor Who.`,
+						error: true
 					}
+					this.allowed = false;
 				}
+
 				this.talk = false;
 			});
 		} else {
@@ -1057,10 +1058,25 @@ class FragmentContextStudent implements OnInit {
 @Component({
 	selector: 'fragment-context-faculty',
 	template: `
+		<div class="message__history" *ngIf="history && historyUser && historyFrag">
+			<button (click)="flushHistory()" class="icon-close"></button>
+			<profile-card [user]="historyUser"></profile-card>
+			<span class="status" [ngSwitch]="historyFrag.status" *ngIf="historyFrag.status">
+				<span *ngSwitchWhen="1" [innerHTML]="'Waiting for approval'"></span>
+				<span *ngSwitchWhen="2" [innerHTML]="'Approved'"></span>
+				<span *ngSwitchWhen="3" [innerHTML]="'Denied'"></span>
+				<span *ngSwitchWhen="4" [innerHTML]="'Cancelled'"></span>
+				<span *ngSwitchWhen="5" [innerHTML]="''"></span>
+				<span *ngSwitchWhen="6" [innerHTML]="'Blocked'"></span>
+				<span *ngSwitchWhen="7" [innerHTML]="'Invitation'"></span>
+			</span>
+			<fragment-message [fragment]="historyFrag"></fragment-message>
+		</div>
+
 		<div class="fragment__ctx">
 			<div class="fragment__history" *ngIf="users">
 				<span *ngFor="#user of users">
-					<img src="{{user.meta?.avatar}}" alt="" />
+					<img (click)="showHistory(user.id)" src="{{user.meta?.avatar}}" alt="" />
 				</span>
 			</div>
 
@@ -1164,7 +1180,7 @@ class FragmentContextStudent implements OnInit {
 			</div>
 		</div>
 	`,
-	directives: [FragmentMessage, FragmentProfile, RadiusRadioComponent, RadiusSelectComponent, FragmentCtxHeader, FragmentInviteeList],
+	directives: [FragmentMessage, FragmentProfile, RadiusRadioComponent, RadiusSelectComponent, FragmentCtxHeader, FragmentInviteeList, ProfileCard],
 	pipes: [TimePipe]
 })
 class FragmentContextFaculty implements OnInit {
@@ -1180,6 +1196,10 @@ class FragmentContextFaculty implements OnInit {
 	fragment$: Observable<FragmentResponse>;
 
 	momentAl: boolean;
+
+	history: boolean = false;
+	historyUser: User;
+	historyFrag: Fragment;
 
 	notify_select: SelectObject[] = [
 		{ value: 10, text: '10 min' },
@@ -1239,6 +1259,7 @@ class FragmentContextFaculty implements OnInit {
 	}
 
 	ngOnChanges() {
+		this.flushHistory();
 		this.users = [];
 		this.user$ = this.userService.user$;
 		this.user$.subscribe(
@@ -1291,6 +1312,25 @@ class FragmentContextFaculty implements OnInit {
 
 	block() {
 		this.update(Status.blocked);
+	}
+
+	flushHistory() {
+		this.historyFrag = null;
+		this.history = null;
+		this.historyUser = null;
+	}
+
+	showHistory(uid: string) {
+		if ('history' in this.fragment) {
+			this.history = true;
+			let index = this.fragment.history.map(history => history._user).indexOf(uid);
+			let index2 = this.users.map(user => user.id).indexOf(uid);
+			this.historyUser = this.users[index2];
+			this.historyFrag = {
+				messages: this.fragment.history[index].messages,
+				status: this.fragment.history[index].status
+			};
+		}
 	}
 
 	histroyLine() {

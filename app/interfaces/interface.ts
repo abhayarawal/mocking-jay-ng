@@ -110,6 +110,7 @@ export interface Fragment {
 	end: Time,
 	_segment: string,
 	_user?: string,
+	user?: User,
 	segment?: Segment,
 	message?: string,
 	messages?: Message[],

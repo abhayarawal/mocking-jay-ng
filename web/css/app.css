@@ -738,8 +738,7 @@ html, body {
         .profile__viewport .profile__outlet .profile__context .row section:first-child ul li a.selected {
           border-color: #9f9c9f; }
   .profile__viewport .profile__outlet .profile__context .row .context__header {
-    text-align: center;
-    color: #fff; }
+    text-align: center; }
     .profile__viewport .profile__outlet .profile__context .row .context__header h4 {
       line-height: 36px;
       font-weight: 500;
@@ -877,7 +876,7 @@ html, body {
         -ms-transform: scale(0.85);
         transform: scale(0.85); }
 
-.auth, .segment__viewport .day__component, .segment__viewport .fragment__context, .wrapping__viewport .wrapping__content, .overview__events {
+.auth, .segment__viewport .day__component, .segment__viewport .message__history, .segment__viewport .fragment__context, .wrapping__viewport .wrapping__content, .overview__events {
   background: #fff;
   -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
   -moz-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
@@ -1299,6 +1298,56 @@ textarea {
     .segment__viewport .day__component .day__header h4, .segment__viewport .day__component .day__header h5 {
       margin: 0;
       padding: 0; }
+  .segment__viewport .message__history .message__wrap, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message__wrap {
+    margin-top: 35px;
+    display: block; }
+  .segment__viewport .message__history .message, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message {
+    background: #fbecda;
+    margin-top: 7px;
+    color: #968d82;
+    position: relative;
+    padding: 6px 12px;
+    margin-right: 40px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    font-weight: 500; }
+    .segment__viewport .message__history .message em, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message em {
+      font-weight: 400;
+      font-style: normal;
+      display: block;
+      font-size: 10px; }
+    .segment__viewport .message__history .message.response, .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message.response {
+      background: #f2f1ee;
+      margin-right: 0;
+      margin-left: 40px;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 0px;
+      text-align: right; }
+  .segment__viewport .message__history {
+    z-index: 5;
+    position: absolute;
+    left: 10px;
+    width: calc(100% - 20px);
+    top: 10px; }
+    .segment__viewport .message__history .status {
+      display: block;
+      font-weight: 500;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      margin-top: 15px;
+      padding: 5px 0;
+      border-top: 1px solid #d9d9d9;
+      border-bottom: 1px solid #d9d9d9; }
+    .segment__viewport .message__history button {
+      position: absolute;
+      right: 10px;
+      top: 10px; }
+    .segment__viewport .message__history .message__wrap {
+      margin-top: 15px; }
   .segment__viewport .fragment__context {
     position: absolute;
     right: 30px;
@@ -1318,10 +1367,6 @@ textarea {
       background: rgba(223, 245, 255, 0.31);
       color: #6daec9;
       border: 1px solid #9addf2; }
-      .segment__viewport .fragment__context .not__allowed.error {
-        background: #ffdde2;
-        color: #ff051d;
-        border: 1px solid #ff8984; }
       .segment__viewport .fragment__context .not__allowed h3, .segment__viewport .fragment__context .not__allowed h4, .segment__viewport .fragment__context .not__allowed h5 {
         font-size: 14px;
         font-weight: 400;
@@ -1343,54 +1388,195 @@ textarea {
           top: 50%;
           margin-top: -15px;
           font-size: 25px; }
-    .segment__viewport .fragment__context .fragment__ctx .fragment__history {
-      position: absolute;
-      right: 10px;
-      top: 10px; }
-      .segment__viewport .fragment__context .fragment__ctx .fragment__history span {
-        width: 30px;
-        display: inline-block;
-        position: relative;
-        vertical-align: middle;
-        -webkit-transition: all 0.2s ease;
-        -moz-transition: all 0.2s ease;
-        -o-transition: all 0.2s ease;
-        -ms-transition: all 0.2s ease;
-        transition: all 0.2s ease; }
-        .segment__viewport .fragment__context .fragment__ctx .fragment__history span img {
-          -webkit-border-radius: 100%;
-          -moz-border-radius: 100%;
-          -o-border-radius: 100%;
-          -ms-border-radius: 100%;
-          border-radius: 100%; }
-    .segment__viewport .fragment__context .fragment__ctx .ctx__head {
-      text-transform: capitalize;
-      font-weight: 400; }
-      .segment__viewport .fragment__context .fragment__ctx .ctx__head span {
-        display: block;
-        font-size: 0.6em; }
-    .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header {
-      margin-top: 15px; }
-      .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul {
-        text-align: left;
-        display: block;
-        font-size: 0; }
-        .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li {
+      .segment__viewport .fragment__context .not__allowed.error {
+        background: #ffdde2;
+        color: #ff051d;
+        border: 1px solid #ff8984; }
+        .segment__viewport .fragment__context .not__allowed.error h3:before, .segment__viewport .fragment__context .not__allowed.error h4:before, .segment__viewport .fragment__context .not__allowed.error h5:before {
+          content: "\e903"; }
+    .segment__viewport .fragment__context .fragment__ctx {
+      position: relative;
+      overflow: hidden; }
+      .segment__viewport .fragment__context .fragment__ctx .fragment__history {
+        position: absolute;
+        right: 10px;
+        top: 10px; }
+        .segment__viewport .fragment__context .fragment__ctx .fragment__history span {
+          width: 30px;
           display: inline-block;
+          position: relative;
           vertical-align: middle;
-          width: 50%;
-          font-size: 14px; }
-          .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li:first-child .selected {
-            border-right: none;
-            border-top-right-radius: 0px;
-            border-bottom-right-radius: 0px; }
-          .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li:last-child .selected {
-            border-top-left-radius: 0px;
-            border-bottom-left-radius: 0px; }
-          .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a {
+          -webkit-transition: all 0.2s ease;
+          -moz-transition: all 0.2s ease;
+          -o-transition: all 0.2s ease;
+          -ms-transition: all 0.2s ease;
+          transition: all 0.2s ease; }
+          .segment__viewport .fragment__context .fragment__ctx .fragment__history span img {
+            -webkit-border-radius: 100%;
+            -moz-border-radius: 100%;
+            -o-border-radius: 100%;
+            -ms-border-radius: 100%;
+            border-radius: 100%;
+            cursor: pointer;
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            transition: all 0.2s ease; }
+      .segment__viewport .fragment__context .fragment__ctx .ctx__head {
+        text-transform: capitalize;
+        font-weight: 400; }
+        .segment__viewport .fragment__context .fragment__ctx .ctx__head span {
+          display: block;
+          font-size: 0.6em; }
+      .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header {
+        margin-top: 15px; }
+        .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul {
+          text-align: left;
+          display: block;
+          font-size: 0; }
+          .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li {
+            display: inline-block;
+            vertical-align: middle;
+            width: 50%;
+            font-size: 14px; }
+            .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li:first-child .selected {
+              border-right: none;
+              border-top-right-radius: 0px;
+              border-bottom-right-radius: 0px; }
+            .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li:last-child .selected {
+              border-top-left-radius: 0px;
+              border-bottom-left-radius: 0px; }
+            .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a {
+              position: relative;
+              display: block; }
+              .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected {
+                background: #fff;
+                display: block;
+                -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+                -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+                border: 1px solid rgba(0, 0, 0, 0.17);
+                -webkit-border-radius: 4px;
+                -moz-border-radius: 4px;
+                -o-border-radius: 4px;
+                -ms-border-radius: 4px;
+                border-radius: 4px;
+                line-height: 32px;
+                text-align: center;
+                font-size: 15px;
+                color: #878787;
+                cursor: pointer;
+                -webkit-transition: all 0.2s ease;
+                -moz-transition: all 0.2s ease;
+                -o-transition: all 0.2s ease;
+                -ms-transition: all 0.2s ease;
+                transition: all 0.2s ease; }
+                .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected:hover {
+                  background-repeat: repeat-x;
+                  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#fbfbfb));
+                  background: -webkit-linear-gradient(top, #fbfbfb, #f6f6f6);
+                  background: -moz-linear-gradient(top, #fbfbfb, #f6f6f6);
+                  background: -ms-linear-gradient(top, #fbfbfb, #f6f6f6);
+                  background: -o-linear-gradient(top, #fbfbfb, #f6f6f6); }
+                .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected:active {
+                  background-repeat: repeat-x;
+                  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#ececec));
+                  background: -webkit-linear-gradient(top, #ececec, #f6f6f6);
+                  background: -moz-linear-gradient(top, #ececec, #f6f6f6);
+                  background: -ms-linear-gradient(top, #ececec, #f6f6f6);
+                  background: -o-linear-gradient(top, #ececec, #f6f6f6); }
+                .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected > span {
+                  display: inline-block;
+                  padding: 0 4px;
+                  text-align: center;
+                  font-size: 18px;
+                  line-height: 40px;
+                  vertical-align: middle;
+                  position: relative;
+                  top: -2px; }
+                .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected em {
+                  display: inline-block;
+                  font-style: normal;
+                  line-height: 40px;
+                  vertical-align: middle;
+                  font-size: 13px;
+                  font-weight: 500; }
+              .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul {
+                position: absolute;
+                z-index: 5;
+                width: calc(100% - 20px);
+                visibility: hidden;
+                opacity: 0;
+                filter: alpha(opacity=0);
+                -webkit-transition: all 0.2s ease;
+                -moz-transition: all 0.2s ease;
+                -o-transition: all 0.2s ease;
+                -ms-transition: all 0.2s ease;
+                transition: all 0.2s ease;
+                top: -35px;
+                left: 10px;
+                border: 1px solid #d6d7db;
+                padding: 10px 0;
+                -webkit-border-radius: 7px;
+                -moz-border-radius: 7px;
+                -o-border-radius: 7px;
+                -ms-border-radius: 7px;
+                border-radius: 7px;
+                background: #f2f3f5; }
+                .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul.visible {
+                  visibility: visible;
+                  opacity: 1;
+                  filter: alpha(opacity=100); }
+                .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul li {
+                  display: block;
+                  line-height: 27px;
+                  padding: 0 25px;
+                  cursor: pointer;
+                  color: #898c94; }
+                  .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul li.selected {
+                    font-weight: 700; }
+                  .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul li span {
+                    font-weight: 700; }
+                  .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul li:hover {
+                    background: #898c94;
+                    color: #fff; }
+      .segment__viewport .fragment__context .fragment__ctx .date__time span {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 22px;
+        font-weight: 300;
+        margin-right: 15px; }
+      .segment__viewport .fragment__context .fragment__ctx .ctx__controls {
+        display: block;
+        margin-top: 15px; }
+        .segment__viewport .fragment__context .fragment__ctx .ctx__controls strong {
+          margin-top: 10px;
+          background: #fff;
+          display: block;
+          font-size: 18px;
+          color: #555555;
+          border-top: 1px solid #ebebeb;
+          border-bottom: 1px solid #ebebeb;
+          padding: 4px 0 4px 0px;
+          cursor: default;
+          position: relative;
+          font-weight: 400;
+          text-align: center; }
+        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels {
+          margin-top: 15px;
+          font-size: 13px; }
+          .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a {
+            margin-right: 15px; }
+        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group {
+          margin-top: 10px; }
+          .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group.message__box {
             position: relative;
-            display: block; }
-            .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected {
+            margin-top: 20px; }
+            .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group.message__box a {
+              position: absolute;
+              right: 5px;
+              top: 33px;
               background: #fff;
               display: block;
               -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
@@ -1403,148 +1589,81 @@ textarea {
               -ms-border-radius: 4px;
               border-radius: 4px;
               line-height: 32px;
+              width: 32px;
               text-align: center;
               font-size: 15px;
               color: #878787;
-              cursor: pointer;
               -webkit-transition: all 0.2s ease;
               -moz-transition: all 0.2s ease;
               -o-transition: all 0.2s ease;
               -ms-transition: all 0.2s ease;
               transition: all 0.2s ease; }
-              .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected:hover {
+              .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group.message__box a:hover {
                 background-repeat: repeat-x;
                 background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#fbfbfb));
                 background: -webkit-linear-gradient(top, #fbfbfb, #f6f6f6);
                 background: -moz-linear-gradient(top, #fbfbfb, #f6f6f6);
                 background: -ms-linear-gradient(top, #fbfbfb, #f6f6f6);
                 background: -o-linear-gradient(top, #fbfbfb, #f6f6f6); }
-              .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected:active {
+              .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group.message__box a:active {
                 background-repeat: repeat-x;
                 background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#ececec));
                 background: -webkit-linear-gradient(top, #ececec, #f6f6f6);
                 background: -moz-linear-gradient(top, #ececec, #f6f6f6);
                 background: -ms-linear-gradient(top, #ececec, #f6f6f6);
                 background: -o-linear-gradient(top, #ececec, #f6f6f6); }
-              .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected > span {
-                display: inline-block;
-                padding: 0 4px;
-                text-align: center;
-                font-size: 18px;
-                line-height: 40px;
-                vertical-align: middle;
-                position: relative;
-                top: -2px; }
-              .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a .selected em {
-                display: inline-block;
-                font-style: normal;
-                line-height: 40px;
-                vertical-align: middle;
-                font-size: 13px;
-                font-weight: 500; }
-            .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul {
-              position: absolute;
-              z-index: 5;
-              width: calc(100% - 20px);
-              visibility: hidden;
-              opacity: 0;
-              filter: alpha(opacity=0);
-              -webkit-transition: all 0.2s ease;
-              -moz-transition: all 0.2s ease;
-              -o-transition: all 0.2s ease;
-              -ms-transition: all 0.2s ease;
-              transition: all 0.2s ease;
-              top: -35px;
-              left: 10px;
-              border: 1px solid #d6d7db;
-              padding: 10px 0;
-              -webkit-border-radius: 7px;
-              -moz-border-radius: 7px;
-              -o-border-radius: 7px;
-              -ms-border-radius: 7px;
-              border-radius: 7px;
-              background: #f2f3f5; }
-              .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul.visible {
-                visibility: visible;
-                opacity: 1;
-                filter: alpha(opacity=100); }
-              .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul li {
-                display: block;
-                line-height: 27px;
-                padding: 0 25px;
-                cursor: pointer;
-                color: #898c94; }
-                .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul li.selected {
-                  font-weight: 700; }
-                .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul li span {
-                  font-weight: 700; }
-                .segment__viewport .fragment__context .fragment__ctx .fragment__ctx__header > ul > li > a ul li:hover {
-                  background: #898c94;
-                  color: #fff; }
-    .segment__viewport .fragment__context .fragment__ctx .date__time span {
-      display: inline-block;
-      vertical-align: middle;
-      font-size: 22px;
-      font-weight: 300;
-      margin-right: 15px; }
-    .segment__viewport .fragment__context .fragment__ctx .ctx__controls {
-      display: block;
-      margin-top: 15px; }
-      .segment__viewport .fragment__context .fragment__ctx .ctx__controls strong {
-        margin-top: 10px;
-        background: #fff;
-        display: block;
-        font-size: 18px;
-        color: #555555;
-        border-top: 1px solid #ebebeb;
-        border-bottom: 1px solid #ebebeb;
-        padding: 4px 0 4px 0px;
-        cursor: default;
-        position: relative;
-        font-weight: 400;
-        text-align: center; }
-      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels {
-        margin-top: 15px;
-        font-size: 13px; }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .cancels a {
-          margin-right: 15px; }
-      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message__wrap {
-        margin-top: 35px;
-        display: block; }
-      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message {
-        background: #fbecda;
-        margin-top: 7px;
-        color: #968d82;
-        position: relative;
-        padding: 6px 12px;
-        margin-right: 40px;
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-        border-bottom-right-radius: 15px;
-        font-weight: 500; }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message em {
-          font-weight: 400;
-          font-style: normal;
+          .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group textarea {
+            height: 70px;
+            padding-right: 50px; }
+        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile {
+          margin-top: 8px;
+          font-size: 0;
+          background: #fff;
           display: block;
-          font-size: 10px; }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .message.response {
-          background: #f2f1ee;
-          margin-right: 0;
-          margin-left: 40px;
-          border-top-left-radius: 15px;
-          border-top-right-radius: 15px;
-          border-bottom-left-radius: 15px;
-          border-bottom-right-radius: 0px;
-          text-align: right; }
-      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group {
-        margin-top: 10px; }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group.message__box {
-          position: relative;
-          margin-top: 20px; }
-          .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group.message__box a {
+          color: #555555;
+          padding: 8px 0px;
+          cursor: default; }
+          .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 14px; }
+            .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section:first-child {
+              width: 50px;
+              margin-right: 10px; }
+              .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section:first-child img {
+                -webkit-border-radius: 100%;
+                -moz-border-radius: 100%;
+                -o-border-radius: 100%;
+                -ms-border-radius: 100%;
+                border-radius: 100%; }
+            .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section:last-child h5 {
+              margin: 0;
+              padding: 0;
+              font-weight: 500;
+              font-size: 16px; }
+      .segment__viewport .fragment__context .fragment__ctx .invitees__box {
+        margin-top: 25px;
+        display: block; }
+        .segment__viewport .fragment__context .fragment__ctx .invitees__box h5 {
+          margin: 0;
+          padding: 0; }
+        .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li {
+          display: block;
+          padding: 4px 0 0 0; }
+          .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li span {
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            padding-right: 4px; }
+          .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a {
+            font-size: 12px; }
+        .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form {
+          margin-top: 10px;
+          position: relative; }
+          .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form button {
             position: absolute;
-            right: 5px;
-            top: 33px;
+            top: 4px;
+            right: 4px;
             background: #fff;
             display: block;
             -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
@@ -1556,148 +1675,61 @@ textarea {
             -o-border-radius: 4px;
             -ms-border-radius: 4px;
             border-radius: 4px;
-            line-height: 32px;
-            width: 32px;
+            line-height: 20px;
             text-align: center;
             font-size: 15px;
             color: #878787;
+            cursor: pointer;
             -webkit-transition: all 0.2s ease;
             -moz-transition: all 0.2s ease;
             -o-transition: all 0.2s ease;
             -ms-transition: all 0.2s ease;
             transition: all 0.2s ease; }
-            .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group.message__box a:hover {
+            .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form button:hover {
               background-repeat: repeat-x;
               background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#fbfbfb));
               background: -webkit-linear-gradient(top, #fbfbfb, #f6f6f6);
               background: -moz-linear-gradient(top, #fbfbfb, #f6f6f6);
               background: -ms-linear-gradient(top, #fbfbfb, #f6f6f6);
               background: -o-linear-gradient(top, #fbfbfb, #f6f6f6); }
-            .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group.message__box a:active {
+            .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form button:active {
               background-repeat: repeat-x;
               background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#ececec));
               background: -webkit-linear-gradient(top, #ececec, #f6f6f6);
               background: -moz-linear-gradient(top, #ececec, #f6f6f6);
               background: -ms-linear-gradient(top, #ececec, #f6f6f6);
               background: -o-linear-gradient(top, #ececec, #f6f6f6); }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .form__group textarea {
-          height: 70px;
-          padding-right: 50px; }
-      .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile {
-        margin-top: 8px;
-        font-size: 0;
-        background: #fff;
+      .segment__viewport .fragment__context .fragment__ctx .fragment__invitee__list {
         display: block;
-        color: #555555;
-        padding: 8px 0px;
-        cursor: default; }
-        .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section {
-          display: inline-block;
-          vertical-align: middle;
+        margin-top: 30px; }
+        .segment__viewport .fragment__context .fragment__ctx .fragment__invitee__list h5 {
+          margin: 0;
+          padding: 0;
+          font-weight: 400;
           font-size: 14px; }
-          .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section:first-child {
-            width: 50px;
-            margin-right: 10px; }
-            .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section:first-child img {
-              -webkit-border-radius: 100%;
-              -moz-border-radius: 100%;
-              -o-border-radius: 100%;
-              -ms-border-radius: 100%;
-              border-radius: 100%; }
-          .segment__viewport .fragment__context .fragment__ctx .ctx__controls .ctx__profile section:last-child h5 {
-            margin: 0;
-            padding: 0;
-            font-weight: 500;
-            font-size: 16px; }
-    .segment__viewport .fragment__context .fragment__ctx .invitees__box {
-      margin-top: 25px;
-      display: block; }
-      .segment__viewport .fragment__context .fragment__ctx .invitees__box h5 {
-        margin: 0;
-        padding: 0; }
-      .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li {
-        display: block;
-        padding: 4px 0 0 0; }
-        .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li span {
-          position: relative;
+        .segment__viewport .fragment__context .fragment__ctx .fragment__invitee__list ul li > span {
           display: inline-block;
+          color: #777;
+          background: #ececec;
+          font-weight: 400;
+          font-size: 12px;
           vertical-align: middle;
-          padding-right: 4px; }
-        .segment__viewport .fragment__context .fragment__ctx .invitees__box ul li a {
-          font-size: 12px; }
-      .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form {
-        margin-top: 10px;
-        position: relative; }
-        .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form button {
-          position: absolute;
-          top: 4px;
-          right: 4px;
-          background: #fff;
-          display: block;
-          -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-          -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-          border: 1px solid rgba(0, 0, 0, 0.17);
           -webkit-border-radius: 4px;
           -moz-border-radius: 4px;
           -o-border-radius: 4px;
           -ms-border-radius: 4px;
           border-radius: 4px;
-          line-height: 20px;
+          font-weight: 500;
+          padding: 0 8px;
+          margin-right: 10px;
           text-align: center;
-          font-size: 15px;
-          color: #878787;
-          cursor: pointer;
-          -webkit-transition: all 0.2s ease;
-          -moz-transition: all 0.2s ease;
-          -o-transition: all 0.2s ease;
-          -ms-transition: all 0.2s ease;
-          transition: all 0.2s ease; }
-          .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form button:hover {
-            background-repeat: repeat-x;
-            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#fbfbfb));
-            background: -webkit-linear-gradient(top, #fbfbfb, #f6f6f6);
-            background: -moz-linear-gradient(top, #fbfbfb, #f6f6f6);
-            background: -ms-linear-gradient(top, #fbfbfb, #f6f6f6);
-            background: -o-linear-gradient(top, #fbfbfb, #f6f6f6); }
-          .segment__viewport .fragment__context .fragment__ctx .invitees__box .invitees__form button:active {
-            background-repeat: repeat-x;
-            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#ececec));
-            background: -webkit-linear-gradient(top, #ececec, #f6f6f6);
-            background: -moz-linear-gradient(top, #ececec, #f6f6f6);
-            background: -ms-linear-gradient(top, #ececec, #f6f6f6);
-            background: -o-linear-gradient(top, #ececec, #f6f6f6); }
-    .segment__viewport .fragment__context .fragment__ctx .fragment__invitee__list {
-      display: block;
-      margin-top: 30px; }
-      .segment__viewport .fragment__context .fragment__ctx .fragment__invitee__list h5 {
+          width: 115px; }
+      .segment__viewport .fragment__context .fragment__ctx .invitee__template h5 {
+        font-size: 15px;
         margin: 0;
         padding: 0;
-        font-weight: 400;
-        font-size: 14px; }
-      .segment__viewport .fragment__context .fragment__ctx .fragment__invitee__list ul li > span {
-        display: inline-block;
-        color: #777;
-        background: #ececec;
-        font-weight: 400;
-        font-size: 12px;
-        vertical-align: middle;
-        -webkit-border-radius: 4px;
-        -moz-border-radius: 4px;
-        -o-border-radius: 4px;
-        -ms-border-radius: 4px;
-        border-radius: 4px;
         font-weight: 500;
-        padding: 0 8px;
-        margin-right: 10px;
-        text-align: center;
-        width: 115px; }
-    .segment__viewport .fragment__context .fragment__ctx .invitee__template h5 {
-      font-size: 15px;
-      margin: 0;
-      padding: 0;
-      font-weight: 500;
-      margin-top: 35px; }
+        margin-top: 35px; }
 
 .segment__wrap {
   position: relative; }

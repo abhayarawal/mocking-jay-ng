@@ -1148,7 +1148,7 @@ $top__height: 40px;
 						font-size: 16px;
 					}
 
-					color: #fff;
+					// color: #fff;
 				}
 				
 				section:last-child
@@ -1577,6 +1577,84 @@ textarea
 		}
 	}
 
+	%message {
+		.message__wrap
+		{
+			margin-top: 35px;
+			display: block;
+		}
+
+		.message
+		{
+			background: #fbecda;
+			margin-top: 7px;
+			color: #968d82;
+			position: relative;
+			padding: 6px 12px;
+			margin-right: 40px;
+			border-top-left-radius: 15px;
+			border-top-right-radius: 15px;
+			border-bottom-right-radius: 15px;
+			font-weight: 500;
+
+			em
+			{
+				font-weight: 400;
+				font-style: normal;
+				display: block;
+				font-size: 10px;
+			}
+
+			&.response
+			{
+				background: #f2f1ee;
+				margin-right: 0;
+				margin-left: 40px;
+				border-top-left-radius: 15px;
+				border-top-right-radius: 15px;
+				border-bottom-left-radius: 15px;
+				border-bottom-right-radius: 0px;
+				text-align: right;
+			}
+		}
+	}
+
+	.message__history
+	{
+		@extend %card;
+		z-index: 5;
+		position: absolute;
+		left: 10px;
+		width: calc(100% - 20px);
+		top: 10px;
+		@extend %message;
+
+		.status
+		{
+			display: block;
+			font-weight: 500;
+			text-align: center;
+			margin: 0;
+			padding: 0;
+			margin-top: 15px;
+			padding: 5px 0;
+			border-top: 1px solid #d9d9d9;
+			border-bottom: 1px solid #d9d9d9;
+		}
+
+		button
+		{
+			position: absolute;
+			right: 10px;
+			top: 10px;
+		}
+
+		.message__wrap
+		{
+			margin-top: 15px;
+		}
+	}
+
 	.fragment__context
 	{
 		@extend %card;
@@ -1595,14 +1673,7 @@ textarea
 			@include border-radius(5px);
 			background: rgba(223, 245, 255, 0.31);
 			color: #6daec9;
-			border: 1px solid #9addf2;
-
-			&.error
-			{
-				background: #ffdde2;
-				color: #ff051d;
-				border: 1px solid #ff8984;
-			}
+			border: 1px solid #9addf2;			
 
 			h3, h4, h5
 			{
@@ -1630,10 +1701,28 @@ textarea
 					font-size: 25px;
 				}
 			}
+
+			&.error
+			{
+				background: #ffdde2;
+				color: #ff051d;
+				border: 1px solid #ff8984;
+
+				h3, h4, h5
+				{
+					&:before
+					{
+						content: "\e903";
+					}
+				}
+			}
 		}
 
 		.fragment__ctx
 		{
+			position: relative;
+			overflow: hidden;
+
 			.fragment__history
 		  {
 		  	position: absolute;
@@ -1651,6 +1740,13 @@ textarea
 					img
 					{
 						@include border-radius(100%);
+						cursor: pointer;
+						@include transition(all 0.2s ease);
+
+						&:hover
+						{
+							// @include box-shadow(0px, 0px, 0px, 2px, rgba(193, 193, 193, 0.32));
+						}		
 					}
 		  	}
 
@@ -1863,45 +1959,7 @@ textarea
 					@extend %border_a;
 				}
 				
-				.message__wrap
-				{
-					margin-top: 35px;
-					display: block;
-				}
-
-				.message
-				{
-					background: #fbecda;
-					margin-top: 7px;
-					color: #968d82;
-					position: relative;
-					padding: 6px 12px;
-					margin-right: 40px;
-					border-top-left-radius: 15px;
-					border-top-right-radius: 15px;
-					border-bottom-right-radius: 15px;
-					font-weight: 500;
-
-					em
-					{
-						font-weight: 400;
-						font-style: normal;
-						display: block;
-						font-size: 10px;
-					}
-
-					&.response
-					{
-						background: #f2f1ee;
-						margin-right: 0;
-						margin-left: 40px;
-						border-top-left-radius: 15px;
-						border-top-right-radius: 15px;
-						border-bottom-left-radius: 15px;
-						border-bottom-right-radius: 0px;
-						text-align: right;
-					}
-				}
+				@extend %message;
 
 				.form__group
 				{

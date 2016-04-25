@@ -33,6 +33,34 @@ import {RouterService} from '../services/router.service';
 class Spinner { }
 
 @Component({
+	selector: 'time-now',
+	template: `
+		<div class="time__now">
+			{{display}}
+		</div>
+	`
+})
+class TimeNow implements OnInit {
+	display: string;
+	interval: any;
+
+	constructor(
+		private authService: AuthService
+	) {}
+
+	ngOnInit() {
+		this.interval = setInterval(() => {
+			let now = moment().format('LTS');
+			this.display = now;
+		}, 1000);
+	}
+
+	ngOnDestroy() {
+		clearInterval(this.interval);
+	}
+}
+
+@Component({
 	selector: 'profile-context',
 	template: `
 		<div class="profile__context">
@@ -45,8 +73,7 @@ class Spinner { }
 				</section>
 				<section class="context__header">
 					<h4>
-						<span class="lnr lnr-star"></span>
-						Taylor Swifts calendar
+						&nbsp;
 					</h4>
 				</section>
 				<section>
@@ -60,7 +87,7 @@ class Spinner { }
 			</div>
 		</div>
 	`,
-	directives: [RouterLink]
+	directives: [RouterLink, TimeNow]
 })
 class ProfileContext implements OnInit {
 	@Input() day: string = "";
