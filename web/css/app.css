@@ -951,7 +951,7 @@ textarea {
     -ms-transform: scale(0.95);
     transform: scale(0.95); }
   .button.type__1 {
-    background: #ff6071;
+    background: #ff4b70;
     color: #fff;
     line-height: 35px;
     font-weight: 500;
@@ -965,7 +965,7 @@ textarea {
       line-height: 26px;
       width: 26px;
       background: rgba(255, 255, 255, 0.95);
-      color: #ff6071;
+      color: #ff4b70;
       display: inline-block;
       vertical-align: middle;
       margin-right: 10px;
@@ -2594,8 +2594,7 @@ textarea {
     transform: scale(1); } }
 
 .spinner {
-  width: 70px;
-  text-align: center; }
+  margin-top: 20px; }
   .spinner > div {
     width: 9px;
     height: 9px;

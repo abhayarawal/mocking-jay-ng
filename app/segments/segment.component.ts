@@ -25,6 +25,18 @@ export interface Notification {
 	type: boolean
 }
 
+@Component({
+	selector: 'spinner',
+	template: `
+		<div class="spinner">
+			<div class="bounce1"></div>
+			<div class="bounce2"></div>
+			<div class="bounce3"></div>
+		</div>
+	`
+})
+class Spinner { }
+
 
 @Component({
 	selector: 'mj-radio',
@@ -102,124 +114,127 @@ class DateTimeValidator {
 
 @Component({
 	template: `
-		<div class="contextual__form" *ngIf="templates.length > 0">
-			<h4 class="form__lnr">
-				<span class="lnr lnr-pencil"></span>
-				Create a new segment
-			</h4>
-			<div class="form__wrap">
-				{{formatted}}
-				<form [ngFormModel]="segmentForm">
-					<div class="form__group">
-						<label for="">Template</label>
-						<radius-select (update)="updateTemplate($event)" [items]="templates" [selected]="0"></radius-select>
-						<div class="form__desc">
-							Select the template you want this event to use
-						</div>
-					</div>
-					<div class="form__group">
-						<label for="">Date</label>
-						<calendar-select-elm (update)="updateDate($event)"></calendar-select-elm>
-						<div class="form__desc">
-							Select the date for segment start
-						</div>
-					</div>
-					<div class="form__group">
-						<label for="">Start time</label>
-						<div class="divide">
-							<section>
-								<input type="text" ngControl="start" />
-							</section>
-							<section>
-								<radius-select [items]="timeOfDay" [selected]="0"></radius-select>
-							</section>
-						</div>
-						<div class="form__desc">
-							Select the time for segment start
-						</div>
-					</div>
-					<div class="form__group">
-						<label for="">End time</label>
-						<div class="divide">
-							<section>
-								<input type="text" ngControl="end" />
-							</section>
-							<section>
-								<radius-select [items]="timeOfDay" [selected]="0"></radius-select>
-							</section>
-						</div>
-						<div class="form__desc">
-							Select the time for segment end
-						</div>
-					</div>
-					<div class="form__group">
-						<label for="">Repeat?</label>
-						<radius-radio (update)="updateRepeat($event)" [on]="true" [intext]="true"></radius-radio>
-						<div class="form__desc">
-							Do you want to repeat the event
-						</div>
-					</div>
-					<div *ngIf="repeatView">
+		<div *ngIf="templates">
+			<div class="contextual__form" *ngIf="templates.length > 0">
+				<h4 class="form__lnr">
+					<span class="lnr lnr-pencil"></span>
+					Create a new segment
+				</h4>
+				<div class="form__wrap">
+					{{formatted}}
+					<form [ngFormModel]="segmentForm">
 						<div class="form__group">
-							<label for="">Repeat until</label>
-							<calendar-select-elm (update)="updateUntil($event)"></calendar-select-elm>
+							<label for="">Template</label>
+							<radius-select (update)="updateTemplate($event)" [items]="templates" [selected]="0"></radius-select>
 							<div class="form__desc">
-								Select the segment repeat until date
+								Select the template you want this event to use
 							</div>
 						</div>
 						<div class="form__group">
-							<label for="">Repeat days</label>
-							<div class="weekdays">
+							<label for="">Date</label>
+							<calendar-select-elm (update)="updateDate($event)"></calendar-select-elm>
+							<div class="form__desc">
+								Select the date for segment start
+							</div>
+						</div>
+						<div class="form__group">
+							<label for="">Start time</label>
+							<div class="divide">
 								<section>
-									<mj-radio [on]="false" [text]="'Mon'" (update)="updateMon($event)"></mj-radio>
+									<input type="text" ngControl="start" />
 								</section>
 								<section>
-									<mj-radio [on]="false" [text]="'Tue'" (update)="updateTue($event)"></mj-radio>
-								</section>
-								<section>
-									<mj-radio [on]="false" [text]="'Wed'" (update)="updateWed($event)"></mj-radio>
-								</section>
-								<section>
-									<mj-radio [on]="false" [text]="'Thu'" (update)="updateThu($event)"></mj-radio>
-								</section>
-								<section>
-									<mj-radio [on]="false" [text]="'Fri'" (update)="updateFri($event)"></mj-radio>
-								</section>
-								<section>
-									<mj-radio [on]="false" [text]="'Sat'" (update)="updateSat($event)"></mj-radio>
-								</section>
-								<section>
-									<mj-radio [on]="false" [text]="'Sun'" (update)="updateSun($event)"></mj-radio>
+									<radius-select [items]="timeOfDay" [selected]="0"></radius-select>
 								</section>
 							</div>
 							<div class="form__desc">
-								Select the weekdays you want to repeat on
+								Select the time for segment start
 							</div>
 						</div>
-					</div>
-					<div class="form__group">
-						<button (click)="submit()" class="button type__3">
-							<span class="icon-done"></span>Create Segment
-						</button>
-						<button class="button type__4">
-							<span class="icon-close"></span>
-							Cancel
-						</button>
-					</div>
-				</form>
+						<div class="form__group">
+							<label for="">End time</label>
+							<div class="divide">
+								<section>
+									<input type="text" ngControl="end" />
+								</section>
+								<section>
+									<radius-select [items]="timeOfDay" [selected]="0"></radius-select>
+								</section>
+							</div>
+							<div class="form__desc">
+								Select the time for segment end
+							</div>
+						</div>
+						<div class="form__group">
+							<label for="">Repeat?</label>
+							<radius-radio (update)="updateRepeat($event)" [on]="true" [intext]="true"></radius-radio>
+							<div class="form__desc">
+								Do you want to repeat the event
+							</div>
+						</div>
+						<div *ngIf="repeatView">
+							<div class="form__group">
+								<label for="">Repeat until</label>
+								<calendar-select-elm (update)="updateUntil($event)"></calendar-select-elm>
+								<div class="form__desc">
+									Select the segment repeat until date
+								</div>
+							</div>
+							<div class="form__group">
+								<label for="">Repeat days</label>
+								<div class="weekdays">
+									<section>
+										<mj-radio [on]="false" [text]="'Mon'" (update)="updateMon($event)"></mj-radio>
+									</section>
+									<section>
+										<mj-radio [on]="false" [text]="'Tue'" (update)="updateTue($event)"></mj-radio>
+									</section>
+									<section>
+										<mj-radio [on]="false" [text]="'Wed'" (update)="updateWed($event)"></mj-radio>
+									</section>
+									<section>
+										<mj-radio [on]="false" [text]="'Thu'" (update)="updateThu($event)"></mj-radio>
+									</section>
+									<section>
+										<mj-radio [on]="false" [text]="'Fri'" (update)="updateFri($event)"></mj-radio>
+									</section>
+									<section>
+										<mj-radio [on]="false" [text]="'Sat'" (update)="updateSat($event)"></mj-radio>
+									</section>
+									<section>
+										<mj-radio [on]="false" [text]="'Sun'" (update)="updateSun($event)"></mj-radio>
+									</section>
+								</div>
+								<div class="form__desc">
+									Select the weekdays you want to repeat on
+								</div>
+							</div>
+						</div>
+						<div class="form__group">
+							<button (click)="submit()" class="button type__3">
+								<span class="icon-done"></span>Create Segment
+							</button>
+							<button class="button type__4">
+								<span class="icon-close"></span>
+								Cancel
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div *ngIf="!(templates.length > 0)">
+				<h3>You need to create a template before you can create a segment</h3>
 			</div>
 		</div>
-		<div *ngIf="!(templates.length > 0)">
-			<h3>You need to create a template before you can create a segment</h3>
-		</div>
+		<spinner *ngIf="!templates"></spinner>
 	`,
-	directives: [MjRadio, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent, CalendarSelectElm]
+	directives: [MjRadio, RadiusInputComponent, RadiusRadioComponent, RadiusSelectComponent, CalendarSelectElm, Spinner]
 })
 class SegmentCreate implements OnInit {
 	segment: Segment;
 	repeatView: boolean = true;
 
-	templates: SelectObject[] = [];
+	templates: SelectObject[];
 	templates$: Observable<Template[]>;
 
 	notification$: Observable<Notification>;
@@ -408,8 +423,9 @@ class SegmentDetail {
 			<segment-detail *ngFor="#s of segments" [segment]="s">
 			</segment-detail>
 		</ul>
+		<spinner *ngIf="!segments"></spinner>
 	`,
-	directives: [SegmentDetail]
+	directives: [SegmentDetail, Spinner]
 })
 class Segments implements OnInit {
 

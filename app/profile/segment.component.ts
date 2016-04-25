@@ -770,6 +770,10 @@ class FragmentInvitation implements OnInit {
 	}
 }
 
+interface ErrorMessage {
+	message: string,
+	error: boolean
+}
 
 @Component({
 	selector: 'fragment-context-student',
@@ -785,19 +789,21 @@ class FragmentInvitation implements OnInit {
 				Location: N/A
 			</div>
 			<div *ngIf="!talk">
-				<div [ngSwitch]="fragment.status" class="ctx__controls" *ngIf="allow">
+				<div [ngSwitch]="fragment.status" class="ctx__controls" *ngIf="allowed">
 					<template [ngSwitchWhen]="1">
 						<strong>Appointment not approved yet</strong>
 						<fragment-message [fragment]="fragment"></fragment-message>
-						<div class="form__group message__box">
-							<label for="">Send message: </label>
-							<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
-							<a (click)="sendMessage()" class="icon-paperplane"></a>
-						</div>
-						<div class="form__group">
-							<button class="button type__1" (click)="cancel()">
-								<span class="icon-close"></span>Cancel appointment
-							</button>
+						<div *ngIf="momentAl">
+							<div class="form__group message__box">
+								<label for="">Send message: </label>
+								<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
+								<a (click)="sendMessage()" class="icon-paperplane"></a>
+							</div>
+							<div class="form__group">
+								<button class="button type__1" (click)="cancel()">
+									<span class="icon-close"></span>Cancel appointment
+								</button>
+							</div>
 						</div>
 						<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
 					</template>
@@ -805,15 +811,17 @@ class FragmentInvitation implements OnInit {
 						<strong>Appointment approved</strong>
 						<fragment-ctx-header></fragment-ctx-header>
 						<fragment-message [fragment]="fragment"></fragment-message>
-						<div class="form__group message__box">
-							<label for="">Send message: </label>
-							<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
-							<a (click)="sendMessage()" class="icon-paperplane"></a>
-						</div>
-						<div class="form__group">
-							<button class="button type__1" (click)="cancel()">
-								<span class="icon-close"></span>Cancel appointment
-							</button>
+						<div *ngIf="momentAl">
+							<div class="form__group message__box">
+								<label for="">Send message: </label>
+								<textarea [(ngModel)]="message" (keyup.enter)="sendMessage()"></textarea>
+								<a (click)="sendMessage()" class="icon-paperplane"></a>
+							</div>
+							<div class="form__group">
+								<button class="button type__1" (click)="cancel()">
+									<span class="icon-close"></span>Cancel appointment
+								</button>
+							</div>
 						</div>
 						<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
 					</template>
@@ -846,15 +854,17 @@ class FragmentInvitation implements OnInit {
 							<textarea [(ngModel)]="message"></textarea>
 						</div>
 						<fragment-invitees (update)="invitees($event)"></fragment-invitees>
-						<div class="form__group border_a">
-							<button class="button type__3" (click)="create()">
-								<span class="icon-done"></span>Create appointment
-							</button>
+						<div *ngIf="momentAl">
+							<div class="form__group border_a">
+								<button class="button type__3" (click)="create()">
+									<span class="icon-done"></span>Create appointment
+								</button>
+							</div>
 						</div>
 					</template>
 				</div>
-				<div *ngIf="!allow" class="not__allowed">
-					<h4>Sorry, you cannot request multiple appointments for {{fragment.segment.template.name}} in the same day.</h4>
+				<div *ngIf="!allowed && errorMessage" class="not__allowed" [ngClass]="{error: errorMessage.error}">
+					<h4>{{errorMessage.message}}</h4>
 				</div>
 			</div>
 			<spinner *ngIf="talk"></spinner>
@@ -873,7 +883,10 @@ class FragmentContextStudent implements OnInit {
 	fragment$: Observable<FragmentResponse>;
 
 	talk: boolean;
-	allow: boolean;
+	
+	allowed: boolean;
+	errorMessage: ErrorMessage;
+	momentAl: boolean;
 
 
 	notify_select: SelectObject[] = [
@@ -917,10 +930,20 @@ class FragmentContextStudent implements OnInit {
 			});
 	}
 
+	momentAllowed(): boolean {
+		this.allowed = true;
+		var nowMoment = moment();
+		var fragDate = this.fragment.date;
+		var fragStart = this.fragment.start;
+		var targetMoment = moment(new Date(fragDate.year, fragDate.month, fragDate.day, fragStart.hour, fragStart.minute));
+
+		return !((targetMoment - nowMoment) < 0);
+	}
+
 	validateMultiple() {
 		this.talk = true;
 		let run = false;
-		this.allow = true;
+		this.allowed = true;
 
 		let [exists, session] = this.authService.getSession();
 		if (this.fragment.persistent) {
@@ -945,7 +968,21 @@ class FragmentContextStudent implements OnInit {
 		
 		if (run) {
 			this.segmentService.validateMultiple(this.fragment._segment).then((response) => {
-				this.allow = response.allow;
+				this.allowed = response.allow;
+				if (!response.allow) {
+					this.errorMessage = {
+						message: `Sorry, you cannot request multiple appointments for ${this.fragment.segment.template.name} in the same day.`,
+						error: false
+					}
+				} else {
+					if (!this.momentAl) {
+						this.errorMessage = {
+							message: `Sorry, but the moment's passed. Might want to call Doctor Who.`,
+							error: true
+						}
+						this.allowed = false;
+					}
+				}
 				this.talk = false;
 			});
 		} else {
@@ -957,6 +994,7 @@ class FragmentContextStudent implements OnInit {
 	}
 
 	ngOnChanges() {
+		this.momentAl = this.momentAllowed();
 		this.validateMultiple();
 	}
 
@@ -1022,19 +1060,21 @@ class FragmentContextStudent implements OnInit {
 					<fragment-profile [user]="template_user"></fragment-profile>
 					<strong>Appointment not approved yet</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
-					<div class="form__group message__box">
-						<label for="">Send message:</label>
-						<textarea [(ngModel)]="response" (keyup.enter)="respond()"></textarea>
-						<a (click)="respond()" class="icon-paperplane"></a>
-					</div>
-					<div class="form__group border_a">
-						<button class="button type__3" (click)="approve()">
-							<span class="icon-done"></span>Approve appointment
-						</button>
-					</div>
-					<div class="cancels">
-						<a (click)="deny()">Deny appointment</a>
-						<a href="">Deny and make unavailable</a>
+					<div *ngIf="momentAl">
+						<div class="form__group message__box">
+							<label for="">Send message:</label>
+							<textarea [(ngModel)]="response" (keyup.enter)="respond()"></textarea>
+							<a (click)="respond()" class="icon-paperplane"></a>
+						</div>
+						<div class="form__group border_a">
+							<button class="button type__3" (click)="approve()">
+								<span class="icon-done"></span>Approve appointment
+							</button>
+						</div>
+						<div class="cancels">
+							<a (click)="deny()">Deny appointment</a>
+							<a href="">Deny and make unavailable</a>
+						</div>
 					</div>
 					<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
 				</template>
@@ -1044,18 +1084,20 @@ class FragmentContextStudent implements OnInit {
 					<strong>Appointment approved</strong>
 					<fragment-ctx-header></fragment-ctx-header>
 					<fragment-message [fragment]="fragment"></fragment-message>
-					<div class="form__group message__box">
-						<label for="">Send message:</label>
-						<textarea [(ngModel)]="response" (keyup.enter)="respond()"></textarea>
-						<a (click)="respond()" class="icon-paperplane"></a>
-					</div>
-					<div class="form__group border_a">
-						<button class="button type__1" (click)="cancel()">
-							<span class="icon-close"></span>Cancel appointment
-						</button>
-					</div>
-					<div class="cancels">
-						<a href="">Cancel and make unavailable for everyone</a>
+					<div *ngIf="momentAl">
+						<div class="form__group message__box">
+							<label for="">Send message:</label>
+							<textarea [(ngModel)]="response" (keyup.enter)="respond()"></textarea>
+							<a (click)="respond()" class="icon-paperplane"></a>
+						</div>
+						<div class="form__group border_a">
+							<button class="button type__1" (click)="cancel()">
+								<span class="icon-close"></span>Cancel appointment
+							</button>
+						</div>
+						<div class="cancels">
+							<a href="">Cancel and make unavailable for everyone</a>
+						</div>
 					</div>
 					<fragment-invitee-list [fragment]="fragment"></fragment-invitee-list>
 				</template>
@@ -1063,8 +1105,10 @@ class FragmentContextStudent implements OnInit {
 				<template [ngSwitchWhen]="3">
 					<strong>Appointment denied</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
-					<div class="cancels">
-						<a (click)="block()">Block interval for everyone</a>
+					<div *ngIf="momentAl">
+						<div class="cancels">
+							<a (click)="block()">Block interval for everyone</a>
+						</div>
 					</div>
 				</template>
 
@@ -1072,25 +1116,31 @@ class FragmentContextStudent implements OnInit {
 					<fragment-profile [user]="template_user"></fragment-profile>
 					<strong>Appointment cancelled</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
-					<div class="cancels">
-						<a (click)="block()">Block interval for everyone</a>
+					<div *ngIf="momentAl">
+						<div class="cancels">
+							<a (click)="block()">Block interval for everyone</a>
+						</div>
 					</div>
 				</template>
 
 				<template [ngSwitchWhen]="6">
 					<strong>Appointment blocked for everyone</strong>
 					<fragment-message [fragment]="fragment"></fragment-message>
-					<div class="cancels">
-						<button class="button type__2" (click)="open()">
-							<span class="icon-done"></span>Unblock interval
-						</button>
+					<div *ngIf="momentAl">
+						<div class="cancels">
+							<button class="button type__2" (click)="open()">
+								<span class="icon-done"></span>Unblock interval
+							</button>
+						</div>
 					</div>
 				</template>
 				<template ngSwitchDefault>
-					<div class="border_a">
-						<button class="button type__1" (click)="block()">
-							<span class="icon-close"></span>Block interval
-						</button>
+					<div *ngIf="momentAl">
+						<div class="border_a">
+							<button class="button type__1" (click)="block()">
+								<span class="icon-close"></span>Block interval
+							</button>
+						</div>
 					</div>
 				</template>
 			</div>
@@ -1110,6 +1160,8 @@ class FragmentContextFaculty implements OnInit {
 	notification$: Observable<Notification>;
 	user$: Observable<User>;
 	fragment$: Observable<FragmentResponse>;
+
+	momentAl: boolean;
 
 	notify_select: SelectObject[] = [
 		{ value: 10, text: '10 min' },
@@ -1149,6 +1201,7 @@ class FragmentContextFaculty implements OnInit {
 						response.fragment._segment = this.fragment._segment;
 						this.fragment = this.fragmentService.validateHistory(response.fragment);
 						this.histroyLine();
+						this.momentAl = this.momentAllowed();
 						this.userService.getUser(this.fragment._user);
 					}
 				}
@@ -1156,6 +1209,15 @@ class FragmentContextFaculty implements OnInit {
 	}
 
 	ngOnInit() {
+	}
+
+	momentAllowed(): boolean {
+		var nowMoment = moment();
+		var fragDate = this.fragment.date;
+		var fragStart = this.fragment.start;
+		var targetMoment = moment(new Date(fragDate.year, fragDate.month, fragDate.day, fragStart.hour, fragStart.minute));
+
+		return !((targetMoment - nowMoment) < 0);
 	}
 
 	ngOnChanges() {
@@ -1172,6 +1234,7 @@ class FragmentContextFaculty implements OnInit {
 		}
 
 		this.histroyLine();
+		this.momentAl = this.momentAllowed();
 	}
 
 	update(status: Status) {

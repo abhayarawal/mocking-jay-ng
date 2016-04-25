@@ -1412,7 +1412,7 @@ textarea
   }
 
   $button-types: (
-    (type__1 #ff6071)
+    (type__1 #ff4b70)
     (type__2 #ffbe63)
     (type__3 #30d6c8)
     (type__4 #d4d4d4)
@@ -3233,8 +3233,7 @@ textarea
 }
 
 .spinner {
-  width: 70px;
-  text-align: center;
+	margin-top: 20px;
 
 	& > div {
 	  width: 9px;
