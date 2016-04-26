@@ -235,14 +235,27 @@ class ProfileNav implements OnInit {
 		<div class="profile__outlet">
 			<div class="overview__events">
 				<h3>Upcoming Events</h3>
-				<today-events [fragments]="fragments"></today-events>
+				<h5>Today</h5>
+				<section *ngIf="fragments">
+					<strong *ngIf="fragments.length < 1">Nothing for today</strong>
+					<today-events [fragments]="fragments"></today-events>
+				</section>
+				<spinner *ngIf="!fragmentsNext"></spinner>
+				
+				<h5>Tomorrow</h5>
+				<section *ngIf="fragmentsNext">
+					<strong *ngIf="fragmentsNext.length < 1">Nothing for tomorrow</strong>
+					<today-events [fragments]="fragmentsNext"></today-events>
+				</section>
+				<spinner *ngIf="!fragmentsNext"></spinner>
 			</div>
 		</div>
 	`,
-	directives: [ProfileNav, TodayEvents]
+	directives: [ProfileNav, TodayEvents, Spinner]
 })
 class Cal implements OnInit {
 	fragments: Fragment[];
+	fragmentsNext: Fragment[];
 
 	constructor(
 		private userService: UserService,
@@ -263,6 +276,19 @@ class Cal implements OnInit {
 			date.month, date.day, date.year
 		).then((response) => {
 			this.fragments = response;
+		});
+
+		let next = new Date(date.year, date.month, date.day + 1);
+		date = {
+			day: next.getDate(),
+			month: next.getMonth(),
+			year: next.getFullYear()
+		}
+
+		this.fagmentService.getToday(
+			date.month, date.day, date.year
+		).then((response) => {
+			this.fragmentsNext = response;
 		});
 	}
 }

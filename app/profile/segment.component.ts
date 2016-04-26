@@ -391,6 +391,18 @@ export class TodayEvent {
 })
 export class TodayEvents {
 	@Input() fragments: Fragment[];
+
+	sort(fragments: Fragment[]): Fragment[] {
+		return fragments.sort((fragment, next) => {
+			return fragment.start.hour - next.start.hour;
+		});
+	}
+
+	ngOnChanges() {
+		if (this.fragments) {
+			this.fragments = this.sort(this.fragments);
+		}
+	}
 }
 
 @Component({

@@ -1789,7 +1789,7 @@ textarea {
             position: absolute;
             right: 5px;
             top: 5px;
-            font-size: 15px; }
+            font-size: 17px; }
           .segment__wrap .segments .segment .fragments ul li span {
             display: block; }
             .segment__wrap .segments .segment .fragments ul li span.time {
@@ -2518,7 +2518,8 @@ textarea {
     width: 25px;
     text-align: center;
     right: 5px;
-    top: 5px; }
+    top: 5px;
+    display: none; }
   .notification__modal:after {
     z-index: 21;
     display: block;
@@ -2850,3 +2851,6 @@ textarea {
   overflow-x: hidden;
   overflow-y: auto;
   padding: 20px 30px; }
+  .overview__events h5 {
+    margin: 0;
+    padding: 0; }
