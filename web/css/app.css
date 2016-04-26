@@ -1403,8 +1403,7 @@ textarea {
         .segment__viewport .fragment__context .not__allowed.error h3:before, .segment__viewport .fragment__context .not__allowed.error h4:before, .segment__viewport .fragment__context .not__allowed.error h5:before {
           content: "\e903"; }
     .segment__viewport .fragment__context .fragment__ctx {
-      position: relative;
-      overflow: hidden; }
+      position: relative; }
       .segment__viewport .fragment__context .fragment__ctx .fragment__history {
         position: absolute;
         right: 0px;
@@ -2460,6 +2459,90 @@ textarea {
     background: -moz-linear-gradient(left, #57f0cd, #0099cc);
     background: -ms-linear-gradient(left, #57f0cd, #0099cc);
     background: -o-linear-gradient(left, #57f0cd, #0099cc); }
+
+.overlay {
+  z-index: 18;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5); }
+
+.notification__modal {
+  position: fixed;
+  bottom: 20px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  border-radius: 3px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  display: block;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 15px 20px 15px 20px;
+  top: 50%;
+  left: 50%;
+  height: 200px;
+  margin-top: -100px;
+  margin-left: -250px;
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  -ms-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  z-index: 20;
+  width: 500px;
+  overflow: hidden;
+  -webkit-box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4);
+  -moz-box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4);
+  box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4); }
+  .notification__modal.show {
+    visibility: visible;
+    opacity: 1;
+    margin-bottom: 0px; }
+  .notification__modal .controls__modal {
+    position: absolute;
+    bottom: 15px;
+    left: 0px;
+    width: 100%;
+    padding: 0 20px; }
+  .notification__modal .message__modal {
+    font-weight: 400;
+    display: block;
+    margin-top: 10px; }
+  .notification__modal .close__modal {
+    position: absolute;
+    height: 25px;
+    width: 25px;
+    text-align: center;
+    right: 5px;
+    top: 5px; }
+  .notification__modal:after {
+    z-index: 21;
+    display: block;
+    content: "";
+    position: absolute;
+    left: 0%;
+    width: 100%;
+    top: 0px;
+    height: 6px;
+    background: #57f0cd;
+    background-repeat: repeat-y;
+    background: -webkit-gradient(linear, left top, right top, from(#0099cc), to(#57f0cd));
+    background: -webkit-linear-gradient(left, #57f0cd, #0099cc);
+    background: -moz-linear-gradient(left, #57f0cd, #0099cc);
+    background: -ms-linear-gradient(left, #57f0cd, #0099cc);
+    background: -o-linear-gradient(left, #57f0cd, #0099cc); }
+  .notification__modal.red:after {
+    background: #ffba44;
+    background-repeat: repeat-y;
+    background: -webkit-gradient(linear, left top, right top, from(#e55005), to(#ffba44));
+    background: -webkit-linear-gradient(left, #ffba44, #e55005);
+    background: -moz-linear-gradient(left, #ffba44, #e55005);
+    background: -ms-linear-gradient(left, #ffba44, #e55005);
+    background: -o-linear-gradient(left, #ffba44, #e55005); }
 
 .calendar__select__elm {
   position: relative; }

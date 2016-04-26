@@ -1729,7 +1729,7 @@ textarea
 		.fragment__ctx
 		{
 			position: relative;
-			overflow: hidden;
+			// overflow: hidden;
 
 			.fragment__history
 		  {
@@ -3051,6 +3051,95 @@ textarea
 		top: 0px;
 		height: 6px;
 		@include bg-left-right(#57f0cd, #0099cc);
+	}
+}
+
+.overlay
+{
+	z-index: 18;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	background: rgba(255,255,255,0.5);
+}
+
+.notification__modal
+{
+	position: fixed;
+	bottom: 20px;
+	@include border-radius(3px);
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	display: block;
+	background: rgba(255, 255, 255, 0.95);
+	padding: 15px 20px 15px 20px;
+	top: 50%;
+	left: 50%;
+	height: 200px;
+	margin-top: -100px;
+	margin-left: -250px;
+	@include transition(all 0.2s ease);
+	z-index: 20;
+	width: 500px;
+	overflow: hidden;
+	@include box-shadow(0px, 0px, 4px, 0, rgba(113, 113, 113, 0.4));
+	// visibility: visible;
+	// opacity: 0;
+
+	&.show
+	{
+		visibility: visible;
+		opacity: 1;
+		margin-bottom: 0px;
+	}
+
+	.controls__modal
+	{
+		position: absolute;
+		bottom: 15px;
+		left: 0px;
+		width: 100%;
+		padding: 0 20px;
+	}
+
+	.message__modal
+	{
+		font-weight: 400;
+		display: block;
+		margin-top: 10px;
+	}
+
+	.close__modal
+	{
+		position: absolute;
+		height: 25px;
+		width: 25px;
+		text-align: center;
+		right: 5px;
+		top: 5px;
+	}
+
+	&:after
+	{
+		z-index: 21;
+		display: block;
+		content: "";
+		position: absolute;
+		left: 0%;
+		width: 100%;
+		top: 0px;
+		height: 6px;
+		@include bg-left-right(#57f0cd, #0099cc);
+	}
+
+	&.red
+	{
+		&:after
+		{
+			@include bg-left-right(#ffba44, #e55005);
+		}
 	}
 }
 

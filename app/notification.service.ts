@@ -13,6 +13,45 @@ export interface Notification {
 	error: boolean
 }
 
+export interface NotifyTarget {
+	target: string,
+	payload: boolean
+}
+
+export interface NotifyModal {
+	message: string,
+	heading: string,
+	target?: string,
+	display: string,
+	error: boolean
+}
+
+@Injectable()
+export class NotificationModalService {
+	notifyModalObr$: Observable<NotifyModal>;
+	notifyTargetObr$: Observable<NotifyTarget>;
+
+	notifyModalOb: Observer<NotifyModal>;
+	notifyTargetOb: Observer<NotifyTarget>;
+
+	constructor() {
+		this.notifyModalObr$ = new Observable<NotifyModal>(observer => this.notifyModalOb = observer).share();
+		this.notifyTargetObr$ = new Observable<NotifyTarget>(observer => this.notifyTargetOb = observer).share();
+	}
+
+	show(notifyModal: NotifyModal) {
+		this.notifyModalOb.next(notifyModal);
+	}
+
+	notify(notifyTarget: NotifyTarget) {
+		if (this.notifyTargetOb) {
+			if (!this.notifyTargetOb.isUnsubscribed) {
+				this.notifyTargetOb.next(notifyTarget);
+			}
+		}
+	}
+}
+
 
 @Injectable()
 export class NotificationService {

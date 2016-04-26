@@ -15,7 +15,7 @@ import {UserService} from '../services/user.service';
 import {FragmentService, FragmentResponse} from '../services/fragment.service';
 import {SegmentService} from '../services/segment.service';
 import {RouterService} from '../services/router.service';
-import {Notification, NotificationService} from '../notification.service';
+import {Notification, NotificationService, NotificationModalService, NotifyModal, NotifyTarget} from '../notification.service';
 
 import {RadiusSelectComponent, RadiusRadioComponent, SelectObject} from '../form/form.component';
 
@@ -320,6 +320,7 @@ class ProfileCard {
 					<span *ngSwitchWhen="6" [innerHTML]="'Blocked'"></span>
 					<span *ngSwitchWhen="7" [innerHTML]="'Invitation'"></span>
 				</span>
+				<span *ngIf="me">[Me]</span>
 				<h4>
 					<em>{{template.name}}</em> 
 					<span class="at">at</span> 
@@ -339,9 +340,12 @@ export class TodayEvent {
 	template: Template;
 	user: User;
 
+	me: boolean = true;
+
 	constructor(
 		private segmentViewService: SegmentViewService,
-		private fragmentService: FragmentService
+		private fragmentService: FragmentService,
+		private authService: AuthService
 	) { }
 
 	select() {
@@ -357,7 +361,12 @@ export class TodayEvent {
 	}
 
 	ngOnChanges() {
+		let [exists, session] = this.authService.getSession();
 		if (this.fragment) {
+			if (this.fragment._user == session.id) {
+				this.me = false;
+			}
+
 			this.fragmentService.getSegmentArray(this.fragment._id).then((response2) => {
 				if (response2.success) {
 					let [segment, template, user] = response2.payload;
@@ -900,6 +909,9 @@ class FragmentContextStudent implements OnInit {
 	user$: Observable<User>;
 	fragment$: Observable<FragmentResponse>;
 
+	notifyTargetObr$: Observable<NotifyTarget>;
+	notifyModal: NotifyModal;
+
 	talk: boolean;
 	
 	allowed: boolean;
@@ -922,13 +934,16 @@ class FragmentContextStudent implements OnInit {
 		private fragmentService: FragmentService,
 		private segmentService: SegmentService,
 		private userService: UserService,
-		private authService: AuthService
+		private authService: AuthService,
+		private NMService: NotificationModalService
 	) {
 		this.notification$ = this.fragmentService.notification$;
 		this.notification$.subscribe(
 			(response) => {
 				this.notificationService.notify(response.message, true, !response.type);
 			});
+
+		this.notifyTargetObr$ = this.NMService.notifyTargetObr$;
 
 		this.fragment$ = this.fragmentService.fragment$;
 		this.fragment$.subscribe(
@@ -1018,8 +1033,21 @@ class FragmentContextStudent implements OnInit {
 	}
 
 	cancel() {
-		this.fragment.status = Status.cancelled;
-		this.update();
+		let target = genId();
+		this.NMService.show({
+			heading: `You're about to perform an irreversible action`,
+			message: `Are you sure you want to cancel this appointment?`,
+			target: target,
+			display: `Cancel`,
+			error: true
+		});
+		this.notifyTargetObr$.subscribe(
+			(done) => {
+				if (done.target == target && done.payload == true) {
+					this.fragment.status = Status.cancelled;
+					this.update();
+				}
+			});
 	}
 
 	invitees([valid, invitees]) {
@@ -1045,13 +1073,26 @@ class FragmentContextStudent implements OnInit {
 	}
 
 	create() {
-		if (this.fragment.segment.template.require_accept) {
-			this.fragment.status = Status.in_progress;
-		} else {
-			this.fragment.status = Status.approved;
-		}
+		let target = genId();
+		this.NMService.show({
+			heading: `You're about to perform an irreversible action`,
+			message: `Are you sure you want to create this appointment?`,
+			target: target,
+			display: `Create appointment`,
+			error: false
+		});
+		this.notifyTargetObr$.subscribe(
+			(done) => {
+				if (done.target == target && done.payload == true) {
+					if (this.fragment.segment.template.require_accept) {
+						this.fragment.status = Status.in_progress;
+					} else {
+						this.fragment.status = Status.approved;
+					}
 
-		this.update();
+					this.update();
+				}
+			});
 	}
 }
 
@@ -1194,6 +1235,7 @@ class FragmentContextFaculty implements OnInit {
 	notification$: Observable<Notification>;
 	user$: Observable<User>;
 	fragment$: Observable<FragmentResponse>;
+	notifyTargetObr$: Observable<NotifyTarget>;
 
 	momentAl: boolean;
 
@@ -1214,7 +1256,8 @@ class FragmentContextFaculty implements OnInit {
 		private segmentViewService: SegmentViewService,
 		private notificationService: NotificationService,
 		private fragmentService: FragmentService,
-		private userService: UserService
+		private userService: UserService,
+		private NMService: NotificationModalService
 	) {
 		this.notification$ = this.fragmentService.notification$;
 		this.notification$.subscribe(
@@ -1222,6 +1265,7 @@ class FragmentContextFaculty implements OnInit {
 				this.notificationService.notify(response.message, true, !response.type);
 			});
 
+		this.notifyTargetObr$ = this.NMService.notifyTargetObr$;
 
 		this.fragment$ = this.fragmentService.fragment$;
 		this.fragment$.subscribe(
@@ -1232,7 +1276,7 @@ class FragmentContextFaculty implements OnInit {
 						if (!('segment' in response.fragment)) {
 							response.fragment.segment = this.fragment.segment;
 						}
-						console.log(response.fragment._user);
+						// console.log(response.fragment._user);
 						if (this.fragment._user) {
 							response.fragment._user = this.fragment._user;
 						}
@@ -1295,15 +1339,47 @@ class FragmentContextFaculty implements OnInit {
 	}
 
 	deny() {
-		this.update(Status.denied);
+		this.modal({
+			heading: `You're about to perform an irreversible action`,
+			message: `Are you sure you want to deny this appointment?`,
+			target: ``,
+			display: `Deny`,
+			error: true
+		}, Status.denied);
+		// this.update(Status.denied);
+	}
+
+	modal(notifyModal: NotifyModal, status: Status) {
+		let target = genId();
+		notifyModal.target = target;
+		this.NMService.show(notifyModal);
+		this.notifyTargetObr$.subscribe(
+			(done) => {
+				if (done.target == target && done.payload == true) {
+					this.update(status);
+				}
+			});
 	}
 
 	cancel() {
-		this.update(Status.cancelled);
+		this.modal({
+			heading: `You're about to perform an irreversible action`,
+			message: `Are you sure you want to cancel this appointment?`,
+			target: ``,
+			display: `Cancel`,
+			error: true
+		}, Status.cancelled);
+		// this.update(Status.cancelled);
 	}
 
 	approve() {
-		this.update(Status.approved);
+		this.modal({
+			heading: `You're about to perform an irreversible action`,
+			message: `Are you sure you want to approve this appointment?`,
+			target: ``,
+			display: `Approve`,
+			error: false
+		}, Status.approved);
 	}
 
 	open() {

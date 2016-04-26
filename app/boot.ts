@@ -8,7 +8,7 @@ import {HTTP_PROVIDERS, HTTP_BINDINGS} from 'angular2/http';
 import {SegmentViewService} from './profile/segment.view.service';
 import {TemplateService} from './services/template.service';
 import {SegmentService} from './services/segment.service';
-import {NotificationService} from './notification.service';
+import {NotificationService, NotificationModalService} from './notification.service';
 import {AuthService} from './auth/auth.service';
 import {UserService} from './services/user.service';
 import {FragmentService} from './services/fragment.service';
@@ -21,5 +21,5 @@ bootstrap(MountNode, [
 	ROUTER_PROVIDERS, HTTP_PROVIDERS, HTTP_BINDINGS, 
 	AuthService, UserService, FacultyService, RouterService, NotifierService,
 	SegmentViewService, TemplateService, SegmentService, NotificationService,
-	FragmentService
+	FragmentService, NotificationModalService
 ]);
