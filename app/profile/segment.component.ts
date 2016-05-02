@@ -539,8 +539,9 @@ interface Timey {
 				<li>
 					<a tabindex="150" (blur)="show=false">
 						<div class="selected" (click)="show=!show">
-							<span class="icon-notifications_true"></span>
-							<em>Alert {{times[selected].text}}</em>
+							<span class="icon-notifications_true" *ngIf="!(selected==0)"></span>
+							<span class="icon-notifications_false" *ngIf="(selected==0)"></span>
+							<em>Reminder {{times[selected].text}}</em>
 						</div>
 						<ul [ngClass]="{visible: show}">
 							<li *ngFor="#time of times; #i = index" (click)="remind(i)">
@@ -552,7 +553,8 @@ interface Timey {
 				<li>
 					<a>
 						<div class="selected" (click)="notification=!notification">
-							<span class="icon-alarm"></span>
+							<span class="icon-alarm_on" *ngIf="notification"></span>
+							<span class="icon-alarm_off" *ngIf="!notification"></span>
 							<em>Nofication <span *ngIf="notification">On</span> <span *ngIf="!notification">Off</span></em>
 						</div>
 					</a>
@@ -570,8 +572,8 @@ class FragmentCtxHeader {
 
 	times: Timey[] = [
 		{ value: -1, text: 'None' },
-		{ value: 15, text: '15 minutes' },
-		{ value: 30, text: '30 minutes' },
+		{ value: 15, text: '15 min' },
+		{ value: 30, text: '30 min' },
 		{ value: 60, text: '1 hour' },
 		{ value: 120, text: '2 hour' },
 		{ value: 1440, text: '1 day' },

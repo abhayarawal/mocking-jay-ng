@@ -255,29 +255,33 @@ class TemplateCreate implements OnInit {
 	selector: 'template-editor',
 	template: `
 		<div class="inner__row editor" *ngIf="template">
+			<h4>Edit template</h4>
 			<div class="form__wrap">
 				<form [ngFormModel]="editForm">
 					<div class="inner__row">
 						<section>
 							<label>Template name:</label>
 							<input type="text" [(ngModel)]="morphTemplate.name" ngControl="name" />
+							<div class="form__desc">Edit the name of the template</div>
 						</section>
 						<section>
 							<label>Allow multiple?</label>
 							<radius-radio (update)="updateAllow($event)" [on]="template.allow_multiple" [intext]="true"></radius-radio>
+							<div class="form__desc">Can students select multiple appointments for the same day?</div>
 						</section>
 						<section>
 							<label>Require Accept?</label>
 							<radius-radio (update)="updateAccept($event)" [on]="template.require_accept" [intext]="true"></radius-radio>
+							<div class="form__desc">Do you want to approve each appointment in this template?</div>
 						</section>
 					</div>
 
 					<div class="inner__row ctls">
 						<section>
-							<button class="button type__3" (click)="updateTemplate()">
+							<button class="button type__2" (click)="updateTemplate()">
 								<span class="icon-done"></span>Update template
 							</button>
-							<button class="button type__1" (click)="remove()">
+							<button class="button type__4" (click)="remove()">
 								<span class="icon-close"></span>Delete
 							</button>
 						</section>
@@ -362,9 +366,10 @@ class TemplateEditor implements OnInit {
 			<div class="inner__row">
 				<section>
 					<h5>{{template.name}}</h5>
+					Interval {{template.interval}} min
 				</section>
 				<section>
-					Interval {{template.interval}} min
+					
 				</section>
 				<section>
 					<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
@@ -384,12 +389,14 @@ class TemplateDetail {
 
 @Component({
 	template: `
-		<h3>Templates</h3>
-		<ul *ngIf="templates" class="table">
-			<template-detail *ngFor="#t of templates; #i = index" [template]="t" [index]="i">
-			</template-detail>
-		</ul>
-		<spinner *ngIf="!templates"></spinner>
+		<div class="templates__wrap">
+			<h3>Templates</h3>
+			<ul *ngIf="templates" class="table">
+				<template-detail *ngFor="#t of templates; #i = index" [template]="t" [index]="i">
+				</template-detail>
+			</ul>
+			<spinner *ngIf="!templates"></spinner>
+		</div>
 	`,
 	directives: [TemplateDetail, Spinner]
 })

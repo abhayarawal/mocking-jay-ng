@@ -1352,6 +1352,7 @@ input[type="text"], input[type="password"], input[type="telephone"], input[type=
 	@include border-radius(5px);
 	position: relative;
 	color: #7d7d7d;
+	font-family: $base-font;
 
   &:focus
   {
@@ -1877,10 +1878,11 @@ textarea
 								@include transition(all 0.2s ease);
 								top: -35px;
 								left: 10px;
-								border: 1px solid #d6d7db;
 								padding: 10px 0;
-								@include border-radius(7px);
-								background: lighten(#ECEDF1, 2%);
+								background: #fcfdff;
+								@include border-radius(4px);
+								@include box-shadow(0, 1px, 4px, 0, rgba(0, 0, 0, .06));
+								border: 1px solid rgba(0, 0, 0, .09);
 
 								&.visible
 								{
@@ -2757,12 +2759,14 @@ textarea
 		visibility: hidden;
 		@include opacity(0);
 		@include transition(all 0.2s ease);
-		top: -35px;
+		top: -10px;
 		left: 10px;
 		border: 1px solid #d6d7db;
 		padding: 10px 0;
-		@include border-radius(7px);
-		background: lighten(#ECEDF1, 2%);
+		background: #fcfdff;
+		@include border-radius(4px);
+		@include box-shadow(0, 1px, 4px, 0, rgba(0, 0, 0, .06));
+		border: 1px solid rgba(0, 0, 0, .09);
 
 		&.show
 		{
@@ -2945,59 +2949,204 @@ textarea
 	}
 }
 
-.table
+.table__segments
 {
 	font-size: 0;
 
-	li
+	segment-detail
 	{
+		font-size: $font-size;
 		display: inline-block;
 		vertical-align: top;
-		border-bottom: 1px solid #EAECEE;
-		padding: 10px 0px;
-		font-size: $font-size;
-		width: 100%;
-		// background: #F9FAFB;
+		width: percentage(1/2);
 
-		&.even {
-			background: #FFFFFF;
+		&:nth-child(3n+2) {
+			padding: 0 12px;
 		}
+	}
 
-		.inner__row
+	li
+	{
+		margin-top: 20px;
+
+		& > div
 		{
-			@include row(true);
+			background: #f9f9f9;
+			padding: 20px 0px;
+			position: relative;
+
+			button
+			{
+				position: absolute;
+				top: 10px;
+				right: 10px;
+			}
 
 			section
 			{
-				@include col(1/3);
-
-				&:first-child
-				{
-					text-transform: capitalize;
-				}
-
-				h1, h2, h3, h4, h5, h6
+				h4, h5
 				{
 					margin: 0;
 					padding: 0;
 				}
 			}
 
-			.form__wrap
+			.editor
 			{
-				@include col(1/1);
+				border-top: 1px solid #eceef0;
+				border-bottom: 1px solid #eceef0;
+				background: #fcfcfc;
+				margin-top: 15px;
+				box-shadow: 0px 0px 6px 0 rgba(217, 217, 217, 0.46) inset;
+				padding: 20px 15px;
+				position: relative;
+
+				&:before, &:after {
+					content: "";
+					display: block;
+					position: absolute;
+					top: 0px;
+					height: 100%;
+					width: 5px;
+					background: #fcfcfc;
+				}
+
+				&:before { left: 0px; }
+				&:after { right: 0px; }
+
+				h4, h5
+				{
+					@include col(1);
+					font-size: 17px;
+					font-weight: 500;
+				}
+
+				.ctls
+				{
+					margin-top: 15px;
+					@extend %border_a;
+				}
+
+				.form__desc
+				{
+					display: block;
+					margin-top: 15px;
+					font-size: 12px;
+					color: #a1a1a1;
+				}
+
+				.form__wrap
+				{
+					display: block;
+					margin-top: 10px;
+				}
 			}
 		}
-		
-		.editor
-		{
-			// background: #fcf8ea;
-			margin-top: 15px;
+	}
+}
 
-			.ctls
+
+.templates__wrap
+{
+	// background: #fcfcfc;
+
+	.table
+	{
+		font-size: 0;
+
+		li
+		{
+			display: inline-block;
+			vertical-align: top;
+			// border-bottom: 1px solid #EAECEE;
+			padding: 10px 20px;
+			font-size: $font-size;
+			width: 100%;
+			background: #F4F5F7;
+			@include border-radius(5px);
+			margin-top: 10px;
+
+			&.even {
+				background: #FFFFFF;
+			}
+
+			.inner__row
 			{
+				@include row(true);
+
+				section
+				{
+					@include col(1/3);
+
+					&:first-child
+					{
+						text-transform: capitalize;
+					}
+
+					h1, h2, h3, h4, h5, h6
+					{
+						margin: 0;
+						padding: 0;
+						font-weight: 500;
+					}
+				}
+
+				.form__wrap
+				{
+					@include col(1/1);
+				}
+			}
+			
+			.editor
+			{
+				border-top: 1px solid #eaebed;
+				border-bottom: 1px solid #eaebed;
+				// background: #fbf9fc;
+				background: #fefcff;
 				margin-top: 15px;
-				@extend %border_a;
+				// box-shadow: 0px 0px 6px 0 rgba(217, 217, 217, 0.46) inset;
+				padding: 20px 0;
+				position: relative;
+
+				// &:before, &:after {
+				// 	content: "";
+				// 	display: block;
+				// 	position: absolute;
+				// 	top: 0px;
+				// 	height: 100%;
+				// 	width: 5px;
+				// 	background: #fefcff;
+				// }
+
+				// &:before { left: 0px; }
+				// &:after { right: 0px; }
+
+				h4, h5
+				{
+					@include col(1);
+					font-size: 17px;
+					font-weight: 500;
+				}
+
+				.ctls
+				{
+					margin-top: 15px;
+					@extend %border_a;
+				}
+
+				.form__desc
+				{
+					display: block;
+					margin-top: 15px;
+					font-size: 12px;
+					color: #a1a1a1;
+				}
+
+				.form__wrap
+				{
+					display: block;
+					margin-top: 10px;
+				}
 			}
 		}
 	}
@@ -3198,10 +3347,13 @@ textarea
 		top: -75px;
 		left: 50%;
 		margin-left: -125px;
-		border: 1px solid #d6d7db;
+		// border: 1px solid #d6d7db;
 		padding: 10px 0;
-		@include border-radius(7px);
-		background: lighten(#ECEDF1, 2%);
+		// background: lighten(#ECEDF1, 2%);
+		background: #fcfdff;
+		@include border-radius(4px);
+		@include box-shadow(0, 1px, 4px, 0, rgba(0, 0, 0, .06));
+		border: 1px solid rgba(0, 0, 0, .09);
 
 		&.show
 		{
@@ -3293,7 +3445,7 @@ textarea
 						a
 						{
 							display: block;
-							@include border-radius(100%);
+							@include border-radius(3px);
 							font-weight: 500;
 							font-size: 13px;
 							@include transition(all 0.1s ease);
@@ -3304,7 +3456,7 @@ textarea
 							{
 								background: lighten(#898c94, 0%);
 								color: #fff;
-								@include box-shadow(0, 0, 0, 2px, rgba(137, 140, 148, 0.53));
+								// @include box-shadow(0, 0, 0, 2px, rgba(137, 140, 148, 0.53));
 							}
 						}
 					}

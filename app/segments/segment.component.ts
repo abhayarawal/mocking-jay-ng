@@ -363,7 +363,7 @@ class SegmentCreate implements OnInit {
 @Component({
 	selector: 'segment-editor',
 	template: `
-	<div class="inner__row" *ngIf="segment">
+	<div class="editor" *ngIf="segment">
 		<div class="form__wrap">
 			<form>
 				<h3>Edit:</h3>
@@ -388,7 +388,7 @@ class SegmentEditor {
 	selector: 'segment-detail',
 	template: `
 		<li *ngIf="segment" class="segment__detail">
-			<div class="inner__row">
+			<div>
 				<section>
 				<h4>{{segment.template?.name}}</h4>
 				</section>
@@ -399,14 +399,10 @@ class SegmentEditor {
 						<strong>To:</strong> {{segment.end.hour}}:{{segment.end.minute}}
 					</div>
 				</section>
-				<section>
-					<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
-				</section>
-				</div>
-
+				<button class="lnr" [ngClass]="{'lnr-pencil': !show, 'lnr-cross': show}" (click)="show=!show"></button>
 				<segment-editor [segment]="segment" *ngIf="show"></segment-editor>
-			</li>
-
+			</div>
+		</li>
 	`,
 	directives: [SegmentEditor]
 })
@@ -419,7 +415,7 @@ class SegmentDetail {
 @Component({
 	template: `
 		<h3>Segments</h3>
-		<ul *ngIf="segments" class="table">
+		<ul *ngIf="segments" class="table__segments">
 			<segment-detail *ngFor="#s of segments" [segment]="s">
 			</segment-detail>
 		</ul>
