@@ -2377,7 +2377,7 @@ textarea {
     font-size: 14px;
     display: inline-block;
     vertical-align: top;
-    width: 50%; }
+    width: 33.33333%; }
     .table__segments segment-detail:nth-child(3n+2) {
       padding: 0 12px; }
   .table__segments li {
@@ -2390,15 +2390,25 @@ textarea {
         position: absolute;
         top: 10px;
         right: 10px; }
-      .table__segments li > div section h4, .table__segments li > div section h5 {
-        margin: 0;
-        padding: 0; }
+      .table__segments li > div section {
+        padding: 0 15px; }
+        .table__segments li > div section h4, .table__segments li > div section h5 {
+          margin: 0;
+          padding: 0; }
+        .table__segments li > div section h4 {
+          font-weight: 500;
+          font-size: 19px;
+          text-transform: capitalize; }
+        .table__segments li > div section h5 {
+          font-weight: 400; }
+        .table__segments li > div section div {
+          display: block;
+          margin-top: 12px; }
       .table__segments li > div .editor {
-        border-top: 1px solid #eceef0;
-        border-bottom: 1px solid #eceef0;
-        background: #fcfcfc;
+        border-top: 1px solid #eaebed;
+        border-bottom: 1px solid #eaebed;
+        background: #fefcff;
         margin-top: 15px;
-        box-shadow: 0px 0px 6px 0 rgba(217, 217, 217, 0.46) inset;
         padding: 20px 15px;
         position: relative; }
         .table__segments li > div .editor:before, .table__segments li > div .editor:after {
@@ -2563,6 +2573,61 @@ textarea {
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.5); }
+
+.contact__wrap__modal {
+  position: fixed;
+  bottom: 20px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  border-radius: 3px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  display: block;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 15px 20px 15px 20px;
+  top: 50%;
+  left: 50%;
+  height: 450px;
+  margin-top: -225px;
+  margin-left: -250px;
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  -ms-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  z-index: 20;
+  width: 500px;
+  overflow: hidden;
+  -webkit-box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4);
+  -moz-box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4);
+  box-shadow: 0px 0px 4px 0 rgba(113, 113, 113, 0.4); }
+  .contact__wrap__modal:after {
+    z-index: 21;
+    display: block;
+    content: "";
+    position: absolute;
+    left: 0%;
+    width: 100%;
+    top: 0px;
+    height: 6px;
+    background: #57f0cd;
+    background-repeat: repeat-y;
+    background: -webkit-gradient(linear, left top, right top, from(#0099cc), to(#57f0cd));
+    background: -webkit-linear-gradient(left, #57f0cd, #0099cc);
+    background: -moz-linear-gradient(left, #57f0cd, #0099cc);
+    background: -ms-linear-gradient(left, #57f0cd, #0099cc);
+    background: -o-linear-gradient(left, #57f0cd, #0099cc); }
+  .contact__wrap__modal > a {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: block;
+    cursor: pointer; }
+  .contact__wrap__modal .contact__card {
+    padding: 15px 0;
+    color: #555555; }
 
 .notification__modal {
   position: fixed;

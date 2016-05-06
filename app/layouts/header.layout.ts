@@ -10,6 +10,7 @@ import {User, UserType} from '../interfaces/interface';
 import {AuthService} from '../auth/auth.service';
 import {Notifier, NotifierService} from '../services/notifier.service';
 import {NotificationService, Notification} from '../notification.service';
+import {SearchService} from './header.service';
 
 @Pipe({ name: 'unread' })
 export class UnreadNotifiers implements PipeTransform {
@@ -164,12 +165,24 @@ interface SearchResult {
 }
 
 @Component({
+	selector: 'spinner',
+	template: `
+		<div class="spinner">
+			<div class="bounce1"></div>
+			<div class="bounce2"></div>
+			<div class="bounce3"></div>
+		</div>
+	`
+})
+class Spinner { }
+
+@Component({
 	selector: 'search-box',
 	template: `
 		<form>
 			<div class="search__box">
 				<span class='lnr lnr-magnifier'></span>
-        <input placeholder='Search for anything' type='text' (focus)="show=true" (blur)="hide()">
+        <input placeholder='Search for anything' type='text' [(ngModel)]="q" (focus)="show=true" (blur)="hide()" (keyup)="search()">
 
         <ul class="search__results" [ngClass]="{show: show}">
         	<h5>Search results:</h5>
@@ -182,16 +195,41 @@ interface SearchResult {
 							</h3>
         		</a>
         	</li>
+        	<li *ngIf="searchResults.length < 1 && q.length > 0 && !spin">Could not find anything</li>
+        	<li *ngIf="searchResults.length < 1 && q.length < 1 && !spin">Type to search</li>
+        	<li *ngIf="spin"><spinner></spinner></li>
         </ul>
 			</div>
 		</form>
 	`,
-	directives: [RouterLink]
+	directives: [RouterLink, Spinner],
+	providers: [SearchService]
 })
 class SearchBox implements OnInit {
-	searchResults: SearchResult[];
+	searchResults: SearchResult[] = [];
 	show: boolean = false;
 	timeout: any;
+	q: string = "";
+	spin: boolean = false;
+
+	constructor(
+		private searchService: SearchService
+	) {}
+
+	search() {
+		if (this.q.length > 0) {
+			this.spin = true;
+			this.searchService.search(this.q).then((users) => {
+				this.searchResults = [];
+				users.forEach((user) => {
+					let tmp = user;
+					tmp.id = user._id;
+					this.searchResults.push({ type: SearchType.User, obj: tmp });
+				});
+				this.spin = false;
+			})
+		}
+	}
 
 	hide() {
 		clearTimeout(this.timeout);
@@ -199,40 +237,6 @@ class SearchBox implements OnInit {
 	}
 
 	ngOnInit() {
-		this.searchResults = [
-			{
-				type: SearchType.User, obj: {
-					id: '571042bac49d06d536f49738', fname: "John", lname: "Doe", email: "john.doe@google.com",
-					meta: {
-						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-03-20_at_4.35.11_PM.png?3896038397320089616"
-					}
-				}
-			},
-			{
-				type: SearchType.User, obj: {
-					id: "571042fcf09005e43602ef39", fname: "Taylor", lname: "Swift", email: "taylor.swift@google.com",
-					meta: {
-						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/Screen_Shot_2016-02-18_at_3.11.09_PM.png?5003393221482762451"
-					}
-				}
-			},
-			{
-				type: SearchType.User, obj: {
-					id: "571042732e85f0c736ea83c3", fname: "Jane", lname: "Douglas", email: "jane.douglas@outsidexbox.com",
-					meta: {
-						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/lady.png?8325253379137164394"
-					}
-				}
-			},
-			{
-				type: SearchType.User, obj: {
-					id: "571042e34c682edc367747ec", fname: "Evie", lname: "Frye", email: "evie.frye@ubi.com", type: UserType.Faculty,
-					meta: {
-						avatar: "https://cdn.shopify.com/s/files/1/0521/5917/files/lady2.png?18444122143504349695"
-					}
-				}
-			}
-		]
 	}
 }
 

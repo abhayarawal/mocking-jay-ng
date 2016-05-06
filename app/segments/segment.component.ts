@@ -14,7 +14,7 @@ import {TemplateService} from '../services/template.service';
 import {SegmentService} from '../services/segment.service';
 import {AuthService} from '../auth/auth.service';
 
-import {NotificationService} from '../notification.service';
+import {Notification, NotificationService, NotificationModalService, NotifyModal, NotifyTarget} from '../notification.service';
 import {CalendarSelectElm} from '../form/calendar.form.component';
 
 // TOO MUCH MONKEY PATCHING ..... FIX IT!!!!!
@@ -24,6 +24,10 @@ export interface Notification {
 	message: string,
 	type: boolean
 }
+
+var genId = () => {
+	return Math.random().toString(36).substr(2, 9);
+};
 
 @Component({
 	selector: 'spinner',
@@ -366,8 +370,10 @@ class SegmentCreate implements OnInit {
 	<div class="editor" *ngIf="segment">
 		<div class="form__wrap">
 			<form>
-				<h3>Edit:</h3>
-				<a class="button type__2" (click)="remove(segment.id)">Remove</a>
+				<a class="button type__1" (click)="remove(segment.id)">
+					<span class="icon-close"></span>
+					Remove segment
+				</a>
 			</form>
 		</div>
 	</div>
@@ -375,11 +381,32 @@ class SegmentCreate implements OnInit {
 })
 class SegmentEditor {
 	@Input() segment: Segment;
+	
+	notifyTargetObr$: Observable<NotifyTarget>;
+	notifyModal: NotifyModal;
+
 	constructor(
-		private segmentService: SegmentService) { }
+		private segmentService: SegmentService,
+		private NMService: NotificationModalService
+	) {
+		this.notifyTargetObr$ = this.NMService.notifyTargetObr$;
+	}
 
 	remove(id: string) {
-		this.segmentService.removeSegment(id);
+		let target = genId();
+		this.NMService.show({
+			heading: `You're about to perform an irreversible action`,
+			message: `Deleting a segment is a permanent action. It will remove all appointments associated with it. Are you sure you want to proceed?`,
+			target: target,
+			display: `Delete Segment`,
+			error: true
+		});
+		this.notifyTargetObr$.subscribe(
+			(done) => {
+				if (done.target == target && done.payload == true) {
+					this.segmentService.removeSegment(id);
+				}
+			});
 	}
 }
 
@@ -393,7 +420,7 @@ class SegmentEditor {
 				<h4>{{segment.template?.name}}</h4>
 				</section>
 				<section>
-					<h5>{{segment.date.month}}/{{segment.date.day}}/{{segment.date.year}}</h5>
+					<h5>{{from}}</h5>
 					<div>
 						<strong>From</strong> {{segment.start.hour}}:{{segment.start.minute}} 
 						<strong>To:</strong> {{segment.end.hour}}:{{segment.end.minute}}
@@ -406,9 +433,17 @@ class SegmentEditor {
 	`,
 	directives: [SegmentEditor]
 })
-class SegmentDetail {
+class SegmentDetail implements OnInit {
 	@Input() segment: Segment;
 	show: boolean = false;
+
+	from: any = '';
+
+	ngOnInit() {
+		if (this.segment) {
+			this.from = moment(new Date(this.segment.date.year, this.segment.date.month, this.segment.date.day)).format("MMM Do YYYY");
+		}
+	}
 }
 
 

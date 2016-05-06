@@ -6,7 +6,7 @@ import {Http, Response, Headers} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/Rx';
 
-import {NotificationService, Notification} from '../notification.service';
+import {Notification, NotificationService, NotificationModalService, NotifyModal, NotifyTarget} from '../notification.service';
 
 import {LayoutHeader} from '../layouts/header.layout';
 import {Template, UserType, User} from '../interfaces/interface';
@@ -177,8 +177,6 @@ class TemplateValidator {
 						</button>
 					</div>
 				</form>
-				<div>{{json}}</div>
-				valid? {{templateForm.valid}}
 			</div>
 		</div>
 	`,
@@ -294,6 +292,9 @@ class TemplateCreate implements OnInit {
 })
 class TemplateEditor implements OnInit {
 	@Input() template: Template;
+
+	notifyTargetObr$: Observable<NotifyTarget>;
+	notifyModal: NotifyModal;
 	
 	morphTemplate: Template;
 
@@ -305,8 +306,11 @@ class TemplateEditor implements OnInit {
 	constructor(
 		private templateService: TemplateService,
 		private fb: FormBuilder,
-		private notificationService: NotificationService
-	) { }
+		private notificationService: NotificationService,
+		private NMService: NotificationModalService
+	) {
+		this.notifyTargetObr$ = this.NMService.notifyTargetObr$;
+	}
 
 	ngOnInit() {
 		let { id, allow_multiple, require_accept, name } = this.template;
@@ -350,7 +354,20 @@ class TemplateEditor implements OnInit {
 	}
 
 	remove() {
-		this.templateService.removeTemplate(this.template.id);
+		let target = genId();
+		this.NMService.show({
+			heading: `You're about to perform an irreversible action`,
+			message: `Deleting a template is a permanent action. It will remove all appointments associated with it. Are you sure you want to proceed?`,
+			target: target,
+			display: `Delete Segment`,
+			error: true
+		});
+		this.notifyTargetObr$.subscribe(
+			(done) => {
+				if (done.target == target && done.payload == true) {
+					this.templateService.removeTemplate(this.template.id);
+				}
+			});
 	}
 
 	get json() {
@@ -405,11 +422,16 @@ class Templates implements OnInit {
 	templates$: Observable<Template[]>;
 	notification$: Observable<Notification>;
 
+	notifyTargetObr$: Observable<NotifyTarget>;
+	notifyModal: NotifyModal;
+
 	constructor(
 		private templateService: TemplateService,
 		private notificationService: NotificationService,
-		private authService: AuthService
+		private authService: AuthService,
+		private NMService: NotificationModalService
 	) {
+		this.notifyTargetObr$ = this.NMService.notifyTargetObr$;
 	}
 
 	ngOnInit() {
@@ -432,11 +454,24 @@ class Templates implements OnInit {
 	}
 
 	remove(id: string) {
-		this.templateService.removeTemplate(id);
+		let target = genId();
+		this.NMService.show({
+			heading: `You're about to perform an irreversible action`,
+			message: `Deleting segment is a permanent action. It will remove all appointments associated with it. Are you sure you want to proceed?`,
+			target: target,
+			display: `Delete Segment`,
+			error: true
+		});
+		this.notifyTargetObr$.subscribe(
+			(done) => {
+				if (done.target == target && done.payload == true) {
+					// this.templateService.removeTemplate(id);
+				}
+			});
 	}
 
 	flush() {
-		localStorage.removeItem('templates');
+		// localStorage.removeItem('templates');
 	}
 }
 

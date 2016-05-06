@@ -121,9 +121,42 @@ class ProfileContext implements OnInit {
 }
 
 @Component({
+	selector: 'contact-card',
+	template: `
+		<div class="overlay" *ngIf="user"></div>
+		<div class="contact__wrap__modal" *ngIf="user">
+			<a class="icon-close" (click)="close()"></a>
+			<div class="contact__card">
+				<section class="avatar">
+					<img src="{{user.meta?.avatar}}" *ngIf="user.meta.avatar" alt="" />
+					<span *ngIf="!user.meta.avatar">AR</span>
+				</section>
+				<h3>{{user.lname}}, {{user.fname}}</h3>
+				<ul class="email">
+					<li>{{user.email}}</li>
+					<li *ngFor="#mail of user.meta.emails" *ngIf="user.meta.emails">
+						<span *ngIf="mail?.show">{{mail.email}}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	`
+})
+class ContactCard {
+	@Input() user;
+	@Output() hide = new EventEmitter<boolean>();
+
+	close() {
+		this.hide.next(false);
+	}
+}
+
+
+@Component({
 	selector: 'profile-nav',
 	template: `
 		<div class="profile__nav" *ngIf="user">
+			<contact-card [user]="user" *ngIf="card" (hide)="hideCard($event)"></contact-card>
 			<div class="profile__card__nav">
 				<img src="{{user.meta?.avatar}}" />
 				<h3>
@@ -134,7 +167,7 @@ class ProfileContext implements OnInit {
 					<li *ngIf="session.id!==user.id">
 						<a class="lnr lnr-pushpin" (click)="togglePin()" [ngClass]="{pinned: pinned}"></a>
 					</li>
-					<li><a class="lnr lnr-license"></a></li>
+					<li><a class="lnr lnr-license" (click)="showCard()"></a></li>
 					<li><a [routerLink]="['/ProfileViewport', 'CalendarRouter', {id: user.id}]" class="lnr lnr-calendar-full"></a></li>
 					<li><a href="" class="lnr lnr-download"></a></li>
 				</ul>
@@ -155,10 +188,12 @@ class ProfileContext implements OnInit {
 			</div>
 		</div>
 	`,
-	directives: [Calendar, RouterLink]
+	directives: [Calendar, RouterLink, ContactCard]
 })
 class ProfileNav implements OnInit {
 	@Input() user: User;
+
+	card: boolean = false;
 
 	day: String = '';
 	month: String = '';
@@ -216,6 +251,14 @@ class ProfileNav implements OnInit {
 				}
 			}
 		);
+	}
+
+	showCard() {
+		this.card = true;
+	}
+
+	hideCard(next) {
+		this.card = false;
 	}
 
 	togglePin() {
@@ -295,25 +338,19 @@ class Cal implements OnInit {
 
 @Component({
 	template: `
-		<profile-nav [user]="user"></profile-nav>
-		<div class="profile__outlet">
-			<h2>Upcoming events</h2>
-		</div>
 	`,
-	directives: [ProfileNav]
+	directives: []
 })
 class None implements OnInit{
-	user: User;
-
 	constructor(
 		private userService: UserService,
-		private routeParams: RouteParams,
-		private router: Router,
-		private authService: AuthService
+		private router: Router
 	) { }
 
 	ngOnInit() {
-		this.userService.getUser().then(user => this.user = user);
+		this.userService.getUser().then(user => {
+			this.router.navigateByUrl(`/calendar/${user.id}`);
+		});
 	}
 }
 

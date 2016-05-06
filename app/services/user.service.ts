@@ -84,4 +84,24 @@ export class UserService {
 			return Promise.resolve(session);
 		}
 	}
+
+	addEmail(email: string) {
+		return this.http.post(
+			`${this.authService.baseUri}/users/email`,
+			JSON.stringify({ email: email }),
+			{ headers: this.authService.getAuthHeader() }
+		)
+			.map(res => res.json())
+			.toPromise();
+	}
+
+	activate(id: string, code: string) {
+		return this.http.post(
+			`${this.authService.baseUri}/users/activate`,
+			JSON.stringify({ id: id, code: code }),
+			{ headers: this.authService.getAuthHeader() }
+		)
+			.map(res => res.json())
+			.toPromise();
+	}
 }
